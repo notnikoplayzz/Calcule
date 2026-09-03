@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CALCULE LEGENDS</title>
+<style>
+:root{--bg:#070b18;--bg2:#121b38;--card:rgba(18,27,58,.9);--text:#fff;--muted:#aab5d1;--accent:#8b5cf6;--accent2:#38bdf8;--green:#22c55e;--red:#ef4444;--gold:#fbbf24;--border:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0} body{font-family:Arial,sans-serif;color:var(--text);min-height:100vh;background:radial-gradient(circle at top,#1d2b5b,var(--bg) 58%);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:42px 42px}
+.app{width:min(1100px,94%);margin:auto;padding:24px 0 50px;position:relative}.screen{display:none;animation:in .4s ease}.screen.active{display:block}@keyframes in{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:26px;padding:24px;box-shadow:0 25px 80px #0006;backdrop-filter:blur(12px)}.title{text-align:center;font-size:clamp(30px,6vw,52px);margin:12px 0}.sub{text-align:center;color:var(--muted);margin:10px 0 20px}
+.logo{text-align:center;margin:10px 0 25px}.logo h1{font-size:clamp(42px,9vw,78px);background:linear-gradient(90deg,#fff,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}.logo-icon{font-size:70px;animation:float 3s ease-in-out infinite}@keyframes float{50%{transform:translateY(-10px) rotate(4deg)}}
+.start-img{display:flex;justify-content:center;margin-bottom:18px}.start-img img{width:min(380px,95%);height:250px;object-fit:cover;border-radius:30px;border:3px solid var(--accent);box-shadow:0 0 30px var(--accent),0 0 90px #8b5cf666}
+button{border:none;color:var(--text);cursor:pointer;font-weight:bold;transition:.2s}.bigbtn,.action{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:18px;padding:18px;font-size:20px}.bigbtn{width:100%}.bigbtn:hover,.action:hover,.world:hover,.mode:hover,.menu-btn:hover{transform:translateY(-4px);filter:brightness(1.1)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.menu-btn,.mode{padding:22px;text-align:left;border-radius:20px;background:#ffffff0d;border:1px solid var(--border);font-size:17px}.mode h3{font-size:22px;margin-bottom:7px}.mode p{color:var(--muted)}
+.back{margin-top:18px;background:transparent;border:1px solid var(--border);padding:12px 20px;border-radius:13px}.difficulties{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.difficulty{padding:22px 8px;border-radius:18px;font-size:16px}.easy{background:linear-gradient(135deg,#047857,#22c55e)}.medium{background:linear-gradient(135deg,#b45309,#f59e0b)}.hard{background:linear-gradient(135deg,#b91c1c,#ef4444)}.insane{background:linear-gradient(135deg,#581c87,#a855f7)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.stat,.box{background:#ffffff0d;border:1px solid var(--border);border-radius:15px;padding:12px;text-align:center}.stat small{display:block;color:var(--muted)}.question{min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(36px,8vw,70px);font-weight:bold}.answer-row{display:flex;gap:10px}.answer-row input{flex:1;padding:17px;border-radius:16px;border:1px solid var(--border);background:#0003;color:var(--text);font-size:25px;text-align:center}.timer,.progress,.health{height:14px;background:#ffffff18;border-radius:20px;overflow:hidden;margin:14px 0}.timer div,.progress div{height:100%;width:100%;background:linear-gradient(90deg,var(--green),var(--gold),var(--red));transition:width 1s linear}.progress div{background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.message{height:48px;text-align:center;padding:13px;font-weight:bold}.ok{color:var(--green)}.bad{color:var(--red)}
+.worlds{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.world{border:1px solid var(--border);border-radius:22px;padding:20px;text-align:left;background:#ffffff0b;min-height:160px}.world.locked{filter:grayscale(.8);opacity:.58}.world h3{font-size:24px;margin:8px 0}.world p{color:var(--muted);font-size:14px}.world b{display:block;margin-top:10px}.world1{box-shadow:inset 0 0 40px #22c55e22}.world2{box-shadow:inset 0 0 40px #38bdf822}.world3{box-shadow:inset 0 0 40px #8b5cf622}.world4{box-shadow:inset 0 0 40px #ef444422}.world5{box-shadow:inset 0 0 40px #06b6d422}.world6{box-shadow:inset 0 0 40px #fbbf2422}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.level-btn{padding:18px 5px;border-radius:16px;background:#ffffff0d;border:1px solid var(--border)}.level-btn.locked{opacity:.4;cursor:not-allowed}.boxgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.box h2{margin-top:8px;color:var(--accent)}.list{display:grid;gap:10px}.item{padding:16px;border-radius:15px;background:#ffffff0d;border:1px solid var(--border);display:flex;justify-content:space-between;gap:12px}
+@media(max-width:700px){.grid,.worlds,.boxgrid{grid-template-columns:1fr}.difficulties{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.levels{grid-template-columns:repeat(3,1fr)}.answer-row{flex-direction:column}}
+</style>
+</head>
+<body><div class="app">
+
+<section id="home" class="screen active"><div class="start-img"><img src="gelutzu.jpeg" alt="Poza de start"></div><div class="logo"><div class="logo-icon">🧠⚡</div><h1>CALCULE LEGENDS</h1><p>Rezolvă. Fă combo. Deblochează lumi. Devino legendă!</p></div><div class="card"><button class="bigbtn" onclick="show('menu')">▶ JOACĂ ACUM</button></div></section>
+
+<section id="menu" class="screen"><h2 class="title">🎮 MENIU PRINCIPAL</h2><div class="grid">
+<button class="menu-btn" onclick="show('modes')">⚡ MODURI DE JOC</button><button class="menu-btn" onclick="openCampaign()">🗺️ CAMPANIE</button>
+<button class="menu-btn" onclick="show('profile')">👤 PROFIL & XP</button><button class="menu-btn" onclick="show('statsPage')">📊 STATISTICI</button>
+<button class="menu-btn" onclick="show('records')">🏆 RECORDURI</button><button class="menu-btn" onclick="show('achievements')">🏅 REALIZĂRI</button>
+</div><button class="back" onclick="show('home')">← ACASĂ</button></section>
+
+<section id="campaign" class="screen"><h2 class="title">🗺️ CAMPANIA LEGENDARY</h2><p class="sub">Termină toate cele 10 niveluri ale unei lumi pentru a debloca următoarea lume!</p><div class="card"><div id="worlds" class="worlds"></div></div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+
+<section id="worldLevels" class="screen"><h2 id="worldTitle" class="title">🌲 LUMEA 1</h2><p id="worldDesc" class="sub"></p><div class="card"><p class="sub">Alege un nivel. 🔒 = încă blocat</p><div id="levels" class="levels"></div></div><button class="back" onclick="openCampaign()">← HARTĂ</button></section>
+
+<section id="modes" class="screen"><h2 class="title">⚡ MODURI DE JOC</h2><div class="grid">
+<button class="mode" onclick="chooseMode('free')"><h3>♾️ JOC LIBER</h3><p>Fără timer.</p></button>
+<button class="mode" onclick="chooseMode('rapid')"><h3>⚡ RAPID</h3><p>Răspunde înainte să expire timpul.</p></button>
+<button class="mode" onclick="chooseMode('survival')"><h3>❤️ SUPRAVIEȚUIRE</h3><p>Ai 3 vieți.</p></button>
+<button class="mode" onclick="chooseMode('time')"><h3>⏱️ CONTRA TIMP</h3><p>60 secunde.</p></button>
+<button class="mode" onclick="chooseMode('challenge')"><h3>🔥 PROVOCARE</h3><p>10 calcule.</p></button>
+<button class="mode" onclick="chooseMode('zen')"><h3>🧘 ZEN</h3><p>Fără timer, fără presiune.</p></button>
+</div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+
+<section id="difficulty" class="screen"><h2 class="title">🎯 ALEGE DIFICULTATEA</h2><div class="difficulties"><button class="difficulty easy" onclick="startGame('easy')">🟢<br>UȘOR</button><button class="difficulty medium" onclick="startGame('medium')">🟠<br>MEDIU</button><button class="difficulty hard" onclick="startGame('hard')">🔴<br>GREU</button><button class="difficulty insane" onclick="startGame('insane')">💀<br>IMPOSIBIL</button></div><button class="back" onclick="show('modes')">← ÎNAPOI</button></section>
+
+<section id="game" class="screen"><div class="card"><div class="stats"><div class="stat"><small>SCOR</small><b id="score">0</b></div><div class="stat"><small>COMBO 🔥</small><b id="combo">0</b></div><div class="stat"><small>VIEȚI ❤️</small><b id="lives">3</b></div><div class="stat"><small>NIVEL</small><b id="level">1</b></div><div class="stat"><small>TIMP</small><b id="time">∞</b></div></div>
+<div id="campaignInfo" class="sub"></div><div id="timer" class="timer"><div id="timerFill"></div></div><div id="question" class="question">...</div><div class="answer-row"><input id="answer" type="number" placeholder="Răspunsul tău"><button class="action" onclick="checkAnswer()">VERIFICĂ ⚡</button></div><div id="message" class="message"></div><div class="progress"><div id="xpBar"></div></div><button class="back" onclick="endGame()">TERMINĂ JOCUL</button></div></section>
+
+<section id="profile" class="screen"><h2 class="title">👤 PROFILUL TĂU</h2><div class="card"><div class="boxgrid"><div class="box">⭐ LEVEL<h2 id="profileLevel">1</h2></div><div class="box">⚡ XP<h2 id="xp">0</h2></div><div class="box">🪙 MONEDE<h2 id="coins">0</h2></div></div><div class="progress"><div id="profileXp"></div></div><p id="rank" class="sub">🐣 Începător</p></div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+<section id="statsPage" class="screen"><h2 class="title">📊 STATISTICI</h2><div class="boxgrid"><div class="box">✅ CORECTE<h2 id="correctStat">0</h2></div><div class="box">❌ GREȘITE<h2 id="wrongStat">0</h2></div><div class="box">🎯 PRECIZIE<h2 id="accuracy">0%</h2></div><div class="box">🔥 COMBO MAXIM<h2 id="maxCombo">0</h2></div><div class="box">🏆 RECORD<h2 id="recordStat">0</h2></div><div class="box">🗺️ LUMI TERMINATE<h2 id="worldStat">0</h2></div></div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+<section id="records" class="screen"><h2 class="title">🏆 RECORDURI</h2><div class="card list"><div class="item"><span>🥇 Cel mai mare scor</span><b id="record">0</b></div><div class="item"><span>🔥 Cel mai mare combo</span><b id="recordCombo">0</b></div><div class="item"><span>⭐ Nivel maxim</span><b id="recordLevel">1</b></div></div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+<section id="achievements" class="screen"><h2 class="title">🏅 REALIZĂRI</h2><div class="card list"><div class="item"><span>🌲 Termină Lumea 1</span><b id="a1">🔒</b></div><div class="item"><span>❄️ Termină Lumea 2</span><b id="a2">🔒</b></div><div class="item"><span>🚀 Termină Lumea 3</span><b id="a3">🔒</b></div><div class="item"><span>🌋 Termină Lumea 4</span><b id="a4">🔒</b></div><div class="item"><span>🤖 Termină Lumea 5</span><b id="a5">🔒</b></div><div class="item"><span>👑 Termină Lumea 6</span><b id="a6">🔒</b></div></div><button class="back" onclick="show('menu')">← ÎNAPOI</button></section>
+<section id="end" class="screen"><div class="card" style="text-align:center"><div class="logo-icon">🏆</div><h2 class="title" id="endTitle">JOC TERMINAT!</h2><p class="sub" id="endText">Scor final</p><h1 id="finalScore" style="font-size:70px;color:var(--gold)">0</h1><button class="bigbtn" onclick="show('menu')">ÎNAPOI LA MENIU</button></div></section>
+
+</div><script>
+const worlds=[
+ {name:"🌲 Lumea 1: Pădurea Numerelor",desc:"Începutul aventurii. Adunări și scăderi.",theme:"world1",difficulty:"easy",ops:[1,2]},
+ {name:"❄️ Lumea 2: Regatul Înghețat",desc:"Numere mai mari și înmulțiri.",theme:"world2",difficulty:"medium",ops:[1,2,3]},
+ {name:"🚀 Lumea 3: Galaxia Matematicii",desc:"Misiuni spațiale cu operații mixte.",theme:"world3",difficulty:"medium",ops:[2,3,4]},
+ {name:"🌋 Lumea 4: Vulcanul Calculului",desc:"Paranteze și calcule fierbinți.",theme:"world4",difficulty:"hard",ops:[1,2,3]},
+ {name:"🤖 Lumea 5: Orașul Cyber",desc:"Calcule complexe în orașul viitorului.",theme:"world5",difficulty:"hard",ops:[1,2,3,4]},
+ {name:"👑 Lumea 6: Castelul Final",desc:"Ultima lume. Doar legendele ajung aici!",theme:"world6",difficulty:"insane",ops:[1,2,3,4]}
+];
+const data=JSON.parse(localStorage.getItem('calculeLegends')||'{}');
+let correct=data.correct||0,wrong=data.wrong||0,record=data.record||0,maxCombo=data.maxCombo||0,xp=data.xp||0,coins=data.coins||0,playerLevel=data.playerLevel||1;
+let campaignProgress=Array.isArray(data.campaignProgress)?data.campaignProgress:[0,0,0,0,0,0];
+let mode='',difficulty='',score=0,combo=0,lives=3,answer=0,time=0,maxTime=0,timer=null,active=false,round=0,campaignWorld=null,campaignLevel=null;
+
+function save(){localStorage.setItem('calculeLegends',JSON.stringify({correct,wrong,record,maxCombo,xp,coins,playerLevel,campaignProgress}));update()}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');update()}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function isWorldUnlocked(i){return i===0||campaignProgress[i-1]>=10}
+function openCampaign(){renderWorlds();show('campaign')}
+function renderWorlds(){document.getElementById('worlds').innerHTML=worlds.map((w,i)=>{let unlocked=isWorldUnlocked(i),done=campaignProgress[i];return `<button class="world ${w.theme} ${unlocked?'':'locked'}" onclick="${unlocked?`openWorld(${i})`:'lockedWorld()'}"><div style="font-size:42px">${w.name.split(':')[0]}</div><h3>${w.name}</h3><p>${w.desc}</p><b>${unlocked?`Niveluri: ${done}/10 ${done>=10?'✅ TERMINATĂ':''}`:'🔒 Termină lumea anterioară'}</b></button>`}).join('')}
+function lockedWorld(){alert('🔒 Termină toate cele 10 niveluri ale lumii anterioare!')}
+function openWorld(i){campaignWorld=i;document.getElementById('worldTitle').textContent=worlds[i].name;document.getElementById('worldDesc').textContent=worlds[i].desc;renderLevels(i);show('worldLevels')}
+function renderLevels(i){let done=campaignProgress[i],html='';for(let n=1;n<=10;n++){let unlocked=n<=done+1;html+=`<button class="level-btn ${unlocked?'':'locked'}" onclick="${unlocked?`startCampaign(${i},${n})`:'lockedLevel()'}">${n<=done?'✅ ':n===10?'👹 ':'🔒 '} NIVEL ${n}</button>`}document.getElementById('levels').innerHTML=html}
+function lockedLevel(){alert('🔒 Termină nivelul anterior mai întâi!')}
+function startCampaign(w,l){campaignWorld=w;campaignLevel=l;mode='campaign';difficulty=worlds[w].difficulty;score=0;combo=0;lives=3;round=0;active=true;show('game');document.getElementById('campaignInfo').textContent=`🗺️ ${worlds[w].name} — Nivel ${l}/10${l===10?' 👹 BOSS FINAL':''}`;updateGame();newQuestion()}
+function chooseMode(m){campaignWorld=null;campaignLevel=null;mode=m;show('difficulty')}
+function startGame(d){difficulty=d;score=0;combo=0;lives=3;round=0;active=true;show('game');document.getElementById('campaignInfo').textContent='';updateGame();newQuestion()}
+function newQuestion(){if(!active)return;clearInterval(timer);let a,b,c,type;
+ if(mode==='campaign'){let w=worlds[campaignWorld],boost=(campaignWorld+1)*campaignLevel*4;a=rnd(1+boost,20+boost);b=rnd(1,15+boost/2);type=w.ops[rnd(0,w.ops.length-1)]}
+ else{if(difficulty==='easy'){a=rnd(1,20);b=rnd(1,20)}if(difficulty==='medium'){a=rnd(10,100);b=rnd(2,30)}if(difficulty==='hard'){a=rnd(20,150);b=rnd(2,50)}if(difficulty==='insane'){a=rnd(50,300);b=rnd(5,100)}type=rnd(1,difficulty==='easy'?2:4)}
+ if(type===1){answer=a+b;question.textContent=`${a} + ${b} = ?`}else if(type===2){if(b>a)[a,b]=[b,a];answer=a-b;question.textContent=`${a} − ${b} = ?`}else if(type===3){answer=a*b;question.textContent=`${a} × ${b} = ?`}else{answer=b;a=a*b;question.textContent=`${a} ÷ ${b} = ?`}
+ if(mode==='campaign'&&campaignWorld>=3&&Math.random()>.45){c=rnd(2,10+campaignWorld);answer=(a+b)*c;question.textContent=`(${a} + ${b}) × ${c} = ?`}
+ answerInput.value='';message.textContent='';answerInput.focus();startTimer()}
+const question=document.getElementById('question'),answerInput=document.getElementById('answer'),message=document.getElementById('message');
+function startTimer(){clearInterval(timer);const box=document.getElementById('timer');if(mode==='free'||mode==='zen'||mode==='campaign'){box.style.display='none';document.getElementById('time').textContent='∞';return}box.style.display='block';maxTime=mode==='time'?60:(difficulty==='easy'?15:difficulty==='medium'?12:difficulty==='hard'?10:8);time=maxTime;document.getElementById('time').textContent=time;timerFill.style.width='100%';timer=setInterval(()=>{time--;document.getElementById('time').textContent=time;timerFill.style.width=Math.max(0,time/maxTime*100)+'%';if(time<=0){clearInterval(timer);if(mode==='time')endGame();else fail('⏰ TIMP EXPIRAT!')}},1000)}
+function checkAnswer(){if(!active)return;let v=answerInput.value;if(v==='')return;clearInterval(timer);Number(v)===answer?win():fail(`❌ GREȘIT! Era ${answer}`)}
+function win(){correct++;combo++;round++;maxCombo=Math.max(maxCombo,combo);let points=difficulty==='easy'?10:difficulty==='medium'?20:difficulty==='hard'?30:50;if(mode==='campaign')points+=campaignWorld*10+campaignLevel*3;points+=Math.min(combo*2,50);score+=points;xp+=points;coins+=Math.max(1,Math.floor(points/5));playerLevel=Math.max(playerLevel,Math.floor(xp/250)+1);record=Math.max(record,score);message.className='message ok';message.textContent=`🎉 CORECT! +${points} | COMBO x${combo}`;save();updateGame();
+ let needed=mode==='campaign'?(campaignLevel===10?12:5):(mode==='challenge'?10:Infinity);if(round>=needed){if(mode==='campaign')finishCampaignLevel();else setTimeout(endGame,700);return}setTimeout(newQuestion,600)}
+function finishCampaignLevel(){active=false;clearInterval(timer);campaignProgress[campaignWorld]=Math.max(campaignProgress[campaignWorld],campaignLevel);save();document.getElementById('endTitle').textContent=campaignLevel===10?`🏆 LUMEA ${campaignWorld+1} TERMINATĂ!`:'🎉 NIVEL TERMINAT!';document.getElementById('endText').textContent=campaignLevel===10&&campaignWorld<5?'Următoarea lume este acum DEBLOCATĂ! 🔓':'Ai deblocat următorul nivel!';document.getElementById('finalScore').textContent=score;show('end')}
+function fail(text){wrong++;combo=0;if(mode!=='time'&&mode!=='zen')lives--;message.className='message bad';message.textContent=text;save();updateGame();if(lives<=0&&mode!=='time'&&mode!=='zen')setTimeout(endGame,900);else setTimeout(newQuestion,900)}
+function endGame(){active=false;clearInterval(timer);save();document.getElementById('endTitle').textContent='🏆 JOC TERMINAT!';document.getElementById('endText').textContent='Scor final';document.getElementById('finalScore').textContent=score;show('end')}
+function updateGame(){scoreEl.textContent=score;comboEl.textContent=combo;livesEl.textContent=lives;levelEl.textContent=Math.floor(score/100)+1;xpBar.style.width=(score%100)+'%'}
+const scoreEl=document.getElementById('score'),comboEl=document.getElementById('combo'),livesEl=document.getElementById('lives'),levelEl=document.getElementById('level'),xpBar=document.getElementById('xpBar'),timerFill=document.getElementById('timerFill');
+function update(){let total=correct+wrong,acc=total?Math.round(correct/total*100):0,done=campaignProgress.filter(x=>x>=10).length;const set=(id,v)=>{let e=document.getElementById(id);if(e)e.textContent=v};set('correctStat',correct);set('wrongStat',wrong);set('accuracy',acc+'%');set('maxCombo',maxCombo);set('recordStat',record);set('worldStat',done);set('record',record);set('recordCombo',maxCombo);set('recordLevel',playerLevel);set('profileLevel',playerLevel);set('xp',xp);set('coins',coins);set('rank',playerLevel>=20?'👑 Legendă':playerLevel>=10?'🔥 Maestru':playerLevel>=5?'⚡ Expert':'🐣 Începător');let p=Math.min(100,(xp%250)/2.5);let pb=document.getElementById('profileXp');if(pb)pb.style.width=p+'%';for(let i=0;i<6;i++)set('a'+(i+1),campaignProgress[i]>=10?'🏆':'🔒')}
+answerInput.addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer()});update();
+</script></body></html>
