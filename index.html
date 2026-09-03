@@ -3,26 +3,24 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>CALCULE LEGENDS — Ultimate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CALCULE LEGENDS</title>
 
 <style>
 :root{
-  --bg:#060812;
-  --bg2:#0d1224;
-  --panel:rgba(17,24,46,.82);
-  --panel2:rgba(255,255,255,.055);
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --accent:#8b5cf6;
-  --accent2:#06b6d4;
-  --green:#22c55e;
-  --red:#ef4444;
-  --gold:#fbbf24;
-  --pink:#ec4899;
-  --border:rgba(255,255,255,.1);
-  --shadow:0 25px 80px rgba(0,0,0,.45);
+  --bg:#070b16;
+  --bg2:#10182b;
+  --card:#121c31;
+  --card2:#18243d;
+  --text:#f5f7ff;
+  --muted:#9da8c0;
+  --accent:#6c63ff;
+  --accent2:#00d4ff;
+  --green:#20d67b;
+  --red:#ff4d67;
+  --gold:#ffc857;
+  --border:rgba(255,255,255,.09);
+  --shadow:0 20px 50px rgba(0,0,0,.35);
 }
 
 *{
@@ -36,119 +34,81 @@ html{
 }
 
 body{
-  font-family:Inter,Arial,sans-serif;
-  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   min-height:100vh;
+  color:var(--text);
   background:
-    radial-gradient(circle at 15% 0%,#33216d 0,transparent 35%),
-    radial-gradient(circle at 90% 10%,#075985 0,transparent 30%),
-    linear-gradient(145deg,var(--bg),var(--bg2));
+    radial-gradient(circle at 15% 10%,rgba(108,99,255,.22),transparent 28%),
+    radial-gradient(circle at 85% 80%,rgba(0,212,255,.14),transparent 30%),
+    linear-gradient(135deg,var(--bg),var(--bg2));
   overflow-x:hidden;
+  transition:.3s ease;
 }
 
-body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.12;
-  background-image:
-    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
-  background-size:45px 45px;
+body.light-mode{
+  --bg:#eef3ff;
+  --bg2:#dfe8ff;
+  --card:#ffffff;
+  --card2:#f2f5ff;
+  --text:#111827;
+  --muted:#5f6b85;
+  --border:rgba(20,30,60,.12);
+  --shadow:0 20px 50px rgba(30,50,100,.15);
 }
 
-button,input{
-  font:inherit;
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after{
+  animation:none !important;
+  transition:none !important;
 }
 
 button{
-  border:0;
-  cursor:pointer;
-  color:var(--text);
+  font:inherit;
 }
 
 .app{
-  width:min(1250px,94%);
+  width:min(1100px,94%);
   margin:auto;
-  padding:22px 0 90px;
+  padding:20px 0 50px;
 }
 
-/* =========================
-   TOPBAR
-========================= */
-
-.topbar{
-  height:72px;
+header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:20px;
-  margin-bottom:25px;
-  padding:12px 18px;
+  gap:15px;
+  padding:12px 0 24px;
+}
+
+.logo{
+  font-size:clamp(24px,5vw,38px);
+  font-weight:1000;
+  letter-spacing:-2px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent),#ff4ecd);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.header-right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.header-pill{
+  padding:8px 12px;
   border:1px solid var(--border);
-  background:rgba(8,12,28,.72);
-  backdrop-filter:blur(20px);
-  border-radius:22px;
-  position:sticky;
-  top:12px;
-  z-index:50;
-  box-shadow:var(--shadow);
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-weight:900;
-  font-size:20px;
-}
-
-.brand-icon{
-  width:44px;
-  height:44px;
-  display:grid;
-  place-items:center;
-  border-radius:14px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:0 0 30px #8b5cf655;
-  font-size:22px;
-}
-
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.currency{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:10px 13px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:13px;
+  background:rgba(255,255,255,.05);
+  border-radius:999px;
   font-weight:800;
+  font-size:13px;
 }
-
-.avatar{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#ec4899,#8b5cf6);
-  font-size:20px;
-}
-
-/* =========================
-   SCREENS
-========================= */
 
 .screen{
   display:none;
-  animation:screenIn .35s ease;
+  animation:screenIn .3s ease;
 }
 
 .screen.active{
@@ -158,722 +118,354 @@ button{
 @keyframes screenIn{
   from{
     opacity:0;
-    transform:translateY(15px);
+    transform:translateY(10px);
   }
   to{
     opacity:1;
-    transform:none;
+    transform:translateY(0);
   }
 }
 
-/* =========================
-   HERO
-========================= */
-
 .hero{
-  min-height:470px;
+  min-height:calc(100vh - 100px);
   display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:30px;
-  align-items:center;
+  place-items:center;
+  text-align:center;
 }
 
-.hero-text{
-  padding:20px;
+.hero-box{
+  width:min(760px,100%);
+  padding:45px 20px;
 }
 
-.badge{
-  display:inline-flex;
-  padding:8px 13px;
-  border-radius:999px;
-  background:#8b5cf622;
-  border:1px solid #8b5cf655;
-  color:#c4b5fd;
-  font-weight:800;
-  font-size:13px;
-  margin-bottom:15px;
+.hero-image{
+  width:180px;
+  height:180px;
+  object-fit:cover;
+  border-radius:50%;
+  border:5px solid rgba(255,255,255,.12);
+  box-shadow:0 0 60px rgba(108,99,255,.35);
+  margin-bottom:25px;
 }
 
-.logo-title{
-  font-size:clamp(45px,7vw,82px);
+h1{
+  font-size:clamp(38px,8vw,76px);
   line-height:.95;
   font-weight:1000;
   letter-spacing:-4px;
-  background:linear-gradient(
-    100deg,
-    #fff,
-    #c4b5fd 35%,
-    #67e8f9 75%,
-    #fff
-  );
+  margin-bottom:18px;
+}
+
+.gradient{
+  background:linear-gradient(90deg,var(--accent2),var(--accent),#ff4ecd);
   -webkit-background-clip:text;
+  background-clip:text;
   color:transparent;
 }
 
-.hero-sub{
+.subtitle{
   color:var(--muted);
-  font-size:18px;
-  line-height:1.6;
-  max-width:600px;
-  margin:22px 0;
+  font-size:17px;
+  max-width:650px;
+  margin:0 auto 30px;
 }
 
-.hero-buttons{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.primary{
-  padding:15px 22px;
-  border-radius:16px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
+.btn{
+  border:0;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),#8a55ff);
+  padding:14px 22px;
+  border-radius:15px;
   font-weight:900;
-  box-shadow:0 15px 40px #8b5cf633;
+  box-shadow:0 10px 25px rgba(108,99,255,.25);
   transition:.2s;
 }
 
-.primary:hover{
-  transform:translateY(-3px);
-  box-shadow:0 20px 55px #8b5cf655;
+.btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
 }
 
-.secondary{
-  padding:15px 22px;
-  border-radius:16px;
-  background:var(--panel2);
+.btn:active{
+  transform:scale(.97);
+}
+
+.btn.secondary{
+  background:var(--card2);
+  color:var(--text);
   border:1px solid var(--border);
-  font-weight:800;
+  box-shadow:none;
 }
 
-.secondary:hover{
-  background:#ffffff10;
+.btn.danger{
+  background:linear-gradient(135deg,#ff3f5e,#d92b4a);
 }
 
-.hero-art{
-  min-height:370px;
-  border-radius:35px;
-  border:1px solid var(--border);
-  background:
-    radial-gradient(circle at 50% 40%,#8b5cf644,transparent 30%),
-    linear-gradient(145deg,#111936,#080c1b);
+.btn.green{
+  background:linear-gradient(135deg,#16b96a,#20d67b);
+}
+
+.btn.gold{
+  background:linear-gradient(135deg,#e99b00,#ffc857);
+  color:#1b1605;
+}
+
+.big-btn{
+  min-width:230px;
+  font-size:17px;
+}
+
+.section-title{
+  margin:10px 0 20px;
+  font-size:30px;
+  font-weight:1000;
+}
+
+.section-desc{
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.menu-grid{
   display:grid;
-  place-items:center;
-  position:relative;
-  overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.menu-btn{
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  color:var(--text);
+  padding:22px;
+  border-radius:20px;
+  cursor:pointer;
+  text-align:left;
   box-shadow:var(--shadow);
+  transition:.2s;
 }
 
-.hero-art:before{
-  content:"";
-  width:250px;
-  height:250px;
-  border-radius:50%;
-  border:1px solid #ffffff22;
-  box-shadow:
-    0 0 50px #8b5cf655,
-    inset 0 0 50px #06b6d433;
-  animation:pulse 3s infinite;
+.menu-btn:hover{
+  transform:translateY(-4px);
+  border-color:rgba(108,99,255,.5);
 }
 
-.hero-art-icon{
-  position:absolute;
-  font-size:100px;
-  animation:float 3s ease-in-out infinite;
+.menu-icon{
+  font-size:30px;
+  display:block;
+  margin-bottom:10px;
 }
 
-@keyframes float{
-  50%{
-    transform:translateY(-15px) rotate(3deg);
-  }
+.menu-btn strong{
+  display:block;
+  font-size:18px;
+  margin-bottom:4px;
 }
 
-@keyframes pulse{
-  50%{
-    transform:scale(1.08);
-    opacity:.7;
-  }
+.menu-btn span{
+  color:var(--muted);
+  font-size:13px;
 }
-
-/* =========================
-   CARDS
-========================= */
 
 .card{
-  background:var(--panel);
+  background:linear-gradient(145deg,var(--card),var(--card2));
   border:1px solid var(--border);
-  border-radius:25px;
+  border-radius:22px;
   padding:22px;
-  backdrop-filter:blur(18px);
   box-shadow:var(--shadow);
 }
 
-.title{
-  font-size:clamp(28px,5vw,46px);
-  margin:10px 0;
-  font-weight:950;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
 }
 
-.sub{
-  color:var(--muted);
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
   margin-bottom:20px;
 }
 
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:15px;
-  margin-bottom:16px;
-}
-
-.section-head h2{
-  font-size:25px;
-}
-
-/* =========================
-   DASHBOARD
-========================= */
-
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:1.5fr .8fr;
-  gap:16px;
-}
-
-.welcome{
-  padding:27px;
-  background:
-    radial-gradient(circle at 90% 20%,#06b6d433,transparent 30%),
-    linear-gradient(135deg,#161d3a,#0d1328);
-}
-
-.welcome h1{
-  font-size:34px;
-  margin-bottom:8px;
-}
-
-.welcome p{
-  color:var(--muted);
-}
-
-.quick-stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-top:20px;
-}
-
-.stat-card{
+.stat{
   padding:18px;
-  border-radius:18px;
-  background:var(--panel2);
+  background:rgba(255,255,255,.04);
   border:1px solid var(--border);
+  border-radius:17px;
 }
 
-.stat-icon{
-  font-size:25px;
-  margin-bottom:8px;
-}
-
-.stat-card small{
+.stat-label{
   color:var(--muted);
-  display:block;
+  font-size:12px;
+  text-transform:uppercase;
+  font-weight:900;
 }
 
-.stat-card strong{
-  font-size:25px;
+.stat-value{
+  font-size:28px;
+  font-weight:1000;
+  margin-top:5px;
+}
+
+.choice{
+  width:100%;
+  padding:20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:18px;
+  cursor:pointer;
+  font-weight:900;
+  text-align:left;
+  transition:.2s;
+}
+
+.choice:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+
+.choice small{
+  display:block;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.level-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+}
+
+.level{
+  min-height:130px;
+  border-radius:20px;
+  padding:18px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  cursor:pointer;
+  transition:.2s;
+  font-weight:900;
+}
+
+.level:hover{
+  transform:translateY(-3px);
+  border-color:var(--accent2);
+}
+
+.level.locked{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.level-number{
+  font-size:32px;
+  font-weight:1000;
 }
 
 .progress{
   height:9px;
-  background:#ffffff12;
-  border-radius:20px;
+  background:rgba(255,255,255,.08);
+  border-radius:99px;
   overflow:hidden;
-  margin-top:12px;
+  margin-top:10px;
 }
 
-.progress div{
+.progress-bar{
   height:100%;
-  width:0;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  border-radius:20px;
-  transition:.5s;
+  width:0%;
+  background:linear-gradient(90deg,var(--accent2),var(--accent));
+  border-radius:99px;
+  transition:.4s;
 }
 
-/* =========================
-   MENU
-========================= */
-
-.menu-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-
-.menu-card{
-  min-height:145px;
-  padding:22px;
-  border-radius:22px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  text-align:left;
-  transition:.2s;
-  position:relative;
-  overflow:hidden;
-}
-
-.menu-card:after{
-  content:"";
-  position:absolute;
-  width:100px;
-  height:100px;
-  right:-30px;
-  bottom:-40px;
-  border-radius:50%;
-  background:#8b5cf622;
-}
-
-.menu-card:hover{
-  transform:translateY(-5px);
-  border-color:#8b5cf655;
-  box-shadow:0 20px 50px #0005;
-}
-
-.menu-card .icon{
-  font-size:35px;
-  margin-bottom:12px;
-}
-
-.menu-card h3{
-  font-size:20px;
-  margin-bottom:6px;
-}
-
-.menu-card p{
-  color:var(--muted);
-  font-size:14px;
-}
-
-/* =========================
-   GAME MODES
-========================= */
-
-.mode-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.mode-card{
-  padding:25px;
-  border-radius:23px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  text-align:left;
-  transition:.2s;
-}
-
-.mode-card:hover{
-  transform:translateY(-5px);
-  border-color:#38bdf855;
-}
-
-.mode-icon{
-  font-size:42px;
-  margin-bottom:14px;
-}
-
-.mode-card h3{
-  font-size:22px;
-  margin-bottom:7px;
-}
-
-.mode-card p{
-  color:var(--muted);
-  line-height:1.5;
-}
-
-/* =========================
-   WORLD MAP
-========================= */
-
-.world-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.world{
-  min-height:205px;
-  padding:22px;
-  border-radius:24px;
-  border:1px solid var(--border);
-  background:linear-gradient(145deg,#ffffff0b,#ffffff03);
-  text-align:left;
-  transition:.25s;
-}
-
-.world:hover{
-  transform:translateY(-5px) scale(1.01);
-}
-
-.world.locked{
-  opacity:.45;
-  filter:grayscale(.8);
-}
-
-.world-icon{
-  font-size:48px;
-}
-
-.world h3{
-  margin:12px 0 7px;
-  font-size:21px;
-}
-
-.world p{
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.5;
-}
-
-.world-progress{
-  margin-top:15px;
-}
-
-.world-progress-text{
+.topbar{
   display:flex;
   justify-content:space-between;
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* =========================
-   LEVELS
-========================= */
-
-.level-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-}
-
-.level-btn{
-  padding:22px 8px;
-  border-radius:17px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-  font-weight:900;
-  transition:.2s;
-}
-
-.level-btn:hover:not(.locked){
-  transform:translateY(-4px);
-  border-color:var(--accent);
-}
-
-.level-btn.done{
-  background:#22c55e15;
-  border-color:#22c55e44;
-}
-
-.level-btn.locked{
-  opacity:.35;
-  cursor:not-allowed;
-}
-
-/* =========================
-   GAME
-========================= */
-
-.game-header{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
+  align-items:center;
   gap:10px;
+  flex-wrap:wrap;
   margin-bottom:18px;
 }
 
-.game-stat{
-  padding:13px;
-  text-align:center;
-  border-radius:16px;
-  background:#ffffff08;
+.game-info{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.info-pill{
+  padding:9px 13px;
+  background:var(--card);
   border:1px solid var(--border);
-}
-
-.game-stat small{
-  display:block;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.game-stat b{
-  font-size:20px;
-}
-
-.timer{
-  height:10px;
-  border-radius:20px;
-  background:#ffffff12;
-  overflow:hidden;
-  margin:15px 0;
-}
-
-.timer div{
-  width:100%;
-  height:100%;
-  background:linear-gradient(90deg,var(--green),var(--gold),var(--red));
-  transition:width 1s linear;
+  border-radius:999px;
+  font-weight:900;
+  font-size:13px;
 }
 
 .question{
-  min-height:260px;
-  display:grid;
-  place-items:center;
   text-align:center;
-  font-size:clamp(40px,8vw,80px);
+  font-size:clamp(42px,10vw,78px);
   font-weight:1000;
-  letter-spacing:-2px;
+  margin:35px 0;
+  letter-spacing:-3px;
 }
 
 .answer-row{
   display:flex;
   gap:10px;
+  max-width:550px;
+  margin:auto;
 }
 
-.answer-row input{
+.answer-input{
   flex:1;
   min-width:0;
-  padding:17px;
-  border-radius:16px;
   border:1px solid var(--border);
-  background:#0005;
-  color:#fff;
   outline:none;
-  font-size:25px;
-  text-align:center;
-}
-
-.answer-row input:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px #8b5cf622;
-}
-
-.answer-row button{
-  min-width:170px;
-}
-
-.message{
-  min-height:48px;
-  padding:14px;
+  background:var(--card);
+  color:var(--text);
+  border-radius:16px;
+  padding:16px;
+  font-size:22px;
   text-align:center;
   font-weight:900;
 }
 
-.ok{
+.answer-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(108,99,255,.15);
+}
+
+.feedback{
+  text-align:center;
+  min-height:35px;
+  margin-top:18px;
+  font-size:18px;
+  font-weight:1000;
+}
+
+.correct{
   color:var(--green);
 }
 
-.bad{
+.wrong{
   color:var(--red);
 }
 
-/* =========================
-   PROFILE / STATS
-========================= */
-
-.profile-layout{
-  display:grid;
-  grid-template-columns:.8fr 1.2fr;
-  gap:16px;
-}
-
-.profile-card{
+.center{
   text-align:center;
 }
 
-.big-avatar{
-  width:110px;
-  height:110px;
-  margin:10px auto 15px;
-  border-radius:32px;
-  display:grid;
-  place-items:center;
-  font-size:55px;
-  background:linear-gradient(135deg,var(--accent),var(--pink));
-  box-shadow:0 20px 50px #8b5cf644;
+.back{
+  margin-top:20px;
 }
 
-.rank{
-  color:var(--gold);
-  font-weight:900;
-}
-
-.stats-grid{
+.setting-list{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
   gap:12px;
-}
-
-.stat-box{
-  padding:20px;
-  border-radius:18px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-}
-
-.stat-box small{
-  color:var(--muted);
-}
-
-.stat-box h2{
-  margin-top:7px;
-}
-
-/* =========================
-   ACHIEVEMENTS
-========================= */
-
-.achievement-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:13px;
-}
-
-.achievement{
-  padding:20px;
-  border-radius:19px;
-  background:var(--panel);
-  border:1px solid var(--border);
-}
-
-.achievement.locked{
-  opacity:.4;
-}
-
-.achievement-icon{
-  font-size:34px;
-  margin-bottom:10px;
-}
-
-/* =========================
-   SHOP
-========================= */
-
-.shop-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:13px;
-}
-
-.shop-item{
-  padding:20px;
-  border-radius:20px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  text-align:center;
-}
-
-.shop-icon{
-  font-size:48px;
-  margin-bottom:12px;
-}
-
-.shop-item h3{
-  margin-bottom:5px;
-}
-
-.shop-item p{
-  color:var(--muted);
-  font-size:13px;
-  margin-bottom:15px;
-}
-
-.buy{
-  width:100%;
-  padding:11px;
-  border-radius:12px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  font-weight:900;
-}
-
-/* =========================
-   LEADERBOARD
-========================= */
-
-.leaderboard{
-  display:grid;
-  gap:10px;
-}
-
-.player-row{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:16px;
-  border-radius:17px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-}
-
-.position{
-  width:35px;
-  font-weight:1000;
-  font-size:18px;
-}
-
-.player-avatar{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  background:#8b5cf622;
-}
-
-.player-info{
-  flex:1;
-}
-
-.player-info small{
-  color:var(--muted);
-}
-
-/* =========================
-   DAILY
-========================= */
-
-.daily{
-  text-align:center;
-  padding:45px 20px;
-  background:
-    radial-gradient(circle,#8b5cf633,transparent 35%),
-    var(--panel);
-}
-
-.daily-icon{
-  font-size:70px;
-  margin-bottom:15px;
-}
-
-.daily h2{
-  font-size:36px;
-}
-
-.daily p{
-  color:var(--muted);
-  margin:12px auto 22px;
-  max-width:600px;
-}
-
-/* =========================
-   SETTINGS
-========================= */
-
-.settings{
-  display:grid;
-  gap:10px;
 }
 
 .setting{
@@ -882,212 +474,193 @@ button{
   justify-content:space-between;
   gap:15px;
   padding:18px;
-  border-radius:17px;
-  background:var(--panel2);
   border:1px solid var(--border);
+  background:var(--card);
+  border-radius:18px;
 }
 
-.setting p{
+.setting-text strong{
+  display:block;
+  font-size:16px;
+  margin-bottom:4px;
+}
+
+.setting-text span{
   color:var(--muted);
   font-size:13px;
-  margin-top:4px;
 }
 
 .toggle{
-  width:52px;
-  height:28px;
-  border-radius:30px;
-  background:#ffffff18;
   position:relative;
-  flex-shrink:0;
-}
-
-.toggle:after{
-  content:"";
-  position:absolute;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:#fff;
-  top:3px;
-  left:4px;
+  width:58px;
+  height:32px;
+  flex:none;
+  border:0;
+  border-radius:99px;
+  background:#505a70;
+  cursor:pointer;
   transition:.2s;
 }
 
+.toggle::after{
+  content:"";
+  position:absolute;
+  width:24px;
+  height:24px;
+  top:4px;
+  left:4px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+  box-shadow:0 2px 5px rgba(0,0,0,.25);
+}
+
 .toggle.on{
-  background:var(--accent);
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
 }
 
-.toggle.on:after{
-  left:26px;
+.toggle.on::after{
+  left:30px;
 }
 
-/* =========================
-   TOAST
-========================= */
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.achievement{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.achievement-icon{
+  width:55px;
+  height:55px;
+  display:grid;
+  place-items:center;
+  font-size:27px;
+  border-radius:15px;
+  background:rgba(255,200,87,.12);
+}
+
+.achievement.locked{
+  opacity:.4;
+  filter:grayscale(1);
+}
+
+.record-list{
+  display:grid;
+  gap:10px;
+}
+
+.record{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:var(--card);
+}
+
+.profile{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:20px;
+  align-items:center;
+}
+
+.avatar{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid var(--accent);
+}
+
+.xp-track{
+  height:13px;
+  background:rgba(255,255,255,.08);
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.xp-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold),#ff8f00);
+  width:0%;
+  transition:.4s;
+}
+
+#timer{
+  color:var(--gold);
+}
 
 .toast{
   position:fixed;
-  right:20px;
-  bottom:20px;
-  padding:15px 19px;
-  border-radius:15px;
-  background:#10172c;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  transform:translateY(120px);
-  opacity:0;
-  transition:.3s;
-  z-index:100;
-}
-
-.toast.show{
-  transform:none;
-  opacity:1;
-}
-
-/* =========================
-   BOTTOM NAV
-========================= */
-
-.bottom-nav{
-  position:fixed;
-  bottom:15px;
   left:50%;
-  transform:translateX(-50%);
-  width:min(700px,92%);
-  padding:9px;
-  display:flex;
-  justify-content:space-around;
-  gap:5px;
-  border:1px solid var(--border);
-  background:rgba(8,12,28,.88);
-  backdrop-filter:blur(20px);
-  border-radius:22px;
-  z-index:80;
-  box-shadow:0 20px 70px #0008;
-}
-
-.nav-btn{
-  flex:1;
-  padding:10px 7px;
+  bottom:25px;
+  transform:translate(-50%,20px);
+  padding:13px 18px;
   border-radius:14px;
-  background:transparent;
-  color:var(--muted);
-  font-size:11px;
+  background:#111827;
+  color:white;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 15px 40px rgba(0,0,0,.35);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:9999;
   font-weight:800;
 }
 
-.nav-btn span{
-  display:block;
-  font-size:19px;
-  margin-bottom:3px;
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-.nav-btn.active{
-  color:#fff;
-  background:#8b5cf622;
-}
-
-/* =========================
-   BACK
-========================= */
-
-.back{
-  margin-top:18px;
-  padding:11px 17px;
-  border-radius:13px;
-  background:transparent;
-  border:1px solid var(--border);
+footer{
+  text-align:center;
   color:var(--muted);
+  margin-top:40px;
+  font-size:12px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:900px){
-  .hero,
-  .dashboard-grid,
-  .profile-layout{
-    grid-template-columns:1fr;
-  }
-
-  .menu-grid,
-  .mode-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .world-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .shop-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:650px){
+@media(max-width:600px){
   .app{
-    width:94%;
-    padding-top:10px;
+    width:92%;
   }
 
-  .topbar{
-    position:relative;
-    top:0;
+  .hero-image{
+    width:140px;
+    height:140px;
   }
 
-  .brand span{
-    display:none;
-  }
-
-  .hero{
-    min-height:auto;
-  }
-
-  .hero-art{
-    min-height:280px;
-  }
-
-  .logo-title{
+  h1{
     letter-spacing:-2px;
   }
 
-  .menu-grid,
-  .mode-grid,
-  .world-grid,
-  .achievement-grid,
-  .shop-grid{
+  .profile{
     grid-template-columns:1fr;
+    text-align:center;
   }
 
-  .quick-stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .game-header{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .question{
-    min-height:210px;
+  .avatar{
+    margin:auto;
   }
 
   .answer-row{
     flex-direction:column;
   }
 
-  .answer-row button{
+  .answer-input{
     width:100%;
   }
 
-  .level-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .bottom-nav{
-    width:95%;
+  .setting{
+    align-items:flex-start;
   }
 }
 </style>
@@ -1097,732 +670,549 @@ button{
 
 <div class="app">
 
-<!-- ================= TOPBAR ================= -->
+<header>
+  <div class="logo">CALCULE LEGENDS</div>
 
-<header class="topbar">
-
-  <div class="brand">
-    <div class="brand-icon">🧠</div>
-    <span>CALCULE LEGENDS</span>
+  <div class="header-right">
+    <div class="header-pill">🏆 <span id="headerLevel">1</span></div>
+    <div class="header-pill">🪙 <span id="headerCoins">0</span></div>
   </div>
-
-  <div class="top-actions">
-    <div class="currency">🪙 <span id="topCoins">0</span></div>
-    <div class="currency">⭐ <span id="topXP">0</span></div>
-    <div class="avatar">😎</div>
-  </div>
-
 </header>
 
 
-<!-- ================= HOME ================= -->
-
+<!-- HOME -->
 <section id="home" class="screen active">
-
   <div class="hero">
+    <div class="hero-box">
 
-    <div class="hero-text">
+      <img src="gelutzu.jpeg" class="hero-image" alt="Calcule Legends">
 
-      <span class="badge">⚡ SEZONUL 1 • LEGENDARY</span>
-
-      <h1 class="logo-title">
+      <h1>
         CALCULE<br>
-        LEGENDS
+        <span class="gradient">LEGENDS</span>
       </h1>
 
-      <p class="hero-sub">
-        Transformă matematica într-un joc.
-        Fă combo-uri, câștigă XP, deblochează lumi
-        și devino cea mai mare legendă a calculelor.
+      <p class="subtitle">
+        Devino o legendă a matematicii. Rezolvă calcule,
+        câștigă XP, urcă în nivel și bate-ți recordurile!
       </p>
 
-      <div class="hero-buttons">
-
-        <button class="primary" onclick="show('dashboard')">
-          ▶ JOACĂ ACUM
-        </button>
-
-        <button class="secondary" onclick="show('daily')">
-          🎯 PROVOCAREA ZILEI
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="hero-art">
-      <div class="hero-art-icon">🧠⚡</div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= DASHBOARD ================= -->
-
-<section id="dashboard" class="screen">
-
-  <div class="section-head">
-    <div>
-      <h2 class="title">Dashboard</h2>
-      <p class="sub">Bine ai revenit, Legendă! 👑</p>
-    </div>
-  </div>
-
-  <div class="dashboard-grid">
-
-    <div class="card welcome">
-
-      <h1>Pregătit pentru următoarea provocare?</h1>
-
-      <p>
-        Continuă aventura și adună cât mai mult XP.
-      </p>
-
-      <div class="quick-stats">
-
-        <div class="stat-card">
-          <div class="stat-icon">⭐</div>
-          <small>NIVEL</small>
-          <strong id="dashLevel">1</strong>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">⚡</div>
-          <small>XP</small>
-          <strong id="dashXP">0</strong>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">🔥</div>
-          <small>STREAK</small>
-          <strong id="dashStreak">0</strong>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">🏆</div>
-          <small>RECORD</small>
-          <strong id="dashRecord">0</strong>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="card">
-
-      <div class="section-head">
-        <h2>Progres XP</h2>
-      </div>
-
-      <h1 id="dashXpText">0 / 250</h1>
-
-      <div class="progress">
-        <div id="dashXpBar"></div>
-      </div>
-
-      <p class="sub" style="margin-top:12px">
-        Mai ai nevoie de XP pentru următorul nivel.
-      </p>
-
-      <button class="primary" style="width:100%" onclick="show('modes')">
-        ⚡ CONTINUĂ
+      <button class="btn big-btn" onclick="show('menu')">
+        🚀 INTRĂ ÎN JOC
       </button>
 
     </div>
-
   </div>
+</section>
 
-  <br>
 
-  <div class="section-head">
-    <h2>⚡ Acces rapid</h2>
-  </div>
+<!-- MENU -->
+<section id="menu" class="screen">
+
+  <div class="section-title">🎮 MENIU PRINCIPAL</div>
+  <p class="section-desc">Alege ce vrei să faci.</p>
 
   <div class="menu-grid">
 
-    <button class="menu-card" onclick="show('modes')">
-      <div class="icon">⚡</div>
-      <h3>Moduri de joc</h3>
-      <p>Alege stilul tău de joc.</p>
+    <button class="menu-btn" onclick="show('modes')">
+      <span class="menu-icon">🎮</span>
+      <strong>Moduri de joc</strong>
+      <span>Alege modul perfect pentru tine.</span>
     </button>
 
-    <button class="menu-card" onclick="openCampaign()">
-      <div class="icon">🗺️</div>
-      <h3>Campanie</h3>
-      <p>Explorează cele 6 lumi.</p>
+    <button class="menu-btn" onclick="show('campaign')">
+      <span class="menu-icon">🗺️</span>
+      <strong>Campanie</strong>
+      <span>Explorează lumi și nivele.</span>
     </button>
 
-    <button class="menu-card" onclick="show('shop')">
-      <div class="icon">🛒</div>
-      <h3>Magazin</h3>
-      <p>Cheltuie monedele câștigate.</p>
+    <button class="menu-btn" onclick="show('profile');updateUI()">
+      <span class="menu-icon">👤</span>
+      <strong>Profil</strong>
+      <span>Vezi nivelul, XP-ul și progresul.</span>
     </button>
 
-    <button class="menu-card" onclick="show('leaderboard')">
-      <div class="icon">🏆</div>
-      <h3>Clasament</h3>
-      <p>Vezi cei mai buni jucători.</p>
+    <button class="menu-btn" onclick="show('statsPage');updateUI()">
+      <span class="menu-icon">📊</span>
+      <strong>Statistici</strong>
+      <span>Analizează performanța.</span>
     </button>
 
-    <button class="menu-card" onclick="show('achievements')">
-      <div class="icon">🏅</div>
-      <h3>Realizări</h3>
-      <p>Deblochează insigne.</p>
+    <button class="menu-btn" onclick="show('records');updateUI()">
+      <span class="menu-icon">🏆</span>
+      <strong>Recorduri</strong>
+      <span>Vezi cele mai bune rezultate.</span>
     </button>
 
-    <button class="menu-card" onclick="show('profile')">
-      <div class="icon">👤</div>
-      <h3>Profil</h3>
-      <p>Vezi progresul tău.</p>
+    <button class="menu-btn" onclick="show('achievements');updateUI()">
+      <span class="menu-icon">🎖️</span>
+      <strong>Achievement-uri</strong>
+      <span>Deblochează realizări.</span>
     </button>
 
+    <button class="menu-btn" onclick="show('settings');updateSettingsUI()">
+      <span class="menu-icon">⚙️</span>
+      <strong>Setări</strong>
+      <span>Sunet, animații și temă.</span>
+    </button>
+
+  </div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('home')">← Înapoi</button>
   </div>
 
 </section>
 
 
-<!-- ================= MODES ================= -->
-
+<!-- MODES -->
 <section id="modes" class="screen">
 
-  <h2 class="title">⚡ Moduri de joc</h2>
-  <p class="sub">Alege modul care ți se potrivește.</p>
+  <div class="section-title">🎮 MODURI DE JOC</div>
+  <p class="section-desc">Alege provocarea.</p>
 
-  <div class="mode-grid">
+  <div class="grid">
 
-    <button class="mode-card" onclick="chooseMode('free')">
-      <div class="mode-icon">♾️</div>
-      <h3>Joc Liber</h3>
-      <p>Fără timer. Perfect pentru antrenament.</p>
+    <button class="choice" onclick="selectMode('free')">
+      🧮 Free Play
+      <small>Joacă fără limită.</small>
     </button>
 
-    <button class="mode-card" onclick="chooseMode('rapid')">
-      <div class="mode-icon">⚡</div>
-      <h3>Rapid</h3>
-      <p>Rezolvă calculele înainte să expire timpul.</p>
+    <button class="choice" onclick="selectMode('rapid')">
+      ⚡ Rapid
+      <small>Rezolvă cât mai multe rapid.</small>
     </button>
 
-    <button class="mode-card" onclick="chooseMode('survival')">
-      <div class="mode-icon">❤️</div>
-      <h3>Supraviețuire</h3>
-      <p>Ai doar 3 vieți. Cât reziști?</p>
+    <button class="choice" onclick="selectMode('survival')">
+      ❤️ Survival
+      <small>Ai 3 vieți. Nu greși!</small>
     </button>
 
-    <button class="mode-card" onclick="chooseMode('time')">
-      <div class="mode-icon">⏱️</div>
-      <h3>Contra Timp</h3>
-      <p>60 de secunde pentru cât mai multe puncte.</p>
+    <button class="choice" onclick="selectMode('time')">
+      ⏱️ Time Attack
+      <small>Ai 60 de secunde.</small>
     </button>
 
-    <button class="mode-card" onclick="chooseMode('challenge')">
-      <div class="mode-icon">🔥</div>
-      <h3>Provocare</h3>
-      <p>10 calcule. Fără greșeli.</p>
+    <button class="choice" onclick="selectMode('challenge')">
+      🔥 Challenge
+      <small>Calcule din ce în ce mai grele.</small>
     </button>
 
-    <button class="mode-card" onclick="chooseMode('zen')">
-      <div class="mode-icon">🧘</div>
-      <h3>Zen</h3>
-      <p>Fără timer și fără presiune.</p>
+    <button class="choice" onclick="selectMode('zen')">
+      🧘 Zen
+      <small>Fără presiune. Doar matematică.</small>
     </button>
 
+  </div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
   </div>
 
 </section>
 
 
-<!-- ================= DIFFICULTY ================= -->
-
+<!-- DIFFICULTY -->
 <section id="difficulty" class="screen">
 
-  <h2 class="title">🎯 Dificultate</h2>
-  <p class="sub">Cât de greu vrei să fie?</p>
+  <div class="section-title">🔥 DIFICULTATE</div>
+  <p class="section-desc">Cât de greu vrei să fie?</p>
 
-  <div class="mode-grid">
+  <div class="grid">
 
-    <button class="mode-card" onclick="startGame('easy')">
-      <div class="mode-icon">🟢</div>
-      <h3>Ușor</h3>
-      <p>Adunări și scăderi.</p>
+    <button class="choice" onclick="startGame('easy')">
+      🟢 Easy
+      <small>Perfect pentru încălzire.</small>
     </button>
 
-    <button class="mode-card" onclick="startGame('medium')">
-      <div class="mode-icon">🟠</div>
-      <h3>Mediu</h3>
-      <p>Numere mai mari și înmulțiri.</p>
+    <button class="choice" onclick="startGame('medium')">
+      🟡 Medium
+      <small>Puțin mai serios.</small>
     </button>
 
-    <button class="mode-card" onclick="startGame('hard')">
-      <div class="mode-icon">🔴</div>
-      <h3>Greu</h3>
-      <p>Operații mixte și paranteze.</p>
+    <button class="choice" onclick="startGame('hard')">
+      🔴 Hard
+      <small>Pentru jucători experimentați.</small>
     </button>
 
-    <button class="mode-card" onclick="startGame('insane')">
-      <div class="mode-icon">💀</div>
-      <h3>Imposibil</h3>
-      <p>Doar pentru adevăratele legende.</p>
+    <button class="choice" onclick="startGame('insane')">
+      💀 Insane
+      <small>Doar pentru legende.</small>
     </button>
 
+  </div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('modes')">← Moduri</button>
   </div>
 
 </section>
 
 
-<!-- ================= CAMPAIGN ================= -->
-
+<!-- CAMPAIGN -->
 <section id="campaign" class="screen">
 
-  <h2 class="title">🗺️ Campania Legendary</h2>
-
-  <p class="sub">
-    Termină toate cele 10 niveluri pentru a debloca lumea următoare.
+  <div class="section-title">🗺️ CAMPANIE</div>
+  <p class="section-desc">
+    Completează lumile pentru a debloca următoarele.
   </p>
 
-  <div id="worlds" class="world-grid"></div>
+  <div class="level-grid" id="campaignLevels"></div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
+  </div>
 
 </section>
 
 
-<!-- ================= LEVELS ================= -->
-
+<!-- WORLD LEVELS -->
 <section id="worldLevels" class="screen">
 
-  <h2 id="worldTitle" class="title">Lumea 1</h2>
+  <div class="section-title" id="worldTitle">🌎 Lume</div>
+  <p class="section-desc" id="worldDescription"></p>
 
-  <p id="worldDesc" class="sub"></p>
+  <div class="level-grid" id="worldLevelGrid"></div>
 
-  <div class="card">
-
-    <div id="levels" class="level-grid"></div>
-
+  <div class="center back">
+    <button class="btn secondary" onclick="show('campaign')">← Lumi</button>
   </div>
 
 </section>
 
 
-<!-- ================= GAME ================= -->
-
+<!-- GAME -->
 <section id="game" class="screen">
 
-  <div class="card">
+  <div class="topbar">
 
-    <div class="game-header">
-
-      <div class="game-stat">
-        <small>SCOR</small>
-        <b id="score">0</b>
-      </div>
-
-      <div class="game-stat">
-        <small>COMBO 🔥</small>
-        <b id="combo">0</b>
-      </div>
-
-      <div class="game-stat">
-        <small>VIEȚI ❤️</small>
-        <b id="lives">3</b>
-      </div>
-
-      <div class="game-stat">
-        <small>NIVEL</small>
-        <b id="level">1</b>
-      </div>
-
-      <div class="game-stat">
-        <small>TIMP</small>
-        <b id="time">∞</b>
-      </div>
-
+    <div class="game-info">
+      <div class="info-pill">⭐ <span id="gameScore">0</span></div>
+      <div class="info-pill">🔥 Combo <span id="gameCombo">0</span></div>
+      <div class="info-pill">❤️ <span id="gameLives">∞</span></div>
+      <div class="info-pill">⏱️ <span id="timer">∞</span></div>
     </div>
 
-    <div id="campaignInfo" class="sub"></div>
+    <button class="btn secondary" onclick="exitGame()">✕ Ieșire</button>
 
-    <div id="timer" class="timer">
-      <div id="timerFill"></div>
-    </div>
+  </div>
 
-    <div id="question" class="question">
-      ...
-    </div>
+  <div class="card center">
+
+    <div id="gameModeText" class="section-desc"></div>
+
+    <div class="question" id="question">2 + 2 = ?</div>
 
     <div class="answer-row">
-
       <input
         id="answer"
+        class="answer-input"
         type="number"
-        placeholder="Răspunsul tău"
+        inputmode="numeric"
         autocomplete="off"
+        placeholder="Răspuns"
       >
 
-      <button class="primary" onclick="checkAnswer()">
-        VERIFICĂ ⚡
-      </button>
-
+      <button class="btn" onclick="submitAnswer()">✓</button>
     </div>
 
-    <div id="message" class="message"></div>
-
-    <div class="progress">
-      <div id="xpBar"></div>
-    </div>
-
-    <button class="back" onclick="endGame()">
-      TERMINĂ JOCUL
-    </button>
+    <div id="feedback" class="feedback"></div>
 
   </div>
 
 </section>
 
 
-<!-- ================= DAILY ================= -->
-
-<section id="daily" class="screen">
-
-  <div class="card daily">
-
-    <div class="daily-icon">🎯</div>
-
-    <span class="badge">PROVOCAREA ZILEI</span>
-
-    <h2>Daily Math Challenge</h2>
-
-    <p>
-      Rezolvă 20 de calcule și primește un bonus special de XP și monede.
-      Provocarea se schimbă în fiecare zi.
-    </p>
-
-    <button class="primary" onclick="startDaily()">
-      🚀 ÎNCEPE PROVOCAREA
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- ================= PROFILE ================= -->
-
+<!-- PROFILE -->
 <section id="profile" class="screen">
 
-  <h2 class="title">👤 Profil</h2>
+  <div class="section-title">👤 PROFIL</div>
 
-  <div class="profile-layout">
+  <div class="card profile">
 
-    <div class="card profile-card">
+    <img src="gelutzu.jpeg" class="avatar" alt="Avatar">
 
-      <div class="big-avatar">😎</div>
+    <div>
 
       <h2>Math Legend</h2>
 
-      <p class="rank" id="rank">
-        🐣 Începător
+      <p class="section-desc">
+        Nivel <strong id="profileLevel">1</strong>
+        · <span id="profileCoins">0</span> 🪙
       </p>
 
-      <div class="progress">
-        <div id="profileXp"></div>
+      <div class="xp-track">
+        <div class="xp-fill" id="xpFill"></div>
       </div>
 
-      <p class="sub" id="profileXpText">
-        0 XP
+      <p class="section-desc" style="margin-top:8px">
+        XP: <span id="profileXP">0</span> /
+        <span id="profileNextXP">100</span>
       </p>
-
-    </div>
-
-    <div class="stats-grid">
-
-      <div class="stat-box">
-        <small>⭐ NIVEL</small>
-        <h2 id="profileLevel">1</h2>
-      </div>
-
-      <div class="stat-box">
-        <small>⚡ XP</small>
-        <h2 id="xp">0</h2>
-      </div>
-
-      <div class="stat-box">
-        <small>🪙 MONEDE</small>
-        <h2 id="coins">0</h2>
-      </div>
-
-      <div class="stat-box">
-        <small>🔥 STREAK</small>
-        <h2 id="profileStreak">0</h2>
-      </div>
 
     </div>
 
   </div>
 
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
+  </div>
+
 </section>
 
 
-<!-- ================= STATS ================= -->
-
+<!-- STATS -->
 <section id="statsPage" class="screen">
 
-  <h2 class="title">📊 Statistici</h2>
+  <div class="section-title">📊 STATISTICI</div>
 
   <div class="stats-grid">
 
-    <div class="stat-box">
-      <small>✅ CORECTE</small>
-      <h2 id="correctStat">0</h2>
+    <div class="stat">
+      <div class="stat-label">Corecte</div>
+      <div class="stat-value" id="statCorrect">0</div>
     </div>
 
-    <div class="stat-box">
-      <small>❌ GREȘITE</small>
-      <h2 id="wrongStat">0</h2>
+    <div class="stat">
+      <div class="stat-label">Greșite</div>
+      <div class="stat-value" id="statWrong">0</div>
     </div>
 
-    <div class="stat-box">
-      <small>🎯 PRECIZIE</small>
-      <h2 id="accuracy">0%</h2>
+    <div class="stat">
+      <div class="stat-label">Precizie</div>
+      <div class="stat-value" id="statAccuracy">0%</div>
     </div>
 
-    <div class="stat-box">
-      <small>🔥 COMBO MAXIM</small>
-      <h2 id="maxCombo">0</h2>
+    <div class="stat">
+      <div class="stat-label">Record</div>
+      <div class="stat-value" id="statRecord">0</div>
     </div>
 
-    <div class="stat-box">
-      <small>🏆 RECORD</small>
-      <h2 id="recordStat">0</h2>
+    <div class="stat">
+      <div class="stat-label">Max Combo</div>
+      <div class="stat-value" id="statCombo">0</div>
     </div>
 
-    <div class="stat-box">
-      <small>🗺️ LUMI TERMINATE</small>
-      <h2 id="worldStat">0</h2>
+    <div class="stat">
+      <div class="stat-label">XP</div>
+      <div class="stat-value" id="statXP">0</div>
     </div>
 
+  </div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
   </div>
 
 </section>
 
 
-<!-- ================= LEADERBOARD ================= -->
+<!-- RECORDS -->
+<section id="records" class="screen">
 
-<section id="leaderboard" class="screen">
+  <div class="section-title">🏆 RECORDURI</div>
 
-  <h2 class="title">🏆 Clasament</h2>
+  <div class="record-list">
 
-  <p class="sub">
-    Top legende ale săptămânii.
-  </p>
-
-  <div class="card leaderboard">
-
-    <div class="player-row">
-      <div class="position">🥇</div>
-      <div class="player-avatar">👑</div>
-      <div class="player-info">
-        <b>MathMaster</b>
-        <small>Level 42</small>
-      </div>
-      <strong>98.420 XP</strong>
+    <div class="record">
+      <span>🏆 Cel mai mare scor</span>
+      <strong id="recordScore">0</strong>
     </div>
 
-    <div class="player-row">
-      <div class="position">🥈</div>
-      <div class="player-avatar">🔥</div>
-      <div class="player-info">
-        <b>SpeedLegend</b>
-        <small>Level 37</small>
-      </div>
-      <strong>84.210 XP</strong>
+    <div class="record">
+      <span>🔥 Cel mai mare combo</span>
+      <strong id="recordCombo">0</strong>
     </div>
 
-    <div class="player-row">
-      <div class="position">🥉</div>
-      <div class="player-avatar">⚡</div>
-      <div class="player-info">
-        <b>CalcPro</b>
-        <small>Level 31</small>
-      </div>
-      <strong>71.880 XP</strong>
+    <div class="record">
+      <span>✅ Răspunsuri corecte</span>
+      <strong id="recordCorrect">0</strong>
     </div>
 
-    <div class="player-row">
-      <div class="position">4</div>
-      <div class="player-avatar">😎</div>
-      <div class="player-info">
-        <b>Tu</b>
-        <small id="leaderLevel">Level 1</small>
-      </div>
-      <strong id="leaderXP">0 XP</strong>
-    </div>
+  </div>
 
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
   </div>
 
 </section>
 
 
-<!-- ================= ACHIEVEMENTS ================= -->
-
+<!-- ACHIEVEMENTS -->
 <section id="achievements" class="screen">
 
-  <h2 class="title">🏅 Realizări</h2>
+  <div class="section-title">🎖️ ACHIEVEMENT-URI</div>
 
-  <div class="achievement-grid">
+  <div class="grid">
 
-    <div class="achievement" id="a1">
-      <div class="achievement-icon">🌲</div>
-      <h3>Pădurea cucerită</h3>
-      <p class="sub">Terminǎ Lumea 1.</p>
+    <div class="card achievement" id="achievement1">
+      <div class="achievement-icon">🌱</div>
+      <div>
+        <strong>Prima victorie</strong>
+        <p class="section-desc">Rezolvă primul calcul.</p>
+      </div>
     </div>
 
-    <div class="achievement locked" id="a2">
-      <div class="achievement-icon">❄️</div>
-      <h3>Regele gheții</h3>
-      <p class="sub">Terminǎ Lumea 2.</p>
+    <div class="card achievement" id="achievement2">
+      <div class="achievement-icon">🔥</div>
+      <div>
+        <strong>Combo x10</strong>
+        <p class="section-desc">Ajungi la combo 10.</p>
+      </div>
     </div>
 
-    <div class="achievement locked" id="a3">
-      <div class="achievement-icon">🚀</div>
-      <h3>Explorator spațial</h3>
-      <p class="sub">Terminǎ Lumea 3.</p>
+    <div class="card achievement" id="achievement3">
+      <div class="achievement-icon">🏆</div>
+      <div>
+        <strong>Scor 100</strong>
+        <p class="section-desc">Obține un scor de 100.</p>
+      </div>
     </div>
 
-    <div class="achievement locked" id="a4">
-      <div class="achievement-icon">🌋</div>
-      <h3>Stăpânul vulcanului</h3>
-      <p class="sub">Terminǎ Lumea 4.</p>
-    </div>
-
-    <div class="achievement locked" id="a5">
-      <div class="achievement-icon">🤖</div>
-      <h3>Cyber Legend</h3>
-      <p class="sub">Terminǎ Lumea 5.</p>
-    </div>
-
-    <div class="achievement locked" id="a6">
+    <div class="card achievement" id="achievement4">
       <div class="achievement-icon">👑</div>
-      <h3>ULTIMATE LEGEND</h3>
-      <p class="sub">Terminǎ toate lumile.</p>
+      <div>
+        <strong>Legendă</strong>
+        <p class="section-desc">Ajungi la nivelul 10.</p>
+      </div>
     </div>
 
+  </div>
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">← Meniu</button>
   </div>
 
 </section>
 
 
-<!-- ================= SHOP ================= -->
-
-<section id="shop" class="screen">
-
-  <h2 class="title">🛒 Magazin</h2>
-
-  <p class="sub">
-    Folosește monedele pentru a-ți personaliza experiența.
-  </p>
-
-  <div class="shop-grid">
-
-    <div class="shop-item">
-      <div class="shop-icon">😎</div>
-      <h3>Avatar Cool</h3>
-      <p>Un avatar nou.</p>
-      <button class="buy" onclick="buyItem('Avatar Cool',100)">
-        🪙 100
-      </button>
-    </div>
-
-    <div class="shop-item">
-      <div class="shop-icon">🔥</div>
-      <h3>Flame Theme</h3>
-      <p>Interfață cu efecte de foc.</p>
-      <button class="buy" onclick="buyItem('Flame Theme',250)">
-        🪙 250
-      </button>
-    </div>
-
-    <div class="shop-item">
-      <div class="shop-icon">⚡</div>
-      <h3>Lightning</h3>
-      <p>Efect special pentru combo.</p>
-      <button class="buy" onclick="buyItem('Lightning',350)">
-        🪙 350
-      </button>
-    </div>
-
-    <div class="shop-item">
-      <div class="shop-icon">👑</div>
-      <h3>Legend Crown</h3>
-      <p>Doar pentru legende.</p>
-      <button class="buy" onclick="buyItem('Legend Crown',1000)">
-        🪙 1000
-      </button>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= SETTINGS ================= -->
-
+<!-- SETTINGS -->
 <section id="settings" class="screen">
 
-  <h2 class="title">⚙️ Setări</h2>
+  <div class="section-title">⚙️ SETĂRI</div>
+  <p class="section-desc">
+    Personalizează experiența CALCULE LEGENDS.
+  </p>
 
-  <div class="card settings">
+  <div class="setting-list">
 
     <div class="setting">
 
-      <div>
-        <b>🔊 Sunete</b>
-        <p>Activează efectele audio ale jocului.</p>
+      <div class="setting-text">
+        <strong>🔊 Sunete</strong>
+        <span>Activează efectele audio din joc.</span>
       </div>
 
       <button
         id="soundToggle"
-        class="toggle on"
-        onclick="toggleSetting(this)"
-      ></button>
+        class="toggle"
+        onclick="toggleSound()"
+        aria-label="Sunete">
+      </button>
 
     </div>
 
+
     <div class="setting">
 
-      <div>
-        <b>✨ Animații</b>
-        <p>Activează animațiile interfeței.</p>
+      <div class="setting-text">
+        <strong>✨ Animații</strong>
+        <span>Activează tranzițiile și animațiile.</span>
       </div>
 
       <button
-        class="toggle on"
-        onclick="toggleSetting(this)"
-      ></button>
+        id="animationToggle"
+        class="toggle"
+        onclick="toggleAnimations()"
+        aria-label="Animații">
+      </button>
 
     </div>
 
+
     <div class="setting">
 
-      <div>
-        <b>🌙 Dark Mode</b>
-        <p>Interfață optimizată pentru gaming.</p>
+      <div class="setting-text">
+        <strong>🌙 Mod întunecat</strong>
+        <span>Schimbă aspectul între dark și light.</span>
       </div>
 
       <button
-        class="toggle on"
-        onclick="toggleSetting(this)"
-      ></button>
+        id="darkToggle"
+        class="toggle"
+        onclick="toggleDarkMode()"
+        aria-label="Mod întunecat">
+      </button>
 
     </div>
 
-    <div class="setting">
+  </div>
 
-      <div>
-        <b>🗑️ Resetare progres</b>
-        <p>Șterge progresul local al jocului.</p>
+
+  <div class="actions">
+
+    <button class="btn secondary" onclick="testSound()">
+      🔊 Test sunet
+    </button>
+
+    <button class="btn danger" onclick="resetSettings()">
+      ♻️ Resetează setările
+    </button>
+
+    <button class="btn danger" onclick="resetProgress()">
+      🗑️ Șterge progresul
+    </button>
+
+  </div>
+
+
+  <div class="center back">
+    <button class="btn secondary" onclick="show('menu')">
+      ← Meniu
+    </button>
+  </div>
+
+</section>
+
+
+<!-- END -->
+<section id="end" class="screen">
+
+  <div class="hero" style="min-height:70vh">
+
+    <div class="hero-box card">
+
+      <div style="font-size:60px;margin-bottom:15px">🏆</div>
+
+      <h1 style="font-size:48px">
+        RUN <span class="gradient">FINALIZAT</span>
+      </h1>
+
+      <p class="subtitle" id="endMessage">
+        Bravo!
+      </p>
+
+      <div class="stats-grid">
+
+        <div class="stat">
+          <div class="stat-label">Scor</div>
+          <div class="stat-value" id="endScore">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Corecte</div>
+          <div class="stat-value" id="endCorrect">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Combo</div>
+          <div class="stat-value" id="endCombo">0</div>
+        </div>
+
       </div>
 
-      <button class="secondary" onclick="resetProgress()">
-        RESET
+      <button class="btn big-btn" onclick="show('menu')">
+        🎮 Continuă
       </button>
 
     </div>
@@ -1832,1366 +1222,1302 @@ button{
 </section>
 
 
-<!-- ================= END ================= -->
-
-<section id="end" class="screen">
-
-  <div class="card daily">
-
-    <div class="daily-icon">🏆</div>
-
-    <span class="badge">RUN COMPLET</span>
-
-    <h2 id="endTitle">JOC TERMINAT!</h2>
-
-    <p id="endText">
-      Scor final
-    </p>
-
-    <h1
-      id="finalScore"
-      style="font-size:75px;color:var(--gold);margin:10px 0 20px"
-    >
-      0
-    </h1>
-
-    <button class="primary" onclick="show('dashboard')">
-      ← ÎNAPOI LA DASHBOARD
-    </button>
-
-  </div>
-
-</section>
+<footer>
+  CALCULE LEGENDS · Made for Math Legends
+</footer>
 
 </div>
-
-
-<!-- ================= BOTTOM NAV ================= -->
-
-<nav class="bottom-nav">
-
-  <button class="nav-btn active" onclick="nav('dashboard',this)">
-    <span>🏠</span>
-    Acasă
-  </button>
-
-  <button class="nav-btn" onclick="nav('modes',this)">
-    <span>⚡</span>
-    Joc
-  </button>
-
-  <button class="nav-btn" onclick="nav('campaign',this)">
-    <span>🗺️</span>
-    Hartă
-  </button>
-
-  <button class="nav-btn" onclick="nav('shop',this)">
-    <span>🛒</span>
-    Shop
-  </button>
-
-  <button class="nav-btn" onclick="nav('profile',this)">
-    <span>👤</span>
-    Profil
-  </button>
-
-  <button class="nav-btn" onclick="nav('settings',this)">
-    <span>⚙️</span>
-    Setări
-  </button>
-
-</nav>
 
 
 <div id="toast" class="toast"></div>
 
 
 <script>
+/* =========================================================
+   DATE JOC
+========================================================= */
 
-/* =====================================================
-   DATA
-===================================================== */
+const defaultData = {
+  correct: 0,
+  wrong: 0,
+  record: 0,
+  maxCombo: 0,
+  xp: 0,
+  coins: 0,
+  playerLevel: 1,
+  campaignProgress: [0,0,0,0,0,0]
+};
 
-const worlds=[
- {
-  name:"Lumea 1: Pădurea Numerelor",
-  icon:"🌲",
-  desc:"Adunări și scăderi.",
-  difficulty:"easy"
- },
- {
-  name:"Lumea 2: Regatul Înghețat",
-  icon:"❄️",
-  desc:"Numere mari și înmulțiri.",
-  difficulty:"medium"
- },
- {
-  name:"Lumea 3: Galaxia Matematicii",
-  icon:"🚀",
-  desc:"Operații mixte.",
-  difficulty:"medium"
- },
- {
-  name:"Lumea 4: Vulcanul Calculului",
-  icon:"🌋",
-  desc:"Paranteze și calcule grele.",
-  difficulty:"hard"
- },
- {
-  name:"Lumea 5: Orașul Cyber",
-  icon:"🤖",
-  desc:"Calcule complexe.",
-  difficulty:"hard"
- },
- {
-  name:"Lumea 6: Castelul Final",
-  icon:"👑",
-  desc:"Ultima provocare.",
-  difficulty:"insane"
- }
-];
+let data = loadData();
 
+function loadData(){
 
-/* =====================================================
-   SAVE DATA
-===================================================== */
+  try{
 
-const saved=
- JSON.parse(localStorage.getItem("calculeLegendsUltimate")||"{}");
+    const saved = localStorage.getItem("calculeLegends");
 
-let correct=saved.correct||0;
-let wrong=saved.wrong||0;
-let record=saved.record||0;
-let maxCombo=saved.maxCombo||0;
-let xp=saved.xp||0;
-let coins=saved.coins||0;
-let playerLevel=saved.playerLevel||1;
-let streak=saved.streak||0;
+    if(!saved){
+      return {...defaultData};
+    }
 
-let campaignProgress=
- Array.isArray(saved.campaignProgress)
- ?saved.campaignProgress
- :[0,0,0,0,0,0];
+    return {
+      ...defaultData,
+      ...JSON.parse(saved)
+    };
 
+  }catch(error){
 
-/* =====================================================
-   GAME STATE
-===================================================== */
+    console.warn("Date invalide:",error);
+    return {...defaultData};
 
-let mode="";
-let difficulty="";
-let score=0;
-let combo=0;
-let lives=3;
-let answer=0;
-let time=0;
-let maxTime=0;
-let timer=null;
-let active=false;
-let round=0;
-
-let campaignWorld=null;
-let campaignLevel=null;
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const question=
- document.getElementById("question");
-
-const answerInput=
- document.getElementById("answer");
-
-const message=
- document.getElementById("message");
-
-const scoreEl=
- document.getElementById("score");
-
-const comboEl=
- document.getElementById("combo");
-
-const livesEl=
- document.getElementById("lives");
-
-const levelEl=
- document.getElementById("level");
-
-const timerFill=
- document.getElementById("timerFill");
-
-
-/* =====================================================
-   SAVE
-===================================================== */
+  }
+}
 
 function save(){
 
- localStorage.setItem(
-  "calculeLegendsUltimate",
-  JSON.stringify({
-   correct,
-   wrong,
-   record,
-   maxCombo,
-   xp,
-   coins,
-   playerLevel,
-   streak,
-   campaignProgress
-  })
- );
+  localStorage.setItem(
+    "calculeLegends",
+    JSON.stringify(data)
+  );
 
- update();
+  updateHeader();
 
 }
 
 
-/* =====================================================
-   NAVIGATION
-===================================================== */
+/* =========================================================
+   SETĂRI
+========================================================= */
 
-function show(id){
+const defaultSettings = {
+  soundEnabled: true,
+  animationsEnabled: true,
+  darkMode: true
+};
 
- document
-  .querySelectorAll(".screen")
-  .forEach(x=>x.classList.remove("active"));
+let settings = loadSettings();
 
- const target=document.getElementById(id);
+function loadSettings(){
 
- if(target)
-  target.classList.add("active");
+  try{
 
- update();
+    const saved =
+      localStorage.getItem("calculeLegendsSettings");
 
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
+    if(!saved){
+      return {...defaultSettings};
+    }
 
-}
+    return {
+      ...defaultSettings,
+      ...JSON.parse(saved)
+    };
 
+  }catch(error){
 
-function nav(id,button){
-
- document
-  .querySelectorAll(".nav-btn")
-  .forEach(x=>x.classList.remove("active"));
-
- button.classList.add("active");
-
- show(id);
-
-}
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function toast(text){
-
- const t=document.getElementById("toast");
-
- t.textContent=text;
-
- t.classList.add("show");
-
- setTimeout(()=>{
-  t.classList.remove("show");
- },2200);
-
-}
-
-
-/* =====================================================
-   RANDOM
-===================================================== */
-
-function rnd(a,b){
- return Math.floor(
-  Math.random()*(b-a+1)
- )+a;
-}
-
-
-/* =====================================================
-   QUESTION GENERATORS
-===================================================== */
-
-function makeEasy(){
-
- const type=rnd(1,2);
-
- let a=rnd(1,50);
- let b=rnd(1,50);
-
- if(type===1){
-
-  return {
-   text:`${a} + ${b} = ?`,
-   value:a+b
-  };
-
- }
-
- if(b>a)
-  [a,b]=[b,a];
-
- return {
-  text:`${a} − ${b} = ?`,
-  value:a-b
- };
-
-}
-
-
-function makeDivision(min,max,minDiv,maxDiv){
-
- const divisor=rnd(minDiv,maxDiv);
- const result=rnd(min,max);
-
- return {
-  text:`${result*divisor} ÷ ${divisor} = ?`,
-  value:result
- };
-
-}
-
-
-function makeMedium(){
-
- const type=rnd(1,4);
-
- let a,b;
-
- if(type===1){
-
-  a=rnd(20,200);
-  b=rnd(10,150);
-
-  return {
-   text:`${a} + ${b} = ?`,
-   value:a+b
-  };
-
- }
-
- if(type===2){
-
-  a=rnd(30,250);
-  b=rnd(10,a);
-
-  return {
-   text:`${a} − ${b} = ?`,
-   value:a-b
-  };
-
- }
-
- if(type===3){
-
-  a=rnd(5,30);
-  b=rnd(3,20);
-
-  return {
-   text:`${a} × ${b} = ?`,
-   value:a*b
-  };
-
- }
-
- return makeDivision(5,40,2,15);
-
-}
-
-
-function makeHard(){
-
- const type=rnd(1,6);
-
- let a,b,c;
-
- if(type===1){
-
-  a=rnd(100,500);
-  b=rnd(50,300);
-
-  return {
-   text:`${a} + ${b} = ?`,
-   value:a+b
-  };
-
- }
-
- if(type===2){
-
-  a=rnd(150,700);
-  b=rnd(20,a);
-
-  return {
-   text:`${a} − ${b} = ?`,
-   value:a-b
-  };
-
- }
-
- if(type===3){
-
-  a=rnd(10,60);
-  b=rnd(5,40);
-
-  return {
-   text:`${a} × ${b} = ?`,
-   value:a*b
-  };
-
- }
-
- if(type===4){
-
-  return makeDivision(10,100,3,25);
-
- }
-
- if(type===5){
-
-  a=rnd(10,50);
-  b=rnd(5,30);
-  c=rnd(2,15);
-
-  return {
-   text:`(${a} + ${b}) × ${c} = ?`,
-   value:(a+b)*c
-  };
-
- }
-
- a=rnd(10,50);
- b=rnd(2,15);
- c=rnd(2,20);
-
- return {
-  text:`${a} × ${b} + ${c} = ?`,
-  value:a*b+c
- };
-
-}
-
-
-function makeInsane(){
-
- const type=rnd(1,8);
-
- let a,b,c,d;
-
- if(type===1){
-
-  a=rnd(200,999);
-  b=rnd(100,700);
-  c=rnd(50,500);
-
-  return {
-   text:`${a} + ${b} − ${c} = ?`,
-   value:a+b-c
-  };
-
- }
-
- if(type===2){
-
-  a=rnd(300,1200);
-  b=rnd(50,500);
-  c=rnd(20,400);
-
-  return {
-   text:`${a} − ${b} + ${c} = ?`,
-   value:a-b+c
-  };
-
- }
-
- if(type===3){
-
-  a=rnd(20,100);
-  b=rnd(10,60);
-  c=rnd(5,30);
-
-  return {
-   text:`${a} × ${b} − ${c} = ?`,
-   value:a*b-c
-  };
-
- }
-
- if(type===4){
-
-  a=rnd(10,50);
-  b=rnd(5,30);
-  c=rnd(2,20);
-
-  return {
-   text:`(${a} + ${b}) × ${c} = ?`,
-   value:(a+b)*c
-  };
-
- }
-
- if(type===5){
-
-  a=rnd(10,40);
-  b=rnd(5,25);
-  c=rnd(2,15);
-
-  return {
-   text:`${a} × (${b} + ${c}) = ?`,
-   value:a*(b+c)
-  };
-
- }
-
- if(type===6){
-
-  a=rnd(5,30);
-  b=rnd(2,15);
-  c=rnd(2,12);
-  d=rnd(1,50);
-
-  return {
-   text:`(${a} + ${b}) × ${c} − ${d} = ?`,
-   value:(a+b)*c-d
-  };
-
- }
-
- if(type===7){
-
-  const divisor=rnd(3,20);
-  const quotient=rnd(20,150);
-
-  a=divisor*quotient;
-  b=rnd(2,50);
-  c=rnd(2,30);
-
-  return {
-   text:`${a} ÷ ${divisor} + ${b} × ${c} = ?`,
-   value:quotient+b*c
-  };
-
- }
-
- a=rnd(5,30);
- b=rnd(2,15);
- c=rnd(2,12);
- d=rnd(2,10);
-
- return {
-  text:`(${a} + ${b}) × (${c} + ${d}) = ?`,
-  value:(a+b)*(c+d)
- };
-
-}
-
-
-/* =====================================================
-   CAMPAIGN
-===================================================== */
-
-function isWorldUnlocked(i){
-
- return i===0 ||
- campaignProgress[i-1]>=10;
-
-}
-
-
-function openCampaign(){
-
- renderWorlds();
-
- show("campaign");
-
-}
-
-
-function renderWorlds(){
-
- document.getElementById("worlds").innerHTML=
-
- worlds.map((w,i)=>{
-
-  const unlocked=isWorldUnlocked(i);
-  const done=campaignProgress[i];
-
-  return `
-
-   <button
-    class="world ${unlocked?"":"locked"}"
-    onclick="${unlocked?`openWorld(${i})`:"lockedWorld()"}"
-   >
-
-    <div class="world-icon">
-      ${w.icon}
-    </div>
-
-    <h3>${w.name}</h3>
-
-    <p>${w.desc}</p>
-
-    <div class="world-progress">
-
-      <div class="world-progress-text">
-        <span>PROGRES</span>
-        <span>${done}/10</span>
-      </div>
-
-      <div class="progress">
-        <div style="width:${done*10}%"></div>
-      </div>
-
-    </div>
-
-   </button>
-
-  `;
-
- }).join("");
-
-}
-
-
-function lockedWorld(){
-
- toast("🔒 Termină lumea anterioară!");
-
-}
-
-
-function openWorld(i){
-
- campaignWorld=i;
-
- document.getElementById("worldTitle")
-  .textContent=
-  `${worlds[i].icon} ${worlds[i].name}`;
-
- document.getElementById("worldDesc")
-  .textContent=
-  worlds[i].desc;
-
- renderLevels(i);
-
- show("worldLevels");
-
-}
-
-
-function renderLevels(i){
-
- const done=campaignProgress[i];
-
- let html="";
-
- for(let n=1;n<=10;n++){
-
-  const unlocked=n<=done+1;
-
-  html+=`
-
-   <button
-    class="level-btn
-      ${unlocked?"":"locked"}
-      ${n<=done?"done":""}"
-    onclick="${unlocked?`startCampaign(${i},${n})`:"lockedLevel()"}"
-   >
-
-    ${n<=done?"✅":n===10?"👹":"🔒"}
-
-    <br>
-
-    NIVEL ${n}
-
-   </button>
-
-  `;
-
- }
-
- document.getElementById("levels").innerHTML=html;
-
-}
-
-
-function lockedLevel(){
-
- toast("🔒 Termină nivelul anterior!");
-
-}
-
-
-function startCampaign(w,l){
-
- campaignWorld=w;
- campaignLevel=l;
-
- mode="campaign";
- difficulty=worlds[w].difficulty;
-
- score=0;
- combo=0;
- lives=3;
- round=0;
- active=true;
-
- show("game");
-
- document.getElementById("campaignInfo")
-  .textContent=
-  `${worlds[w].icon} ${worlds[w].name} • Nivel ${l}/10`;
-
- updateGame();
-
- newQuestion();
-
-}
-
-
-/* =====================================================
-   MODES
-===================================================== */
-
-function chooseMode(m){
-
- campaignWorld=null;
- campaignLevel=null;
-
- mode=m;
-
- show("difficulty");
-
-}
-
-
-function startGame(d){
-
- difficulty=d;
-
- score=0;
- combo=0;
- lives=3;
- round=0;
- active=true;
-
- show("game");
-
- document.getElementById("campaignInfo")
-  .textContent="";
-
- updateGame();
-
- newQuestion();
-
-}
-
-
-/* =====================================================
-   NEW QUESTION
-===================================================== */
-
-function newQuestion(){
-
- if(!active)
-  return;
-
- clearInterval(timer);
-
- let q;
-
- if(mode==="campaign")
-  q=makeCampaignQuestion();
-
- else if(difficulty==="easy")
-  q=makeEasy();
-
- else if(difficulty==="medium")
-  q=makeMedium();
-
- else if(difficulty==="hard")
-  q=makeHard();
-
- else
-  q=makeInsane();
-
- answer=q.value;
-
- question.textContent=q.text;
-
- answerInput.value="";
-
- message.textContent="";
- message.className="message";
-
- answerInput.focus();
-
- startTimer();
-
-}
-
-
-function makeCampaignQuestion(){
-
- if(campaignWorld===0)
-  return makeEasy();
-
- if(campaignWorld===1)
-  return makeMedium();
-
- if(campaignWorld===2)
-  return makeMedium();
-
- if(campaignWorld===3)
-  return makeHard();
-
- if(campaignWorld===4)
-  return makeInsane();
-
- return makeInsane();
-
-}
-
-
-/* =====================================================
-   TIMER
-===================================================== */
-
-function startTimer(){
-
- clearInterval(timer);
-
- const box=document.getElementById("timer");
-
- if(
-  mode==="free" ||
-  mode==="zen" ||
-  mode==="campaign"
- ){
-
-  box.style.display="none";
-
-  document.getElementById("time")
-   .textContent="∞";
-
-  return;
-
- }
-
- box.style.display="block";
-
- maxTime=
-  mode==="time"
-  ?60
-  :(difficulty==="easy"?15:
-    difficulty==="medium"?12:
-    difficulty==="hard"?10:8);
-
- time=maxTime;
-
- document.getElementById("time")
-  .textContent=time;
-
- timerFill.style.width="100%";
-
- timer=setInterval(()=>{
-
-  time--;
-
-  document.getElementById("time")
-   .textContent=time;
-
-  timerFill.style.width=
-   Math.max(0,time/maxTime*100)+"%";
-
-  if(time<=0){
-
-   clearInterval(timer);
-
-   if(mode==="time")
-    endGame();
-
-   else
-    fail("⏰ TIMP EXPIRAT!");
+    return {...defaultSettings};
 
   }
-
- },1000);
-
 }
 
+function saveSettings(){
 
-/* =====================================================
-   CHECK
-===================================================== */
-
-function checkAnswer(){
-
- if(!active)
-  return;
-
- const value=answerInput.value.trim();
-
- if(value==="")
-  return;
-
- clearInterval(timer);
-
- if(Number(value)===answer)
-  win();
-
- else
-  fail(`❌ GREȘIT! Era ${answer}`);
-
-}
-
-
-/* =====================================================
-   WIN
-===================================================== */
-
-function win(){
-
- correct++;
- combo++;
- round++;
-
- maxCombo=
-  Math.max(maxCombo,combo);
-
- let points=
-  difficulty==="easy"?10:
-  difficulty==="medium"?20:
-  difficulty==="hard"?30:50;
-
- if(mode==="campaign")
-  points+=campaignWorld*10+campaignLevel*3;
-
- points+=Math.min(combo*2,50);
-
- score+=points;
- xp+=points;
-
- coins+=Math.max(
-  1,
-  Math.floor(points/5)
- );
-
- playerLevel=
-  Math.max(
-   playerLevel,
-   Math.floor(xp/250)+1
+  localStorage.setItem(
+    "calculeLegendsSettings",
+    JSON.stringify(settings)
   );
 
- record=
-  Math.max(record,score);
-
- message.className="message ok";
-
- message.textContent=
-  `🎉 CORECT! +${points} XP • COMBO x${combo}`;
-
- save();
-
- updateGame();
-
- const needed=
-  mode==="campaign"
-  ?(campaignLevel===10?12:5)
-  :(mode==="challenge"?10:Infinity);
-
- if(round>=needed){
-
-  if(mode==="campaign")
-   finishCampaignLevel();
-
-  else
-   setTimeout(endGame,700);
-
-  return;
-
- }
-
- setTimeout(newQuestion,550);
-
 }
 
+function applySettings(){
 
-/* =====================================================
-   FAIL
-===================================================== */
-
-function fail(text){
-
- wrong++;
-
- combo=0;
-
- if(
-  mode!=="time" &&
-  mode!=="zen"
- )
-  lives--;
-
- message.className="message bad";
-
- message.textContent=text;
-
- save();
-
- updateGame();
-
- if(
-  lives<=0 &&
-  mode!=="time" &&
-  mode!=="zen"
- ){
-
-  setTimeout(endGame,900);
-
- }else{
-
-  setTimeout(newQuestion,900);
-
- }
-
-}
-
-
-/* =====================================================
-   CAMPAIGN COMPLETE
-===================================================== */
-
-function finishCampaignLevel(){
-
- active=false;
-
- clearInterval(timer);
-
- campaignProgress[campaignWorld]=
-  Math.max(
-   campaignProgress[campaignWorld],
-   campaignLevel
+  document.body.classList.toggle(
+    "light-mode",
+    !settings.darkMode
   );
 
- save();
+  document.body.classList.toggle(
+    "no-animations",
+    !settings.animationsEnabled
+  );
 
- document.getElementById("endTitle")
-  .textContent=
-  campaignLevel===10
-  ?`🏆 LUMEA ${campaignWorld+1} TERMINATĂ!`
-  :"🎉 NIVEL TERMINAT!";
+  updateSettingsUI();
 
- document.getElementById("endText")
-  .textContent=
-  campaignLevel===10
-  ?"Următoarea lume a fost deblocată! 🔓"
-  :"Nivelul următor a fost deblocat!";
+}
 
- document.getElementById("finalScore")
-  .textContent=score;
+function updateSettingsUI(){
 
- show("end");
+  const sound =
+    document.getElementById("soundToggle");
+
+  const animation =
+    document.getElementById("animationToggle");
+
+  const dark =
+    document.getElementById("darkToggle");
+
+  if(sound){
+    sound.classList.toggle(
+      "on",
+      settings.soundEnabled
+    );
+  }
+
+  if(animation){
+    animation.classList.toggle(
+      "on",
+      settings.animationsEnabled
+    );
+  }
+
+  if(dark){
+    dark.classList.toggle(
+      "on",
+      settings.darkMode
+    );
+  }
+
+}
+
+function toggleSound(){
+
+  settings.soundEnabled =
+    !settings.soundEnabled;
+
+  saveSettings();
+  applySettings();
+
+  if(settings.soundEnabled){
+    playSound("click");
+    showToast("🔊 Sunetele sunt pornite");
+  }else{
+    showToast("🔇 Sunetele sunt oprite");
+  }
+
+}
+
+function toggleAnimations(){
+
+  settings.animationsEnabled =
+    !settings.animationsEnabled;
+
+  saveSettings();
+  applySettings();
+
+  showToast(
+    settings.animationsEnabled
+      ? "✨ Animațiile sunt pornite"
+      : "⏸️ Animațiile sunt oprite"
+  );
+
+}
+
+function toggleDarkMode(){
+
+  settings.darkMode =
+    !settings.darkMode;
+
+  saveSettings();
+  applySettings();
+
+  showToast(
+    settings.darkMode
+      ? "🌙 Modul întunecat activ"
+      : "☀️ Modul luminos activ"
+  );
+
+}
+
+function resetSettings(){
+
+  if(!confirm("Sigur vrei să resetezi toate setările?")){
+    return;
+  }
+
+  settings = {...defaultSettings};
+
+  saveSettings();
+  applySettings();
+
+  showToast("⚙️ Setările au fost resetate");
 
 }
 
 
-/* =====================================================
-   END
-===================================================== */
-
-function endGame(){
-
- active=false;
-
- clearInterval(timer);
-
- save();
-
- document.getElementById("endTitle")
-  .textContent="🏆 JOC TERMINAT!";
-
- document.getElementById("endText")
-  .textContent=
-  `Ai obținut ${score} puncte.`;
-
- document.getElementById("finalScore")
-  .textContent=score;
-
- show("end");
-
-}
-
-
-/* =====================================================
-   DAILY
-===================================================== */
-
-function startDaily(){
-
- mode="challenge";
- difficulty="hard";
-
- score=0;
- combo=0;
- lives=3;
- round=0;
- active=true;
-
- show("game");
-
- document.getElementById("campaignInfo")
-  .textContent=
-  "🎯 PROVOCAREA ZILEI • 20 CALCULE";
-
- updateGame();
-
- newQuestion();
-
-}
-
-
-/* =====================================================
-   SHOP
-===================================================== */
-
-function buyItem(name,price){
-
- if(coins<price){
-
-  toast("❌ Nu ai suficiente monede!");
-
-  return;
-
- }
-
- coins-=price;
-
- save();
-
- toast(`✅ Ai cumpărat ${name}!`);
-
-}
-
-
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-function toggleSetting(el){
-
- el.classList.toggle("on");
-
- toast(
-  el.classList.contains("on")
-  ?"✅ Activat"
-  :"⭕ Dezactivat"
- );
-
-}
-
+/* =========================================================
+   RESET PROGRES
+========================================================= */
 
 function resetProgress(){
 
- if(
-  !confirm(
-   "Sigur vrei să ștergi tot progresul?"
-  )
- )
-  return;
+  if(!confirm(
+    "Sigur vrei să ștergi TOT progresul? Această acțiune nu poate fi anulată."
+  )){
+    return;
+  }
 
- localStorage.removeItem(
-  "calculeLegendsUltimate"
- );
+  data = {...defaultData};
 
- location.reload();
+  localStorage.removeItem("calculeLegends");
 
-}
+  save();
+  updateUI();
 
-
-/* =====================================================
-   UPDATE GAME
-===================================================== */
-
-function updateGame(){
-
- scoreEl.textContent=score;
- comboEl.textContent=combo;
- livesEl.textContent=lives;
-
- levelEl.textContent=
-  Math.floor(score/100)+1;
-
- document.getElementById("xpBar")
-  .style.width=(score%100)+"%";
+  showToast("🗑️ Progresul a fost șters");
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast =
+    document.getElementById("toast");
+
+  if(!toast) return;
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
+
+}
+
+
+/* =========================================================
+   SUNETE - WEB AUDIO
+========================================================= */
+
+let audioContext = null;
+
+function getAudioContext(){
+
+  if(!audioContext){
+
+    const AudioCtx =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if(!AudioCtx) return null;
+
+    audioContext = new AudioCtx();
+
+  }
+
+  return audioContext;
+
+}
+
+function playSound(type="click"){
+
+  if(!settings.soundEnabled){
+    return;
+  }
+
+  try{
+
+    const ctx = getAudioContext();
+
+    if(!ctx) return;
+
+    if(ctx.state === "suspended"){
+      ctx.resume();
+    }
+
+    const oscillator =
+      ctx.createOscillator();
+
+    const gain =
+      ctx.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    let frequency = 500;
+
+    if(type === "correct"){
+      frequency = 700;
+    }
+
+    if(type === "wrong"){
+      frequency = 180;
+    }
+
+    if(type === "level"){
+      frequency = 900;
+    }
+
+    oscillator.frequency.value = frequency;
+    oscillator.type = "sine";
+
+    gain.gain.setValueAtTime(
+      0.0001,
+      ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.12,
+      ctx.currentTime + .02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      ctx.currentTime + .18
+    );
+
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + .2);
+
+  }catch(error){
+
+    console.log("Audio indisponibil:",error);
+
+  }
+
+}
+
+function testSound(){
+
+  if(!settings.soundEnabled){
+
+    showToast("🔇 Pornește mai întâi sunetele");
+
+    return;
+
+  }
+
+  playSound("level");
+
+  showToast("🔊 Test audio");
+
+}
+
+
+/* =========================================================
+   NAVIGARE
+========================================================= */
+
+function show(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+      screen.classList.remove("active");
+    });
+
+  const target =
+    document.getElementById(id);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior: settings.animationsEnabled
+      ? "smooth"
+      : "auto"
+  });
+
+  if(id === "settings"){
+    updateSettingsUI();
+  }
+
+  if(id === "campaign"){
+    renderCampaign();
+  }
+
+  if(id === "profile" ||
+     id === "statsPage" ||
+     id === "records" ||
+     id === "achievements"){
+
+    updateUI();
+
+  }
+
+}
+
+
+/* =========================================================
+   MODURI
+========================================================= */
+
+let selectedMode = "free";
+let selectedDifficulty = "easy";
+
+function selectMode(mode){
+
+  selectedMode = mode;
+
+  if(mode === "zen"){
+    selectedDifficulty = "easy";
+  }
+
+  show("difficulty");
+
+}
+
+
+/* =========================================================
+   JOC
+========================================================= */
+
+let currentQuestion = null;
+let score = 0;
+let combo = 0;
+let lives = Infinity;
+let gameActive = false;
+let gameTimer = null;
+let timeLeft = 60;
+let challengeLevel = 1;
+
+function startGame(difficulty="easy"){
+
+  selectedDifficulty = difficulty;
+
+  score = 0;
+  combo = 0;
+  challengeLevel = 1;
+  gameActive = true;
+
+  if(selectedMode === "survival"){
+    lives = 3;
+  }else{
+    lives = Infinity;
+  }
+
+  timeLeft =
+    selectedMode === "time" ? 60 : Infinity;
+
+  clearInterval(gameTimer);
+
+  if(selectedMode === "time"){
+
+    gameTimer = setInterval(()=>{
+
+      if(!gameActive) return;
+
+      timeLeft--;
+
+      updateGameUI();
+
+      if(timeLeft <= 0){
+        endGame("⏱️ Timpul a expirat!");
+      }
+
+    },1000);
+
+  }
+
+  document.getElementById("gameModeText").textContent =
+    modeName(selectedMode) +
+    " · " +
+    difficultyName(difficulty);
+
+  document.getElementById("feedback").textContent = "";
+
+  show("game");
+
+  nextQuestion();
+
+  setTimeout(()=>{
+    document.getElementById("answer").focus();
+  },100);
+
+}
+
+function modeName(mode){
+
+  const names = {
+    free:"🧮 Free Play",
+    rapid:"⚡ Rapid",
+    survival:"❤️ Survival",
+    time:"⏱️ Time Attack",
+    challenge:"🔥 Challenge",
+    zen:"🧘 Zen"
+  };
+
+  return names[mode] || mode;
+
+}
+
+function difficultyName(diff){
+
+  const names = {
+    easy:"Easy",
+    medium:"Medium",
+    hard:"Hard",
+    insane:"Insane"
+  };
+
+  return names[diff] || diff;
+
+}
+
+
+/* =========================================================
+   GENERARE CALCULE
+========================================================= */
+
+function randomInt(min,max){
+
+  return Math.floor(
+    Math.random()*(max-min+1)
+  ) + min;
+
+}
+
+function generateQuestion(){
+
+  let difficulty = selectedDifficulty;
+
+  if(selectedMode === "challenge"){
+
+    if(challengeLevel >= 15){
+      difficulty = "insane";
+    }else if(challengeLevel >= 10){
+      difficulty = "hard";
+    }else if(challengeLevel >= 5){
+      difficulty = "medium";
+    }else{
+      difficulty = "easy";
+    }
+
+  }
+
+  let a,b,answer,operator;
+
+  if(difficulty === "easy"){
+
+    operator =
+      ["+","-"][randomInt(0,1)];
+
+    a = randomInt(1,30);
+    b = randomInt(1,30);
+
+    if(operator === "-" && b > a){
+      [a,b] = [b,a];
+    }
+
+    answer =
+      operator === "+"
+        ? a+b
+        : a-b;
+
+  }
+
+  else if(difficulty === "medium"){
+
+    operator =
+      ["+","-","×"][randomInt(0,2)];
+
+    if(operator === "×"){
+
+      a = randomInt(2,15);
+      b = randomInt(2,12);
+      answer = a*b;
+
+    }else{
+
+      a = randomInt(10,80);
+      b = randomInt(1,50);
+
+      if(operator === "-" && b>a){
+        [a,b]=[b,a];
+      }
+
+      answer =
+        operator === "+"
+          ? a+b
+          : a-b;
+
+    }
+
+  }
+
+  else if(difficulty === "hard"){
+
+    operator =
+      ["×","÷","+","-"][randomInt(0,3)];
+
+    if(operator === "×"){
+
+      a = randomInt(8,30);
+      b = randomInt(5,20);
+      answer = a*b;
+
+    }else if(operator === "÷"){
+
+      b = randomInt(2,12);
+      answer = randomInt(2,15);
+      a = b*answer;
+
+    }else{
+
+      a = randomInt(30,150);
+      b = randomInt(10,100);
+
+      if(operator === "-" && b>a){
+        [a,b]=[b,a];
+      }
+
+      answer =
+        operator === "+"
+          ? a+b
+          : a-b;
+
+    }
+
+  }
+
+  else{
+
+    operator =
+      ["×","÷","+","-"][randomInt(0,3)];
+
+    if(operator === "×"){
+
+      a = randomInt(20,80);
+      b = randomInt(10,50);
+      answer = a*b;
+
+    }else if(operator === "÷"){
+
+      b = randomInt(3,20);
+      answer = randomInt(10,60);
+      a = b*answer;
+
+    }else{
+
+      a = randomInt(100,500);
+      b = randomInt(50,300);
+
+      if(operator === "-" && b>a){
+        [a,b]=[b,a];
+      }
+
+      answer =
+        operator === "+"
+          ? a+b
+          : a-b;
+
+    }
+
+  }
+
+  return {
+    text:`${a} ${operator} ${b}`,
+    answer
+  };
+
+}
+
+function nextQuestion(){
+
+  if(!gameActive) return;
+
+  currentQuestion =
+    generateQuestion();
+
+  document.getElementById("question")
+    .textContent =
+    currentQuestion.text + " = ?";
+
+  const input =
+    document.getElementById("answer");
+
+  input.value = "";
+
+  updateGameUI();
+
+}
+
+
+/* =========================================================
+   RĂSPUNS
+========================================================= */
+
+function submitAnswer(){
+
+  if(!gameActive) return;
+
+  const input =
+    document.getElementById("answer");
+
+  const value =
+    Number(input.value);
+
+  if(input.value.trim() === ""){
+    return;
+  }
+
+  if(value === currentQuestion.answer){
+
+    handleCorrect();
+
+  }else{
+
+    handleWrong(value);
+
+  }
+
+}
+
+function handleCorrect(){
+
+  combo++;
+
+  data.correct++;
+
+  let points = 10;
+
+  points += Math.min(combo * 2,30);
+
+  if(selectedDifficulty === "medium"){
+    points += 5;
+  }
+
+  if(selectedDifficulty === "hard"){
+    points += 10;
+  }
+
+  if(selectedDifficulty === "insane"){
+    points += 20;
+  }
+
+  score += points;
+
+  data.xp += points;
+
+  data.coins += Math.max(
+    1,
+    Math.floor(points/10)
+  );
+
+  if(combo > data.maxCombo){
+    data.maxCombo = combo;
+  }
+
+  if(score > data.record){
+    data.record = score;
+  }
+
+  if(selectedMode === "challenge"){
+    challengeLevel++;
+  }
+
+  levelUpCheck();
+
+  save();
+
+  playSound("correct");
+
+  const feedback =
+    document.getElementById("feedback");
+
+  feedback.className =
+    "feedback correct";
+
+  feedback.textContent =
+    combo >= 5
+      ? `🔥 PERFECT! +${points} XP · Combo x${combo}`
+      : `✓ Corect! +${points}`;
+
+  updateUI();
+
+  if(selectedMode === "rapid" && score >= 200){
+    endGame("⚡ Ai terminat modul Rapid!");
+    return;
+  }
+
+  setTimeout(nextQuestion,250);
+
+}
+
+function handleWrong(value){
+
+  data.wrong++;
+
+  combo = 0;
+
+  if(selectedMode === "survival"){
+
+    lives--;
+
+    if(lives <= 0){
+
+      save();
+      playSound("wrong");
+      endGame("💀 Ai rămas fără vieți!");
+      return;
+
+    }
+
+  }
+
+  save();
+
+  playSound("wrong");
+
+  const feedback =
+    document.getElementById("feedback");
+
+  feedback.className =
+    "feedback wrong";
+
+  feedback.textContent =
+    `✕ Greșit! Răspunsul era ${currentQuestion.answer}`;
+
+  updateUI();
+
+  setTimeout(nextQuestion,650);
+
+}
+
+function levelUpCheck(){
+
+  const needed =
+    data.playerLevel * 100;
+
+  if(data.xp >= needed){
+
+    data.xp -= needed;
+    data.playerLevel++;
+
+    data.coins += 25;
+
+    playSound("level");
+
+    showToast(
+      `👑 LEVEL UP! Nivel ${data.playerLevel}`
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GAME UI
+========================================================= */
+
+function updateGameUI(){
+
+  document.getElementById("gameScore")
+    .textContent = score;
+
+  document.getElementById("gameCombo")
+    .textContent = combo;
+
+  document.getElementById("gameLives")
+    .textContent =
+    lives === Infinity ? "∞" : lives;
+
+  document.getElementById("timer")
+    .textContent =
+    timeLeft === Infinity ? "∞" : timeLeft;
+
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function endGame(message){
+
+  gameActive = false;
+
+  clearInterval(gameTimer);
+
+  document.getElementById("endMessage")
+    .textContent = message;
+
+  document.getElementById("endScore")
+    .textContent = score;
+
+  document.getElementById("endCorrect")
+    .textContent = data.correct;
+
+  document.getElementById("endCombo")
+    .textContent = combo;
+
+  save();
+
+  updateUI();
+
+  show("end");
+
+}
+
+function exitGame(){
+
+  if(gameActive){
+
+    if(!confirm("Sigur vrei să ieși din joc?")){
+      return;
+    }
+
+  }
+
+  gameActive = false;
+
+  clearInterval(gameTimer);
+
+  show("menu");
+
+}
+
+
+/* =========================================================
+   CAMPANIE
+========================================================= */
+
+const worlds = [
+  {
+    name:"🌱 Green Valley",
+    desc:"Începutul aventurii.",
+    difficulty:"easy"
+  },
+  {
+    name:"🏜️ Desert Zone",
+    desc:"Căldura crește.",
+    difficulty:"easy"
+  },
+  {
+    name:"🌊 Ocean World",
+    desc:"Calcule mai rapide.",
+    difficulty:"medium"
+  },
+  {
+    name:"🌋 Lava Mountain",
+    desc:"Aici începe adevărata provocare.",
+    difficulty:"medium"
+  },
+  {
+    name:"🌌 Space Dimension",
+    desc:"Pentru matematicieni serioși.",
+    difficulty:"hard"
+  },
+  {
+    name:"👑 Legend Realm",
+    desc:"Doar legendele ajung aici.",
+    difficulty:"insane"
+  }
+];
+
+function renderCampaign(){
+
+  const container =
+    document.getElementById("campaignLevels");
+
+  container.innerHTML = "";
+
+  worlds.forEach((world,index)=>{
+
+    const unlocked =
+      index === 0 ||
+      data.campaignProgress[index-1] >= 5;
+
+    const progress =
+      data.campaignProgress[index] || 0;
+
+    const button =
+      document.createElement("button");
+
+    button.className =
+      "level" +
+      (unlocked ? "" : " locked");
+
+    button.disabled = !unlocked;
+
+    button.innerHTML = `
+      <div class="level-number">
+        ${unlocked ? index+1 : "🔒"}
+      </div>
+
+      <div>${world.name}</div>
+
+      <small>${progress}/5 nivele</small>
+
+      <div class="progress">
+        <div class="progress-bar"
+             style="width:${progress*20}%">
+        </div>
+      </div>
+    `;
+
+    if(unlocked){
+
+      button.onclick = ()=>{
+        openWorld(index);
+      };
+
+    }
+
+    container.appendChild(button);
+
+  });
+
+}
+
+function openWorld(index){
+
+  const world = worlds[index];
+
+  document.getElementById("worldTitle")
+    .textContent =
+    world.name;
+
+  document.getElementById("worldDescription")
+    .textContent =
+    world.desc;
+
+  const grid =
+    document.getElementById("worldLevelGrid");
+
+  grid.innerHTML = "";
+
+  const progress =
+    data.campaignProgress[index] || 0;
+
+  for(let level=1;level<=5;level++){
+
+    const unlocked =
+      level <= progress + 1;
+
+    const button =
+      document.createElement("button");
+
+    button.className =
+      "level" +
+      (unlocked ? "" : " locked");
+
+    button.disabled = !unlocked;
+
+    button.innerHTML = `
+      <div class="level-number">
+        ${unlocked ? level : "🔒"}
+      </div>
+
+      <div>Nivel ${level}</div>
+
+      <small>
+        ${level <= progress ? "✅ Completat" : "▶️ Joacă"}
+      </small>
+    `;
+
+    if(unlocked){
+
+      button.onclick = ()=>{
+
+        startCampaignLevel(
+          index,
+          level,
+          world.difficulty
+        );
+
+      };
+
+    }
+
+    grid.appendChild(button);
+
+  }
+
+  show("worldLevels");
+
+}
+
+function startCampaignLevel(
+  worldIndex,
+  level,
+  difficulty
+){
+
+  selectedMode = "challenge";
+  challengeLevel =
+    worldIndex * 5 + level;
+
+  startGame(difficulty);
+
+  const oldEnd = endGame;
+
+}
+
+
+/* =========================================================
    UPDATE UI
-===================================================== */
+========================================================= */
 
-function update(){
+function updateHeader(){
 
- const total=correct+wrong;
+  document.getElementById("headerLevel")
+    .textContent =
+    data.playerLevel;
 
- const accuracy=
-  total
-  ?Math.round(correct/total*100)
-  :0;
+  document.getElementById("headerCoins")
+    .textContent =
+    data.coins;
 
- const done=
-  campaignProgress
-   .filter(x=>x>=10)
-   .length;
+}
 
+function updateUI(){
 
- /* TOP */
+  updateHeader();
 
- document.getElementById("topCoins")
-  .textContent=coins;
+  document.getElementById("profileLevel")
+    .textContent =
+    data.playerLevel;
 
- document.getElementById("topXP")
-  .textContent=xp;
+  document.getElementById("profileCoins")
+    .textContent =
+    data.coins;
 
+  document.getElementById("profileXP")
+    .textContent =
+    data.xp;
 
- /* DASHBOARD */
+  const nextXP =
+    data.playerLevel * 100;
 
- document.getElementById("dashLevel")
-  .textContent=playerLevel;
+  document.getElementById("profileNextXP")
+    .textContent =
+    nextXP;
 
- document.getElementById("dashXP")
-  .textContent=xp;
-
- document.getElementById("dashStreak")
-  .textContent=streak;
-
- document.getElementById("dashRecord")
-  .textContent=record;
-
- const currentXP=xp%250;
-
- document.getElementById("dashXpText")
-  .textContent=
-  `${currentXP} / 250`;
-
- document.getElementById("dashXpBar")
-  .style.width=
-  (currentXP/250*100)+"%";
+  document.getElementById("xpFill")
+    .style.width =
+    Math.min(
+      100,
+      (data.xp / nextXP) * 100
+    ) + "%";
 
 
- /* PROFILE */
+  document.getElementById("statCorrect")
+    .textContent =
+    data.correct;
 
- document.getElementById("profileLevel")
-  .textContent=playerLevel;
+  document.getElementById("statWrong")
+    .textContent =
+    data.wrong;
 
- document.getElementById("xp")
-  .textContent=xp;
+  const total =
+    data.correct + data.wrong;
 
- document.getElementById("coins")
-  .textContent=coins;
+  const accuracy =
+    total === 0
+      ? 0
+      : Math.round(
+          (data.correct / total) * 100
+        );
 
- document.getElementById("profileStreak")
-  .textContent=streak;
+  document.getElementById("statAccuracy")
+    .textContent =
+    accuracy + "%";
 
- document.getElementById("profileXp")
-  .style.width=
-  (currentXP/250*100)+"%";
+  document.getElementById("statRecord")
+    .textContent =
+    data.record;
 
- document.getElementById("profileXpText")
-  .textContent=
-  `${currentXP} / 250 XP`;
+  document.getElementById("statCombo")
+    .textContent =
+    data.maxCombo;
 
-
- /* RANK */
-
- let rank=
-  playerLevel>=20
-  ?"👑 Legendă":
-  playerLevel>=10
-  ?"🔥 Maestru":
-  playerLevel>=5
-  ?"⚡ Expert":
-  "🐣 Începător";
-
- document.getElementById("rank")
-  .textContent=rank;
+  document.getElementById("statXP")
+    .textContent =
+    data.xp;
 
 
- /* STATS */
+  document.getElementById("recordScore")
+    .textContent =
+    data.record;
 
- document.getElementById("correctStat")
-  .textContent=correct;
+  document.getElementById("recordCombo")
+    .textContent =
+    data.maxCombo;
 
- document.getElementById("wrongStat")
-  .textContent=wrong;
-
- document.getElementById("accuracy")
-  .textContent=accuracy+"%";
-
- document.getElementById("maxCombo")
-  .textContent=maxCombo;
-
- document.getElementById("recordStat")
-  .textContent=record;
-
- document.getElementById("worldStat")
-  .textContent=done;
+  document.getElementById("recordCorrect")
+    .textContent =
+    data.correct;
 
 
- /* LEADERBOARD */
+  updateAchievements();
 
- document.getElementById("leaderLevel")
-  .textContent=
-  `Level ${playerLevel}`;
+}
 
- document.getElementById("leaderXP")
-  .textContent=
-  `${xp} XP`;
+function updateAchievements(){
 
+  const a1 =
+    document.getElementById("achievement1");
 
- /* ACHIEVEMENTS */
+  const a2 =
+    document.getElementById("achievement2");
 
- for(let i=0;i<6;i++){
+  const a3 =
+    document.getElementById("achievement3");
 
-  const a=document.getElementById("a"+(i+1));
+  const a4 =
+    document.getElementById("achievement4");
 
-  if(!a)
-   continue;
+  a1.classList.toggle(
+    "locked",
+    data.correct < 1
+  );
 
-  if(campaignProgress[i]>=10)
-   a.classList.remove("locked");
+  a2.classList.toggle(
+    "locked",
+    data.maxCombo < 10
+  );
 
-  else
-   a.classList.add("locked");
+  a3.classList.toggle(
+    "locked",
+    data.record < 100
+  );
 
- }
+  a4.classList.toggle(
+    "locked",
+    data.playerLevel < 10
+  );
 
 }
 
 
-answerInput.addEventListener(
- "keydown",
- e=>{
+/* =========================================================
+   ENTER = RĂSPUNS
+========================================================= */
 
-  if(e.key==="Enter")
-   checkAnswer();
+document.addEventListener("keydown",(event)=>{
 
- }
-);
+  if(
+    event.key === "Enter" &&
+    document.getElementById("game")
+      .classList.contains("active")
+  ){
+
+    submitAnswer();
+
+  }
+
+});
 
 
-update();
+/* =========================================================
+   START
+========================================================= */
+
+applySettings();
+updateUI();
 
 </script>
 
