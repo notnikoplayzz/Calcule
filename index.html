@@ -64,40 +64,576 @@ const worlds=[
  {name:"🤖 Lumea 5: Orașul Cyber",desc:"Calcule complexe în orașul viitorului.",theme:"world5",difficulty:"hard",ops:[1,2,3,4]},
  {name:"👑 Lumea 6: Castelul Final",desc:"Ultima lume. Doar legendele ajung aici!",theme:"world6",difficulty:"insane",ops:[1,2,3,4]}
 ];
+
 const data=JSON.parse(localStorage.getItem('calculeLegends')||'{}');
-let correct=data.correct||0,wrong=data.wrong||0,record=data.record||0,maxCombo=data.maxCombo||0,xp=data.xp||0,coins=data.coins||0,playerLevel=data.playerLevel||1;
+let correct=data.correct||0,wrong=data.wrong||0,record=data.record||0,maxCombo=data.maxCombo||0;
+let xp=data.xp||0,coins=data.coins||0,playerLevel=data.playerLevel||1;
 let campaignProgress=Array.isArray(data.campaignProgress)?data.campaignProgress:[0,0,0,0,0,0];
 let mode='',difficulty='',score=0,combo=0,lives=3,answer=0,time=0,maxTime=0,timer=null,active=false,round=0,campaignWorld=null,campaignLevel=null;
 
-function save(){localStorage.setItem('calculeLegends',JSON.stringify({correct,wrong,record,maxCombo,xp,coins,playerLevel,campaignProgress}));update()}
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');update()}
-function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
-function isWorldUnlocked(i){return i===0||campaignProgress[i-1]>=10}
-function openCampaign(){renderWorlds();show('campaign')}
-function renderWorlds(){document.getElementById('worlds').innerHTML=worlds.map((w,i)=>{let unlocked=isWorldUnlocked(i),done=campaignProgress[i];return `<button class="world ${w.theme} ${unlocked?'':'locked'}" onclick="${unlocked?`openWorld(${i})`:'lockedWorld()'}"><div style="font-size:42px">${w.name.split(':')[0]}</div><h3>${w.name}</h3><p>${w.desc}</p><b>${unlocked?`Niveluri: ${done}/10 ${done>=10?'✅ TERMINATĂ':''}`:'🔒 Termină lumea anterioară'}</b></button>`}).join('')}
-function lockedWorld(){alert('🔒 Termină toate cele 10 niveluri ale lumii anterioare!')}
-function openWorld(i){campaignWorld=i;document.getElementById('worldTitle').textContent=worlds[i].name;document.getElementById('worldDesc').textContent=worlds[i].desc;renderLevels(i);show('worldLevels')}
-function renderLevels(i){let done=campaignProgress[i],html='';for(let n=1;n<=10;n++){let unlocked=n<=done+1;html+=`<button class="level-btn ${unlocked?'':'locked'}" onclick="${unlocked?`startCampaign(${i},${n})`:'lockedLevel()'}">${n<=done?'✅ ':n===10?'👹 ':'🔒 '} NIVEL ${n}</button>`}document.getElementById('levels').innerHTML=html}
-function lockedLevel(){alert('🔒 Termină nivelul anterior mai întâi!')}
-function startCampaign(w,l){campaignWorld=w;campaignLevel=l;mode='campaign';difficulty=worlds[w].difficulty;score=0;combo=0;lives=3;round=0;active=true;show('game');document.getElementById('campaignInfo').textContent=`🗺️ ${worlds[w].name} — Nivel ${l}/10${l===10?' 👹 BOSS FINAL':''}`;updateGame();newQuestion()}
-function chooseMode(m){campaignWorld=null;campaignLevel=null;mode=m;show('difficulty')}
-function startGame(d){difficulty=d;score=0;combo=0;lives=3;round=0;active=true;show('game');document.getElementById('campaignInfo').textContent='';updateGame();newQuestion()}
-function newQuestion(){if(!active)return;clearInterval(timer);let a,b,c,type;
- if(mode==='campaign'){let w=worlds[campaignWorld],boost=(campaignWorld+1)*campaignLevel*4;a=rnd(1+boost,20+boost);b=rnd(1,15+boost/2);type=w.ops[rnd(0,w.ops.length-1)]}
- else{if(difficulty==='easy'){a=rnd(1,20);b=rnd(1,20)}if(difficulty==='medium'){a=rnd(10,100);b=rnd(2,30)}if(difficulty==='hard'){a=rnd(20,150);b=rnd(2,50)}if(difficulty==='insane'){a=rnd(50,300);b=rnd(5,100)}type=rnd(1,difficulty==='easy'?2:4)}
- if(type===1){answer=a+b;question.textContent=`${a} + ${b} = ?`}else if(type===2){if(b>a)[a,b]=[b,a];answer=a-b;question.textContent=`${a} − ${b} = ?`}else if(type===3){answer=a*b;question.textContent=`${a} × ${b} = ?`}else{answer=b;a=a*b;question.textContent=`${a} ÷ ${b} = ?`}
- if(mode==='campaign'&&campaignWorld>=3&&Math.random()>.45){c=rnd(2,10+campaignWorld);answer=(a+b)*c;question.textContent=`(${a} + ${b}) × ${c} = ?`}
- answerInput.value='';message.textContent='';answerInput.focus();startTimer()}
-const question=document.getElementById('question'),answerInput=document.getElementById('answer'),message=document.getElementById('message');
-function startTimer(){clearInterval(timer);const box=document.getElementById('timer');if(mode==='free'||mode==='zen'||mode==='campaign'){box.style.display='none';document.getElementById('time').textContent='∞';return}box.style.display='block';maxTime=mode==='time'?60:(difficulty==='easy'?15:difficulty==='medium'?12:difficulty==='hard'?10:8);time=maxTime;document.getElementById('time').textContent=time;timerFill.style.width='100%';timer=setInterval(()=>{time--;document.getElementById('time').textContent=time;timerFill.style.width=Math.max(0,time/maxTime*100)+'%';if(time<=0){clearInterval(timer);if(mode==='time')endGame();else fail('⏰ TIMP EXPIRAT!')}},1000)}
-function checkAnswer(){if(!active)return;let v=answerInput.value;if(v==='')return;clearInterval(timer);Number(v)===answer?win():fail(`❌ GREȘIT! Era ${answer}`)}
-function win(){correct++;combo++;round++;maxCombo=Math.max(maxCombo,combo);let points=difficulty==='easy'?10:difficulty==='medium'?20:difficulty==='hard'?30:50;if(mode==='campaign')points+=campaignWorld*10+campaignLevel*3;points+=Math.min(combo*2,50);score+=points;xp+=points;coins+=Math.max(1,Math.floor(points/5));playerLevel=Math.max(playerLevel,Math.floor(xp/250)+1);record=Math.max(record,score);message.className='message ok';message.textContent=`🎉 CORECT! +${points} | COMBO x${combo}`;save();updateGame();
- let needed=mode==='campaign'?(campaignLevel===10?12:5):(mode==='challenge'?10:Infinity);if(round>=needed){if(mode==='campaign')finishCampaignLevel();else setTimeout(endGame,700);return}setTimeout(newQuestion,600)}
-function finishCampaignLevel(){active=false;clearInterval(timer);campaignProgress[campaignWorld]=Math.max(campaignProgress[campaignWorld],campaignLevel);save();document.getElementById('endTitle').textContent=campaignLevel===10?`🏆 LUMEA ${campaignWorld+1} TERMINATĂ!`:'🎉 NIVEL TERMINAT!';document.getElementById('endText').textContent=campaignLevel===10&&campaignWorld<5?'Următoarea lume este acum DEBLOCATĂ! 🔓':'Ai deblocat următorul nivel!';document.getElementById('finalScore').textContent=score;show('end')}
-function fail(text){wrong++;combo=0;if(mode!=='time'&&mode!=='zen')lives--;message.className='message bad';message.textContent=text;save();updateGame();if(lives<=0&&mode!=='time'&&mode!=='zen')setTimeout(endGame,900);else setTimeout(newQuestion,900)}
-function endGame(){active=false;clearInterval(timer);save();document.getElementById('endTitle').textContent='🏆 JOC TERMINAT!';document.getElementById('endText').textContent='Scor final';document.getElementById('finalScore').textContent=score;show('end')}
-function updateGame(){scoreEl.textContent=score;comboEl.textContent=combo;livesEl.textContent=lives;levelEl.textContent=Math.floor(score/100)+1;xpBar.style.width=(score%100)+'%'}
-const scoreEl=document.getElementById('score'),comboEl=document.getElementById('combo'),livesEl=document.getElementById('lives'),levelEl=document.getElementById('level'),xpBar=document.getElementById('xpBar'),timerFill=document.getElementById('timerFill');
-function update(){let total=correct+wrong,acc=total?Math.round(correct/total*100):0,done=campaignProgress.filter(x=>x>=10).length;const set=(id,v)=>{let e=document.getElementById(id);if(e)e.textContent=v};set('correctStat',correct);set('wrongStat',wrong);set('accuracy',acc+'%');set('maxCombo',maxCombo);set('recordStat',record);set('worldStat',done);set('record',record);set('recordCombo',maxCombo);set('recordLevel',playerLevel);set('profileLevel',playerLevel);set('xp',xp);set('coins',coins);set('rank',playerLevel>=20?'👑 Legendă':playerLevel>=10?'🔥 Maestru':playerLevel>=5?'⚡ Expert':'🐣 Începător');let p=Math.min(100,(xp%250)/2.5);let pb=document.getElementById('profileXp');if(pb)pb.style.width=p+'%';for(let i=0;i<6;i++)set('a'+(i+1),campaignProgress[i]>=10?'🏆':'🔒')}
-answerInput.addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer()});update();
+const question=document.getElementById('question');
+const answerInput=document.getElementById('answer');
+const message=document.getElementById('message');
+const scoreEl=document.getElementById('score');
+const comboEl=document.getElementById('combo');
+const livesEl=document.getElementById('lives');
+const levelEl=document.getElementById('level');
+const xpBar=document.getElementById('xpBar');
+const timerFill=document.getElementById('timerFill');
+
+function save(){
+ localStorage.setItem('calculeLegends',JSON.stringify({
+  correct,wrong,record,maxCombo,xp,coins,playerLevel,campaignProgress
+ }));
+ update();
+}
+
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ update();
+}
+
+function rnd(a,b){
+ return Math.floor(Math.random()*(b-a+1))+a;
+}
+
+function isWorldUnlocked(i){
+ return i===0||campaignProgress[i-1]>=10;
+}
+
+function openCampaign(){
+ renderWorlds();
+ show('campaign');
+}
+
+function renderWorlds(){
+ document.getElementById('worlds').innerHTML=worlds.map((w,i)=>{
+  let unlocked=isWorldUnlocked(i),done=campaignProgress[i];
+  return `<button class="world ${w.theme} ${unlocked?'':'locked'}"
+    onclick="${unlocked?`openWorld(${i})`:'lockedWorld()'}">
+    <div style="font-size:42px">${w.name.split(':')[0]}</div>
+    <h3>${w.name}</h3>
+    <p>${w.desc}</p>
+    <b>${unlocked?`Niveluri: ${done}/10 ${done>=10?'✅ TERMINATĂ':''}`:'🔒 Termină lumea anterioară'}</b>
+  </button>`;
+ }).join('');
+}
+
+function lockedWorld(){
+ alert('🔒 Termină toate cele 10 niveluri ale lumii anterioare!');
+}
+
+function openWorld(i){
+ campaignWorld=i;
+ document.getElementById('worldTitle').textContent=worlds[i].name;
+ document.getElementById('worldDesc').textContent=worlds[i].desc;
+ renderLevels(i);
+ show('worldLevels');
+}
+
+function renderLevels(i){
+ let done=campaignProgress[i],html='';
+ for(let n=1;n<=10;n++){
+  let unlocked=n<=done+1;
+  html+=`<button class="level-btn ${unlocked?'':'locked'}"
+    onclick="${unlocked?`startCampaign(${i},${n})`:'lockedLevel()'}">
+    ${n<=done?'✅ ':n===10?'👹 ':'🔒 '} NIVEL ${n}
+  </button>`;
+ }
+ document.getElementById('levels').innerHTML=html;
+}
+
+function lockedLevel(){
+ alert('🔒 Termină nivelul anterior mai întâi!');
+}
+
+function startCampaign(w,l){
+ campaignWorld=w;
+ campaignLevel=l;
+ mode='campaign';
+ difficulty=worlds[w].difficulty;
+ score=0;combo=0;lives=3;round=0;active=true;
+ show('game');
+ document.getElementById('campaignInfo').textContent=
+  `🗺️ ${worlds[w].name} — Nivel ${l}/10${l===10?' 👹 BOSS FINAL':''}`;
+ updateGame();
+ newQuestion();
+}
+
+function chooseMode(m){
+ campaignWorld=null;
+ campaignLevel=null;
+ mode=m;
+ show('difficulty');
+}
+
+function startGame(d){
+ difficulty=d;
+ score=0;combo=0;lives=3;round=0;active=true;
+ show('game');
+ document.getElementById('campaignInfo').textContent='';
+ updateGame();
+ newQuestion();
+}
+
+/* ---------------------------------------------------------
+   GENERATOR MATEMATIC NOU
+   Toate expresiile sunt calculate în JavaScript înainte
+   de a fi afișate, astfel încât răspunsul nu poate fi
+   diferit de expresia prezentată.
+--------------------------------------------------------- */
+
+function makeDivision(minResult,maxResult,minDivisor,maxDivisor){
+ const divisor=rnd(minDivisor,maxDivisor);
+ const result=rnd(minResult,maxResult);
+ return {
+  text:`${result*divisor} ÷ ${divisor} = ?`,
+  value:result
+ };
+}
+
+function makeEasy(){
+ const type=rnd(1,2);
+ let a=rnd(1,50),b=rnd(1,50);
+
+ if(type===1){
+  return {text:`${a} + ${b} = ?`,value:a+b};
+ }
+
+ if(b>a)[a,b]=[b,a];
+ return {text:`${a} − ${b} = ?`,value:a-b};
+}
+
+function makeMedium(){
+ const type=rnd(1,4);
+ let a,b;
+
+ if(type===1){
+  a=rnd(20,200); b=rnd(10,150);
+  return {text:`${a} + ${b} = ?`,value:a+b};
+ }
+
+ if(type===2){
+  a=rnd(30,250); b=rnd(10,a);
+  return {text:`${a} − ${b} = ?`,value:a-b};
+ }
+
+ if(type===3){
+  a=rnd(5,30); b=rnd(3,20);
+  return {text:`${a} × ${b} = ?`,value:a*b};
+ }
+
+ return makeDivision(5,40,2,15);
+}
+
+function makeHard(){
+ const type=rnd(1,6);
+ let a,b,c;
+
+ if(type===1){
+  a=rnd(100,500);b=rnd(50,300);
+  return {text:`${a} + ${b} = ?`,value:a+b};
+ }
+
+ if(type===2){
+  a=rnd(150,700);b=rnd(20,a);
+  return {text:`${a} − ${b} = ?`,value:a-b};
+ }
+
+ if(type===3){
+  a=rnd(10,60);b=rnd(5,40);
+  return {text:`${a} × ${b} = ?`,value:a*b};
+ }
+
+ if(type===4){
+  return makeDivision(10,100,3,25);
+ }
+
+ if(type===5){
+  a=rnd(10,50);b=rnd(5,30);c=rnd(2,15);
+  return {
+   text:`(${a} + ${b}) × ${c} = ?`,
+   value:(a+b)*c
+  };
+ }
+
+ a=rnd(10,50);b=rnd(2,15);c=rnd(2,20);
+ return {
+  text:`${a} × ${b} + ${c} = ?`,
+  value:a*b+c
+ };
+}
+
+function makeInsane(){
+ const type=rnd(1,8);
+ let a,b,c,d;
+
+ if(type===1){
+  a=rnd(200,999);b=rnd(100,700);c=rnd(50,500);
+  return {
+   text:`${a} + ${b} − ${c} = ?`,
+   value:a+b-c
+  };
+ }
+
+ if(type===2){
+  a=rnd(300,1200);b=rnd(50,500);c=rnd(20,400);
+  return {
+   text:`${a} − ${b} + ${c} = ?`,
+   value:a-b+c
+  };
+ }
+
+ if(type===3){
+  a=rnd(20,100);b=rnd(10,60);c=rnd(5,30);
+  return {
+   text:`${a} × ${b} − ${c} = ?`,
+   value:a*b-c
+  };
+ }
+
+ if(type===4){
+  a=rnd(10,50);b=rnd(5,30);c=rnd(2,20);
+  return {
+   text:`(${a} + ${b}) × ${c} = ?`,
+   value:(a+b)*c
+  };
+ }
+
+ if(type===5){
+  a=rnd(10,40);b=rnd(5,25);c=rnd(2,15);
+  return {
+   text:`${a} × (${b} + ${c}) = ?`,
+   value:a*(b+c)
+  };
+ }
+
+ if(type===6){
+  a=rnd(5,30);b=rnd(2,15);c=rnd(2,12);d=rnd(1,50);
+  return {
+   text:`(${a} + ${b}) × ${c} − ${d} = ?`,
+   value:(a+b)*c-d
+  };
+ }
+
+ if(type===7){
+  const divisor=rnd(3,20);
+  const quotient=rnd(20,150);
+  a=divisor*quotient;
+  b=rnd(2,50);
+  c=rnd(2,30);
+  return {
+   text:`${a} ÷ ${divisor} + ${b} × ${c} = ?`,
+   value:quotient+b*c
+  };
+ }
+
+ a=rnd(5,30);b=rnd(2,15);c=rnd(2,12);d=rnd(2,10);
+ return {
+  text:`(${a} + ${b}) × (${c} + ${d}) = ?`,
+  value:(a+b)*(c+d)
+ };
+}
+
+function makeCampaignQuestion(){
+ const world=worlds[campaignWorld];
+
+ /* Creștem dificultatea progresiv cu lumea și nivelul. */
+ const boost=(campaignWorld+1)*campaignLevel;
+
+ if(campaignWorld===0){
+  return makeEasy();
+ }
+
+ if(campaignWorld===1){
+  return makeMedium();
+ }
+
+ if(campaignWorld===2){
+  const a=rnd(20+boost,100+boost*3);
+  const b=rnd(5,30);
+  const c=rnd(2,15);
+  const type=rnd(1,3);
+
+  if(type===1) return {text:`${a} × ${b} + ${c} = ?`,value:a*b+c};
+  if(type===2) return {text:`${a} + ${b} × ${c} = ?`,value:a+b*c};
+
+  return makeDivision(10+boost,100+boost*2,2,20);
+ }
+
+ if(campaignWorld===3){
+  return makeHard();
+ }
+
+ if(campaignWorld===4){
+  return makeInsane();
+ }
+
+ /* Boss final: expresii cu 3-4 operații, dar cu rezultat
+    întreg și calculat exact. */
+ const a=rnd(10,60);
+ const b=rnd(5,30);
+ const c=rnd(2,15);
+ const d=rnd(2,20);
+
+ const variants=[
+  {
+   text:`(${a} + ${b}) × ${c} − ${d} = ?`,
+   value:(a+b)*c-d
+  },
+  {
+   text:`${a} × (${b} + ${c}) − ${d} = ?`,
+   value:a*(b+c)-d
+  },
+  {
+   text:`(${a} − ${b}) × ${c} + ${d} = ?`,
+   value:(a-b)*c+d
+  },
+  {
+   text:`(${a} + ${b}) × (${c} + ${d}) = ?`,
+   value:(a+b)*(c+d)
+  }
+ ];
+
+ return variants[rnd(0,variants.length-1)];
+}
+
+function newQuestion(){
+ if(!active)return;
+
+ clearInterval(timer);
+
+ let q;
+
+ if(mode==='campaign'){
+  q=makeCampaignQuestion();
+ }else if(difficulty==='easy'){
+  q=makeEasy();
+ }else if(difficulty==='medium'){
+  q=makeMedium();
+ }else if(difficulty==='hard'){
+  q=makeHard();
+ }else{
+  q=makeInsane();
+ }
+
+ answer=q.value;
+ question.textContent=q.text;
+ answerInput.value='';
+ message.textContent='';
+ message.className='message';
+ answerInput.focus();
+
+ startTimer();
+}
+
+function startTimer(){
+ clearInterval(timer);
+
+ const box=document.getElementById('timer');
+
+ if(mode==='free'||mode==='zen'||mode==='campaign'){
+  box.style.display='none';
+  document.getElementById('time').textContent='∞';
+  return;
+ }
+
+ box.style.display='block';
+
+ maxTime=mode==='time'
+  ?60
+  :(difficulty==='easy'?15:
+    difficulty==='medium'?12:
+    difficulty==='hard'?10:8);
+
+ time=maxTime;
+ document.getElementById('time').textContent=time;
+ timerFill.style.width='100%';
+
+ timer=setInterval(()=>{
+  time--;
+  document.getElementById('time').textContent=time;
+  timerFill.style.width=Math.max(0,time/maxTime*100)+'%';
+
+  if(time<=0){
+   clearInterval(timer);
+   if(mode==='time')endGame();
+   else fail('⏰ TIMP EXPIRAT!');
+  }
+ },1000);
+}
+
+function checkAnswer(){
+ if(!active)return;
+
+ const value=answerInput.value.trim();
+ if(value==='')return;
+
+ clearInterval(timer);
+
+ /* Number() permite și numere mari fără probleme de tip text. */
+ if(Number(value)===answer){
+  win();
+ }else{
+  fail(`❌ GREȘIT! Era ${answer}`);
+ }
+}
+
+function win(){
+ correct++;
+ combo++;
+ round++;
+
+ maxCombo=Math.max(maxCombo,combo);
+
+ let points=
+  difficulty==='easy'?10:
+  difficulty==='medium'?20:
+  difficulty==='hard'?30:50;
+
+ if(mode==='campaign'){
+  points+=campaignWorld*10+campaignLevel*3;
+ }
+
+ points+=Math.min(combo*2,50);
+
+ score+=points;
+ xp+=points;
+ coins+=Math.max(1,Math.floor(points/5));
+ playerLevel=Math.max(playerLevel,Math.floor(xp/250)+1);
+ record=Math.max(record,score);
+
+ message.className='message ok';
+ message.textContent=`🎉 CORECT! +${points} | COMBO x${combo}`;
+
+ save();
+ updateGame();
+
+ const needed=
+  mode==='campaign'
+   ?(campaignLevel===10?12:5)
+   :(mode==='challenge'?10:Infinity);
+
+ if(round>=needed){
+  if(mode==='campaign'){
+   finishCampaignLevel();
+  }else{
+   setTimeout(endGame,700);
+  }
+  return;
+ }
+
+ setTimeout(newQuestion,600);
+}
+
+function finishCampaignLevel(){
+ active=false;
+ clearInterval(timer);
+
+ campaignProgress[campaignWorld]=Math.max(
+  campaignProgress[campaignWorld],
+  campaignLevel
+ );
+
+ save();
+
+ document.getElementById('endTitle').textContent=
+  campaignLevel===10
+   ?`🏆 LUMEA ${campaignWorld+1} TERMINATĂ!`
+   :'🎉 NIVEL TERMINAT!';
+
+ document.getElementById('endText').textContent=
+  campaignLevel===10&&campaignWorld<5
+   ?'Următoarea lume este acum DEBLOCATĂ! 🔓'
+   :'Ai deblocat următorul nivel!';
+
+ document.getElementById('finalScore').textContent=score;
+ show('end');
+}
+
+function fail(text){
+ wrong++;
+ combo=0;
+
+ if(mode!=='time'&&mode!=='zen')lives--;
+
+ message.className='message bad';
+ message.textContent=text;
+
+ save();
+ updateGame();
+
+ if(lives<=0&&mode!=='time'&&mode!=='zen'){
+  setTimeout(endGame,900);
+ }else{
+  setTimeout(newQuestion,900);
+ }
+}
+
+function endGame(){
+ active=false;
+ clearInterval(timer);
+ save();
+
+ document.getElementById('endTitle').textContent='🏆 JOC TERMINAT!';
+ document.getElementById('endText').textContent='Scor final';
+ document.getElementById('finalScore').textContent=score;
+
+ show('end');
+}
+
+function updateGame(){
+ scoreEl.textContent=score;
+ comboEl.textContent=combo;
+ livesEl.textContent=lives;
+ levelEl.textContent=Math.floor(score/100)+1;
+ xpBar.style.width=(score%100)+'%';
+}
+
+function update(){
+ const total=correct+wrong;
+ const acc=total?Math.round(correct/total*100):0;
+ const done=campaignProgress.filter(x=>x>=10).length;
+
+ const set=(id,v)=>{
+  const e=document.getElementById(id);
+  if(e)e.textContent=v;
+ };
+
+ set('correctStat',correct);
+ set('wrongStat',wrong);
+ set('accuracy',acc+'%');
+ set('maxCombo',maxCombo);
+ set('recordStat',record);
+ set('worldStat',done);
+ set('record',record);
+ set('recordCombo',maxCombo);
+ set('recordLevel',playerLevel);
+ set('profileLevel',playerLevel);
+ set('xp',xp);
+ set('coins',coins);
+
+ set(
+  'rank',
+  playerLevel>=20?'👑 Legendă':
+  playerLevel>=10?'🔥 Maestru':
+  playerLevel>=5?'⚡ Expert':
+  '🐣 Începător'
+ );
+
+ const p=Math.min(100,(xp%250)/2.5);
+ const pb=document.getElementById('profileXp');
+ if(pb)pb.style.width=p+'%';
+
+ for(let i=0;i<6;i++){
+  set('a'+(i+1),campaignProgress[i]>=10?'🏆':'🔒');
+ }
+}
+
+answerInput.addEventListener('keydown',e=>{
+ if(e.key==='Enter')checkAnswer();
+});
+
+update();
 </script></body></html>
