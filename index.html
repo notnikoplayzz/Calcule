@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ro">
 <head>
@@ -14,16 +13,46 @@
   font-family:Arial,Helvetica,sans-serif;
 }
 
+:root{
+  --bg:#080914;
+  --text:#fff;
+  --muted:#aeb3ca;
+  --card1:rgba(24,26,48,.95);
+  --card2:rgba(13,14,28,.95);
+  --panel:#15172b;
+  --input:#0d0f20;
+  --border:rgba(255,255,255,.08);
+  --secondary:#202342;
+}
+
 body{
-  background:#080914;
-  color:white;
+  background:var(--bg);
+  color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
+  transition:background .25s,color .25s;
+}
+
+body.light{
+  --bg:#f2f4f8;
+  --text:#111827;
+  --muted:#5d6475;
+  --card1:#fff;
+  --card2:#f8f9fc;
+  --panel:#e8ebf2;
+  --input:#fff;
+  --border:rgba(0,0,0,.12);
+  --secondary:#e1e5ef;
 }
 
 button{
   border:0;
   cursor:pointer;
+}
+
+button:disabled{
+  cursor:not-allowed;
+  opacity:.55;
 }
 
 .screen{
@@ -36,7 +65,7 @@ button{
 }
 
 /* =========================
-   INTRO ANIMATION
+   INTRO
 ========================= */
 
 #introSplash{
@@ -118,7 +147,6 @@ button{
   opacity:0;
   transform:scale(.5);
   filter:blur(20px);
-
   animation:
     introName 1s 1s cubic-bezier(.16,1,.3,1) forwards,
     introGradient 2s 1.8s linear infinite;
@@ -128,7 +156,6 @@ button{
   height:2px;
   width:0;
   margin:auto;
-
   background:
     linear-gradient(
       90deg,
@@ -138,11 +165,9 @@ button{
       #ff4ecd,
       transparent
     );
-
   box-shadow:
     0 0 20px #6c63ff,
     0 0 40px #00d4ff;
-
   animation:introLine .8s .1s ease forwards;
 }
 
@@ -160,7 +185,6 @@ button{
 .intro-loading div{
   height:100%;
   width:0;
-
   background:
     linear-gradient(
       90deg,
@@ -168,9 +192,7 @@ button{
       #6c63ff,
       #ff4ecd
     );
-
   box-shadow:0 0 15px #6c63ff;
-
   animation:introProgress 2.3s 1.7s ease forwards;
 }
 
@@ -178,23 +200,10 @@ button{
   position:absolute;
   inset:0;
   opacity:.7;
-
   background-image:
-    radial-gradient(
-      circle,
-      rgba(0,212,255,.8) 1px,
-      transparent 1px
-    ),
-    radial-gradient(
-      circle,
-      rgba(255,78,205,.7) 1px,
-      transparent 1px
-    );
-
-  background-size:
-    70px 70px,
-    110px 110px;
-
+    radial-gradient(circle,rgba(0,212,255,.8) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,78,205,.7) 1px,transparent 1px);
+  background-size:70px 70px,110px 110px;
   animation:
     particlesMove 8s linear infinite,
     particlesFade 4.5s ease forwards;
@@ -225,42 +234,19 @@ button{
 }
 
 @keyframes introBackground{
-  0%,75%{
-    opacity:1;
-  }
-
-  100%{
-    opacity:0;
-    visibility:hidden;
-  }
+  0%,75%{opacity:1}
+  100%{opacity:0;visibility:hidden}
 }
 
 @keyframes introContent{
-  0%{
-    transform:scale(.8);
-  }
-
-  15%{
-    transform:scale(1);
-  }
-
-  75%{
-    transform:scale(1);
-    opacity:1;
-  }
-
-  100%{
-    transform:scale(1.15);
-    opacity:0;
-    filter:blur(15px);
-  }
+  0%{transform:scale(.8)}
+  15%{transform:scale(1)}
+  75%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.15);opacity:0;filter:blur(15px)}
 }
 
 @keyframes introSmall{
-  to{
-    opacity:1;
-    letter-spacing:8px;
-  }
+  to{opacity:1;letter-spacing:8px}
 }
 
 @keyframes introText{
@@ -277,13 +263,11 @@ button{
     transform:scale(.5) rotateX(80deg);
     filter:blur(25px);
   }
-
   60%{
     opacity:1;
     transform:scale(1.08) rotateX(0);
     filter:blur(0);
   }
-
   100%{
     opacity:1;
     transform:scale(1);
@@ -292,67 +276,39 @@ button{
 }
 
 @keyframes introGradient{
-  to{
-    background-position:300% center;
-  }
+  to{background-position:300% center}
 }
 
 @keyframes introLine{
-  to{
-    width:min(650px,80%);
-  }
+  to{width:min(650px,80%)}
 }
 
 @keyframes introLoading{
-  to{
-    opacity:1;
-  }
+  to{opacity:1}
 }
 
 @keyframes introProgress{
-  to{
-    width:100%;
-  }
+  to{width:100%}
 }
 
 @keyframes particlesMove{
-  from{
-    transform:translate(0,0);
-  }
-
-  to{
-    transform:translate(70px,70px);
-  }
+  from{transform:translate(0,0)}
+  to{transform:translate(70px,70px)}
 }
 
 @keyframes particlesFade{
-  0%,75%{
-    opacity:.7;
-  }
-
-  100%{
-    opacity:0;
-  }
+  0%,75%{opacity:.7}
+  100%{opacity:0}
 }
 
 @keyframes orbOne{
-  0%,100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(150px,100px);
-  }
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(150px,100px)}
 }
 
 @keyframes orbTwo{
-  0%,100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(-120px,-100px);
-  }
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(-120px,-100px)}
 }
 
 /* =========================
@@ -371,10 +327,14 @@ button{
   justify-content:space-between;
   padding:0 25px;
   background:rgba(10,11,25,.9);
-  border-bottom:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid var(--border);
   position:sticky;
   top:0;
   z-index:50;
+}
+
+body.light .topbar{
+  background:rgba(255,255,255,.92);
 }
 
 .logo{
@@ -382,6 +342,7 @@ button{
   font-weight:1000;
   background:linear-gradient(90deg,#00d4ff,#8b5cf6,#ff4ecd);
   -webkit-background-clip:text;
+  background-clip:text;
   color:transparent;
 }
 
@@ -393,8 +354,8 @@ button{
 
 .stat-pill{
   padding:9px 14px;
-  background:#15172b;
-  border:1px solid rgba(255,255,255,.08);
+  background:var(--panel);
+  border:1px solid var(--border);
   border-radius:12px;
 }
 
@@ -405,10 +366,10 @@ button{
 .card{
   background:linear-gradient(
     145deg,
-    rgba(24,26,48,.95),
-    rgba(13,14,28,.95)
+    var(--card1),
+    var(--card2)
   );
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid var(--border);
   border-radius:22px;
   padding:25px;
   box-shadow:0 15px 45px rgba(0,0,0,.25);
@@ -423,8 +384,8 @@ button{
 .btn{
   padding:14px 20px;
   border-radius:14px;
-  background:#202342;
-  color:white;
+  background:var(--secondary);
+  color:var(--text);
   font-weight:900;
   transition:.2s;
 }
@@ -436,10 +397,12 @@ button{
 
 .btn.primary{
   background:linear-gradient(135deg,#6c63ff,#00bfff);
+  color:#fff;
 }
 
 .btn.danger{
   background:linear-gradient(135deg,#ff3d71,#ff6b35);
+  color:#fff;
 }
 
 .big-btn{
@@ -454,7 +417,7 @@ button{
 }
 
 .subtitle{
-  color:#aeb3ca;
+  color:var(--muted);
   font-size:18px;
   margin-bottom:25px;
 }
@@ -465,17 +428,9 @@ button{
 
 #home{
   background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(108,99,255,.2),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(0,212,255,.12),
-      transparent 35%
-    ),
-    #080914;
+    radial-gradient(circle at 20% 20%,rgba(108,99,255,.2),transparent 35%),
+    radial-gradient(circle at 80% 80%,rgba(0,212,255,.12),transparent 35%),
+    var(--bg);
 }
 
 .home-content{
@@ -555,14 +510,14 @@ button{
 }
 
 .game-stat{
-  background:#15172b;
+  background:var(--panel);
   border-radius:14px;
   padding:14px;
   text-align:center;
 }
 
 .game-stat small{
-  color:#8e93ac;
+  color:var(--muted);
 }
 
 .game-stat strong{
@@ -595,8 +550,8 @@ button{
   padding:16px;
   border-radius:14px;
   border:2px solid #292c4b;
-  background:#0d0f20;
-  color:white;
+  background:var(--input);
+  color:var(--text);
   font-size:22px;
   outline:none;
   text-align:center;
@@ -671,7 +626,7 @@ button{
 }
 
 /* =========================
-   PROFILE / STATS
+   PROFILE
 ========================= */
 
 .profile-box{
@@ -708,7 +663,7 @@ button{
   justify-content:space-between;
   align-items:center;
   padding:18px 0;
-  border-bottom:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid var(--border);
 }
 
 .setting:last-child{
@@ -730,6 +685,7 @@ button{
   font-weight:1000;
   background:linear-gradient(90deg,#00d4ff,#6c63ff,#ff4ecd);
   -webkit-background-clip:text;
+  background-clip:text;
   color:transparent;
 }
 
@@ -742,7 +698,7 @@ button{
 
 .end-stat{
   padding:20px;
-  background:#15172b;
+  background:var(--panel);
   border-radius:15px;
 }
 
@@ -763,12 +719,14 @@ button{
   padding:15px 20px;
   border-radius:14px;
   background:#1c1f3a;
+  color:#fff;
   border:1px solid rgba(255,255,255,.1);
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   transform:translateY(100px);
   opacity:0;
   transition:.3s;
   z-index:100000;
+  max-width:min(90vw,400px);
 }
 
 #toast.show{
@@ -776,7 +734,20 @@ button{
   opacity:1;
 }
 
+/* =========================
+   NO ANIMATIONS
+========================= */
+
+body.no-animations *,
+body.no-animations *::before,
+body.no-animations *::after{
+  animation-duration:0s !important;
+  animation-delay:0s !important;
+  transition:none !important;
+}
+
 @media(max-width:600px){
+
   .topbar{
     padding:0 12px;
   }
@@ -801,6 +772,14 @@ button{
   .end-stats{
     grid-template-columns:1fr;
   }
+
+  .content{
+    padding:25px 0;
+  }
+
+  .card{
+    padding:20px;
+  }
 }
 </style>
 </head>
@@ -808,7 +787,7 @@ button{
 <body>
 
 <!-- =========================
-     INTRO SPLASH
+     INTRO
 ========================= -->
 
 <div id="introSplash">
@@ -824,13 +803,9 @@ button{
     </div>
 
     <div class="intro-title">
-
       <span>THIS WEBSITE</span>
-
       <span>WAS MADE BY</span>
-
       <strong>iNiko YT</strong>
-
     </div>
 
     <div class="intro-line"></div>
@@ -926,64 +901,43 @@ button{
 
       <div class="grid menu-grid">
 
-        <div
-          class="card menu-card"
-          onclick="show('modes')"
-        >
+        <div class="card menu-card" onclick="show('modes')">
           <div class="menu-icon">🎮</div>
           <h2>Moduri de joc</h2>
           <p>Alege provocarea.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('campaign')"
-        >
+        <div class="card menu-card" onclick="show('campaign')">
           <div class="menu-icon">🗺️</div>
           <h2>Campanie</h2>
           <p>Explorează lumile.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('profile')"
-        >
+        <div class="card menu-card" onclick="show('profile')">
           <div class="menu-icon">👤</div>
           <h2>Profil</h2>
           <p>Vezi progresul.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('statsPage')"
-        >
+        <div class="card menu-card" onclick="show('statsPage')">
           <div class="menu-icon">📊</div>
           <h2>Statistici</h2>
           <p>Vezi performanța.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('records')"
-        >
+        <div class="card menu-card" onclick="show('records')">
           <div class="menu-icon">🏆</div>
           <h2>Recorduri</h2>
           <p>Recordurile tale.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('achievements')"
-        >
+        <div class="card menu-card" onclick="show('achievements')">
           <div class="menu-icon">🎖️</div>
           <h2>Achievement-uri</h2>
           <p>Deblochează recompense.</p>
         </div>
 
-        <div
-          class="card menu-card"
-          onclick="show('settings')"
-        >
+        <div class="card menu-card" onclick="show('settings')">
           <div class="menu-icon">⚙️</div>
           <h2>Setări</h2>
           <p>Personalizează jocul.</p>
@@ -1015,77 +969,44 @@ button{
         <div class="card">
           <h2>♾️ Free</h2>
           <p class="subtitle">Joacă fără limită.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('free')"
-          >
-            Alege
-          </button>
+          <button class="btn primary" onclick="selectMode('free')">Alege</button>
         </div>
 
         <div class="card">
           <h2>⚡ Rapid</h2>
           <p class="subtitle">20 de răspunsuri.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('rapid')"
-          >
-            Alege
-          </button>
+          <button class="btn primary" onclick="selectMode('rapid')">Alege</button>
         </div>
 
         <div class="card">
           <h2>❤️ Survival</h2>
           <p class="subtitle">Ai grijă de vieți.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('survival')"
-          >
-            Alege
-          </button>
+          <button class="btn primary" onclick="selectMode('survival')">Alege</button>
         </div>
 
         <div class="card">
           <h2>⏱️ Time Attack</h2>
-          <p class="subtitle">Rezolvă cât mai multe.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('time')"
-          >
-            Alege
-          </button>
+          <p class="subtitle">30 de secunde.</p>
+          <button class="btn primary" onclick="selectMode('time')">Alege</button>
         </div>
 
         <div class="card">
           <h2>🔥 Challenge</h2>
           <p class="subtitle">Devine din ce în ce mai greu.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('challenge')"
-          >
-            Alege
-          </button>
+          <button class="btn primary" onclick="selectMode('challenge')">Alege</button>
         </div>
 
         <div class="card">
           <h2>🧘 Zen</h2>
           <p class="subtitle">Fără presiune.</p>
-          <button
-            class="btn primary"
-            onclick="selectMode('zen')"
-          >
-            Alege
-          </button>
+          <button class="btn primary" onclick="selectMode('zen')">Alege</button>
         </div>
 
       </div>
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1113,55 +1034,32 @@ button{
         <div class="card">
           <h2>🌱 Easy</h2>
           <p class="subtitle">Pentru începători.</p>
-          <button
-            class="btn primary"
-            onclick="startGame('easy')"
-          >
-            Joacă
-          </button>
+          <button class="btn primary" onclick="startGame('easy')">Joacă</button>
         </div>
 
         <div class="card">
           <h2>⚔️ Medium</h2>
           <p class="subtitle">Pentru jucători experimentați.</p>
-          <button
-            class="btn primary"
-            onclick="startGame('medium')"
-          >
-            Joacă
-          </button>
+          <button class="btn primary" onclick="startGame('medium')">Joacă</button>
         </div>
 
         <div class="card">
           <h2>🔥 Hard</h2>
           <p class="subtitle">Greu.</p>
-          <button
-            class="btn primary"
-            onclick="startGame('hard')"
-          >
-            Joacă
-          </button>
+          <button class="btn primary" onclick="startGame('hard')">Joacă</button>
         </div>
 
         <div class="card">
           <h2>💀 Insane</h2>
           <p class="subtitle">Doar pentru legende.</p>
-          <button
-            class="btn primary"
-            onclick="startGame('insane')"
-          >
-            Joacă
-          </button>
+          <button class="btn primary" onclick="startGame('insane')">Joacă</button>
         </div>
 
       </div>
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('modes')"
-      >
+      <button class="btn" onclick="show('modes')">
         ← Înapoi
       </button>
 
@@ -1188,17 +1086,11 @@ button{
         Explorează toate cele 6 lumi.
       </p>
 
-      <div
-        id="campaignLevels"
-        class="grid"
-      ></div>
+      <div id="campaignLevels" class="grid"></div>
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1219,29 +1111,17 @@ button{
 
     <div class="container">
 
-      <h1
-        class="title"
-        id="worldTitle"
-      >
+      <h1 class="title" id="worldTitle">
         WORLD
       </h1>
 
-      <p
-        class="subtitle"
-        id="worldDescription"
-      ></p>
+      <p class="subtitle" id="worldDescription"></p>
 
-      <div
-        id="worldLevelGrid"
-        class="world-level-grid"
-      ></div>
+      <div id="worldLevelGrid" class="world-level-grid"></div>
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('campaign')"
-      >
+      <button class="btn" onclick="show('campaign')">
         ← Înapoi
       </button>
 
@@ -1266,7 +1146,7 @@ button{
 
         <div class="game-stat">
           <small>Mod</small>
-          <strong id="gameModeText">Free</strong>
+          <strong id="gameModeText">FREE</strong>
         </div>
 
         <div class="game-stat">
@@ -1316,17 +1196,11 @@ button{
 
         </div>
 
-        <div
-          id="feedback"
-          class="feedback"
-        ></div>
+        <div id="feedback" class="feedback"></div>
 
         <br>
 
-        <button
-          class="btn danger"
-          onclick="exitGame()"
-        >
+        <button class="btn danger" onclick="exitGame()">
           Ieși din joc
         </button>
 
@@ -1353,10 +1227,7 @@ button{
 
         <h1>👤 PROFIL</h1>
 
-        <div
-          id="profileLevel"
-          class="level-number"
-        >
+        <div id="profileLevel" class="level-number">
           1
         </div>
 
@@ -1384,10 +1255,7 @@ button{
 
         <br>
 
-        <button
-          class="btn"
-          onclick="show('menu')"
-        >
+        <button class="btn" onclick="show('menu')">
           ← Înapoi
         </button>
 
@@ -1448,10 +1316,7 @@ button{
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1495,10 +1360,7 @@ button{
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1523,31 +1385,19 @@ button{
 
       <div class="grid">
 
-        <div
-          id="achievement1"
-          class="card"
-        >
+        <div id="achievement1" class="card">
           🔒 First Blood
         </div>
 
-        <div
-          id="achievement2"
-          class="card"
-        >
+        <div id="achievement2" class="card">
           🔒 Combo Master
         </div>
 
-        <div
-          id="achievement3"
-          class="card"
-        >
+        <div id="achievement3" class="card">
           🔒 Legend
         </div>
 
-        <div
-          id="achievement4"
-          class="card"
-        >
+        <div id="achievement4" class="card">
           🔒 Millionaire
         </div>
 
@@ -1555,10 +1405,7 @@ button{
 
       <br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1629,35 +1476,23 @@ button{
 
       <br>
 
-      <button
-        class="btn primary"
-        onclick="testSound()"
-      >
+      <button class="btn primary" onclick="testSound()">
         🔊 Test Sunet
       </button>
 
-      <button
-        class="btn danger"
-        onclick="resetSettings()"
-      >
+      <button class="btn danger" onclick="resetSettings()">
         Reset Setări
       </button>
 
       <br><br>
 
-      <button
-        class="btn danger"
-        onclick="resetProgress()"
-      >
+      <button class="btn danger" onclick="resetProgress()">
         Șterge Progresul
       </button>
 
       <br><br>
 
-      <button
-        class="btn"
-        onclick="show('menu')"
-      >
+      <button class="btn" onclick="show('menu')">
         ← Înapoi
       </button>
 
@@ -1669,7 +1504,7 @@ button{
 
 
 <!-- =========================
-     END SCREEN
+     END
 ========================= -->
 
 <section id="end" class="screen">
@@ -1680,17 +1515,11 @@ button{
 
       <div class="card end-box">
 
-        <h1
-          id="endMessage"
-          class="title"
-        >
+        <h1 id="endMessage" class="title">
           GAME OVER
         </h1>
 
-        <div
-          id="endScore"
-          class="end-score"
-        >
+        <div id="endScore" class="end-score">
           0
         </div>
 
@@ -1713,10 +1542,7 @@ button{
 
         </div>
 
-        <button
-          class="btn primary"
-          onclick="show('menu')"
-        >
+        <button class="btn primary" onclick="show('menu')">
           🏠 Meniu
         </button>
 
@@ -1774,11 +1600,22 @@ let answerLocked = false;
 
 let timerInterval = null;
 let timeLeft = 10;
+let maxTime = 10;
 
 let challengeLevel = 1;
 
 let campaignWorld = null;
 let campaignLevel = null;
+
+/*
+  FIX IMPORTANT:
+  Fiecare joc primește un ID unic.
+  Astfel, timeout-urile vechi nu mai
+  pot modifica un joc nou.
+*/
+let gameSession = 0;
+
+let pendingTimeouts = [];
 
 
 /* =========================
@@ -1830,45 +1667,115 @@ const worlds = [
    STORAGE
 ========================= */
 
+function normalizeData(saved){
+
+  const result = {
+    ...defaultData,
+    ...(saved || {})
+  };
+
+  if(!Array.isArray(result.campaignProgress)){
+    result.campaignProgress = [
+      ...defaultData.campaignProgress
+    ];
+  }
+
+  /*
+    Compatibilitate cu save-uri vechi.
+  */
+  result.campaignProgress =
+    Array.from(
+      {length:worlds.length},
+      (_,index)=>{
+        const value =
+          Number(result.campaignProgress[index]);
+
+        if(!Number.isFinite(value)){
+          return 0;
+        }
+
+        return Math.max(
+          0,
+          Math.min(10,Math.floor(value))
+        );
+      }
+    );
+
+  result.correct =
+    Math.max(0,Number(result.correct) || 0);
+
+  result.wrong =
+    Math.max(0,Number(result.wrong) || 0);
+
+  result.record =
+    Math.max(0,Number(result.record) || 0);
+
+  result.maxCombo =
+    Math.max(0,Number(result.maxCombo) || 0);
+
+  result.xp =
+    Math.max(0,Number(result.xp) || 0);
+
+  result.coins =
+    Math.max(0,Number(result.coins) || 0);
+
+  result.playerLevel =
+    Math.max(
+      1,
+      Math.floor(Number(result.playerLevel) || 1)
+    );
+
+  return result;
+}
+
+
 function loadData(){
 
   try{
 
-    const saved =
-      JSON.parse(
-        localStorage.getItem("calculeLegendsData")
+    const raw =
+      localStorage.getItem(
+        "calculeLegendsData"
       );
 
-    if(saved){
-
-      return {
-        ...defaultData,
-        ...saved
-      };
-
+    if(!raw){
+      return normalizeData(null);
     }
 
-  }catch(e){
+    return normalizeData(
+      JSON.parse(raw)
+    );
 
-    console.log(e);
+  }catch(error){
 
+    console.warn(
+      "Save invalid. Se folosesc datele implicite.",
+      error
+    );
+
+    return normalizeData(null);
   }
 
-  return {
-    ...defaultData,
-    campaignProgress:[
-      ...defaultData.campaignProgress
-    ]
-  };
 }
 
 
 function saveData(){
 
-  localStorage.setItem(
-    "calculeLegendsData",
-    JSON.stringify(data)
-  );
+  try{
+
+    localStorage.setItem(
+      "calculeLegendsData",
+      JSON.stringify(data)
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Nu s-au putut salva datele.",
+      error
+    );
+
+  }
 
 }
 
@@ -1877,38 +1784,105 @@ function loadSettings(){
 
   try{
 
-    const saved =
-      JSON.parse(
-        localStorage.getItem("calculeLegendsSettings")
+    const raw =
+      localStorage.getItem(
+        "calculeLegendsSettings"
       );
 
-    if(saved){
-
+    if(!raw){
       return {
-        ...defaultSettings,
-        ...saved
+        ...defaultSettings
       };
-
     }
 
-  }catch(e){
+    const saved =
+      JSON.parse(raw);
 
-    console.log(e);
+    return {
+      ...defaultSettings,
+      ...(saved || {})
+    };
+
+  }catch(error){
+
+    console.warn(
+      "Setări invalide. Se folosesc setările implicite.",
+      error
+    );
+
+    return {
+      ...defaultSettings
+    };
 
   }
 
-  return {
-    ...defaultSettings
-  };
 }
 
 
 function saveSettings(){
 
-  localStorage.setItem(
-    "calculeLegendsSettings",
-    JSON.stringify(settings)
+  try{
+
+    localStorage.setItem(
+      "calculeLegendsSettings",
+      JSON.stringify(settings)
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Nu s-au putut salva setările.",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================
+   TIMEOUT MANAGEMENT
+========================= */
+
+function clearGameTimers(){
+
+  if(timerInterval !== null){
+
+    clearInterval(timerInterval);
+    timerInterval = null;
+
+  }
+
+  pendingTimeouts.forEach(
+    id=>clearTimeout(id)
   );
+
+  pendingTimeouts = [];
+
+}
+
+
+function gameTimeout(callback,delay,session){
+
+  const id =
+    setTimeout(()=>{
+
+      pendingTimeouts =
+        pendingTimeouts.filter(
+          timeoutId=>timeoutId !== id
+        );
+
+      if(session !== gameSession){
+        return;
+      }
+
+      callback();
+
+    },delay);
+
+  pendingTimeouts.push(id);
+
+  return id;
 
 }
 
@@ -1919,18 +1893,20 @@ function saveSettings(){
 
 function show(id){
 
+  const target =
+    document.getElementById(id);
+
+  if(!target){
+    return;
+  }
+
   document
     .querySelectorAll(".screen")
     .forEach(screen=>{
       screen.classList.remove("active");
     });
 
-  const target =
-    document.getElementById(id);
-
-  if(target){
-    target.classList.add("active");
-  }
+  target.classList.add("active");
 
   if(id === "menu"){
     updateUI();
@@ -1967,12 +1943,24 @@ function show(id){
    INTRO
 ========================= */
 
+let introTimeout = null;
+
 function startIntro(){
 
   const intro =
-    document.getElementById("introSplash");
+    document.getElementById(
+      "introSplash"
+    );
 
-  if(!intro) return;
+  if(!intro){
+    show("menu");
+    return;
+  }
+
+  if(introTimeout !== null){
+    clearTimeout(introTimeout);
+    introTimeout = null;
+  }
 
   intro.classList.remove("show");
 
@@ -1982,13 +1970,16 @@ function startIntro(){
 
   playSound("level");
 
-  setTimeout(()=>{
+  introTimeout =
+    setTimeout(()=>{
 
-    intro.classList.remove("show");
+      introTimeout = null;
 
-    show("menu");
+      intro.classList.remove("show");
 
-  },4500);
+      show("menu");
+
+    },4500);
 
 }
 
@@ -2004,11 +1995,16 @@ function getAudioContext(){
 
   if(!audioContext){
 
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if(!AudioContext){
+      return null;
+    }
+
     audioContext =
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+      new AudioContext();
 
   }
 
@@ -2019,11 +2015,22 @@ function getAudioContext(){
 
 function playSound(type){
 
-  if(!settings.soundEnabled) return;
+  if(!settings.soundEnabled){
+    return;
+  }
 
   try{
 
-    const ctx = getAudioContext();
+    const ctx =
+      getAudioContext();
+
+    if(!ctx){
+      return;
+    }
+
+    if(ctx.state === "suspended"){
+      ctx.resume();
+    }
 
     const oscillator =
       ctx.createOscillator();
@@ -2077,9 +2084,12 @@ function playSound(type){
       ctx.currentTime + .2
     );
 
-  }catch(e){
+  }catch(error){
 
-    console.log(e);
+    console.warn(
+      "Audio error:",
+      error
+    );
 
   }
 
@@ -2099,13 +2109,33 @@ function testSound(){
    SETTINGS
 ========================= */
 
+function applySettings(){
+
+  document.body.classList.toggle(
+    "light",
+    !settings.darkMode
+  );
+
+  document.body.classList.toggle(
+    "no-animations",
+    !settings.animationsEnabled
+  );
+
+}
+
+
 function toggleSound(){
 
   settings.soundEnabled =
     !settings.soundEnabled;
 
   saveSettings();
+
   updateSettingsUI();
+
+  if(settings.soundEnabled){
+    playSound("correct");
+  }
 
 }
 
@@ -2116,6 +2146,9 @@ function toggleAnimations(){
     !settings.animationsEnabled;
 
   saveSettings();
+
+  applySettings();
+
   updateSettingsUI();
 
 }
@@ -2126,17 +2159,10 @@ function toggleDarkMode(){
   settings.darkMode =
     !settings.darkMode;
 
-  document.body.style.background =
-    settings.darkMode
-    ? "#080914"
-    : "#f2f4f8";
-
-  document.body.style.color =
-    settings.darkMode
-    ? "white"
-    : "#111";
-
   saveSettings();
+
+  applySettings();
+
   updateSettingsUI();
 
 }
@@ -2145,13 +2171,19 @@ function toggleDarkMode(){
 function updateSettingsUI(){
 
   const sound =
-    document.getElementById("soundToggle");
+    document.getElementById(
+      "soundToggle"
+    );
 
   const animation =
-    document.getElementById("animationToggle");
+    document.getElementById(
+      "animationToggle"
+    );
 
   const dark =
-    document.getElementById("darkToggle");
+    document.getElementById(
+      "darkToggle"
+    );
 
   if(sound){
     sound.textContent =
@@ -2185,11 +2217,7 @@ function resetSettings(){
 
   saveSettings();
 
-  document.body.style.background =
-    "#080914";
-
-  document.body.style.color =
-    "white";
+  applySettings();
 
   updateSettingsUI();
 
@@ -2208,14 +2236,20 @@ function resetProgress(){
     return;
   }
 
-  data = {
-    ...defaultData,
-    campaignProgress:[
-      ...defaultData.campaignProgress
-    ]
-  };
+  /*
+    Dacă utilizatorul șterge progresul
+    în timpul unui joc, jocul este oprit.
+  */
+  gameSession++;
+
+  clearGameTimers();
+
+  data = normalizeData(
+    defaultData
+  );
 
   saveData();
+
   updateUI();
 
   toast("🗑️ Progres șters.");
@@ -2230,10 +2264,14 @@ function resetProgress(){
 function updateUI(){
 
   const headerLevel =
-    document.getElementById("headerLevel");
+    document.getElementById(
+      "headerLevel"
+    );
 
   const headerCoins =
-    document.getElementById("headerCoins");
+    document.getElementById(
+      "headerCoins"
+    );
 
   if(headerLevel){
     headerLevel.textContent =
@@ -2251,19 +2289,29 @@ function updateUI(){
 function updateProfile(){
 
   const level =
-    document.getElementById("profileLevel");
+    document.getElementById(
+      "profileLevel"
+    );
 
   const coins =
-    document.getElementById("profileCoins");
+    document.getElementById(
+      "profileCoins"
+    );
 
   const xp =
-    document.getElementById("profileXP");
+    document.getElementById(
+      "profileXP"
+    );
 
   const nextXP =
-    document.getElementById("profileNextXP");
+    document.getElementById(
+      "profileNextXP"
+    );
 
   const fill =
-    document.getElementById("xpFill");
+    document.getElementById(
+      "xpFill"
+    );
 
   const needed =
     data.playerLevel * 100;
@@ -2424,6 +2472,19 @@ function updateAchievements(){
 
 function selectMode(mode){
 
+  const validModes = [
+    "free",
+    "rapid",
+    "survival",
+    "time",
+    "challenge",
+    "zen"
+  ];
+
+  if(!validModes.includes(mode)){
+    mode = "free";
+  }
+
   selectedMode = mode;
 
   show("difficulty");
@@ -2435,10 +2496,7 @@ function selectMode(mode){
    START GAME
 ========================= */
 
-function startGame(difficulty){
-
-  currentDifficulty =
-    difficulty;
+function resetRoundState(){
 
   score = 0;
   combo = 0;
@@ -2448,15 +2506,50 @@ function startGame(difficulty){
   roundWrong = 0;
   roundMaxCombo = 0;
 
+  currentAnswer = null;
   answerLocked = false;
 
-  /*
-    IMPORTANT:
-    Nu resetăm challengeLevel
-    când pornim un nivel din campanie.
-  */
+}
 
-  if(selectedMode !== "challenge"){
+
+function startGame(difficulty){
+
+  const validDifficulties = [
+    "easy",
+    "medium",
+    "hard",
+    "insane"
+  ];
+
+  if(
+    !validDifficulties.includes(
+      difficulty
+    )
+  ){
+    difficulty = "easy";
+  }
+
+  /*
+    Anulăm complet jocul anterior.
+  */
+  gameSession++;
+
+  clearGameTimers();
+
+  /*
+    Nu mai suntem în campanie.
+  */
+  campaignWorld = null;
+  campaignLevel = null;
+
+  currentDifficulty =
+    difficulty;
+
+  resetRoundState();
+
+  if(selectedMode === "challenge"){
+    challengeLevel = 1;
+  }else{
     challengeLevel = 1;
   }
 
@@ -2464,7 +2557,7 @@ function startGame(difficulty){
 
   updateGameUI();
 
-  generateQuestion();
+  generateQuestion(gameSession);
 
 }
 
@@ -2483,7 +2576,23 @@ function randomInt(min,max){
 }
 
 
-function generateQuestion(){
+function generateQuestion(session = gameSession){
+
+  if(session !== gameSession){
+    return;
+  }
+
+  const gameScreen =
+    document.getElementById(
+      "game"
+    );
+
+  if(
+    !gameScreen ||
+    !gameScreen.classList.contains("active")
+  ){
+    return;
+  }
 
   answerLocked = false;
 
@@ -2497,9 +2606,16 @@ function generateQuestion(){
       "answer"
     );
 
+  if(!question || !answer){
+    return;
+  }
+
   let difficulty =
     currentDifficulty;
 
+  /*
+    Challenge chiar crește în dificultate.
+  */
   if(selectedMode === "challenge"){
 
     if(challengeLevel >= 10){
@@ -2534,7 +2650,9 @@ function generateQuestion(){
     b = randomInt(2,30);
 
     op =
-      ["+","-","×"][randomInt(0,2)];
+      ["+","-","×"][
+        randomInt(0,2)
+      ];
 
   }
 
@@ -2561,12 +2679,6 @@ function generateQuestion(){
       ];
 
   }
-
-
-  /*
-    Pentru împărțire generăm
-    intenționat rezultate întregi.
-  */
 
   if(op === "÷"){
 
@@ -2596,7 +2708,6 @@ function generateQuestion(){
 
   }
 
-
   currentAnswer =
     result;
 
@@ -2605,9 +2716,15 @@ function generateQuestion(){
 
   answer.value = "";
 
-  answer.focus();
+  /*
+    Focus poate da eroare în anumite
+    browsere dacă pagina este în schimbare.
+  */
+  try{
+    answer.focus();
+  }catch(error){}
 
-  startTimer();
+  startTimer(session);
 
 }
 
@@ -2616,18 +2733,35 @@ function generateQuestion(){
    TIMER
 ========================= */
 
-function startTimer(){
+function startTimer(session = gameSession){
 
   clearInterval(timerInterval);
 
+  if(session !== gameSession){
+    return;
+  }
+
+  const timer =
+    document.getElementById(
+      "timer"
+    );
+
+  if(!timer){
+    return;
+  }
+
+  /*
+    Free și Zen nu au timer.
+  */
   if(
     selectedMode === "zen" ||
     selectedMode === "free"
   ){
 
-    document.getElementById(
-      "timer"
-    ).style.width = "100%";
+    timeLeft = 0;
+    maxTime = 0;
+
+    timer.style.width = "100%";
 
     return;
 
@@ -2649,11 +2783,74 @@ function startTimer(){
     timeLeft = 10;
   }
 
-  const maxTime =
+  maxTime =
     timeLeft;
 
+  timer.style.width =
+    "100%";
+
+  /*
+    FIX:
+    Time Attack este acum un singur
+    timer de 30 secunde pentru tot run-ul.
+  */
+  if(selectedMode === "time"){
+
+    timerInterval =
+      setInterval(()=>{
+
+        if(session !== gameSession){
+          clearInterval(timerInterval);
+          timerInterval = null;
+          return;
+        }
+
+        timeLeft -= .1;
+
+        const percent =
+          Math.max(
+            0,
+            timeLeft / maxTime * 100
+          );
+
+        timer.style.width =
+          percent + "%";
+
+        if(timeLeft <= 0){
+
+          clearInterval(timerInterval);
+          timerInterval = null;
+
+          if(!answerLocked){
+
+            answerLocked = true;
+
+            wrongAnswer(
+              "⏰ Timpul a expirat!",
+              session
+            );
+
+          }
+
+        }
+
+      },100);
+
+    return;
+  }
+
+  /*
+    Rapid / Survival / Challenge:
+    timer per întrebare.
+  */
   timerInterval =
     setInterval(()=>{
+
+      if(session !== gameSession){
+        clearInterval(timerInterval);
+        timerInterval = null;
+        return;
+      }
 
       timeLeft -= .1;
 
@@ -2663,21 +2860,21 @@ function startTimer(){
           timeLeft / maxTime * 100
         );
 
-      document.getElementById(
-        "timer"
-      ).style.width =
+      timer.style.width =
         percent + "%";
 
       if(timeLeft <= 0){
 
         clearInterval(timerInterval);
+        timerInterval = null;
 
         if(!answerLocked){
 
           answerLocked = true;
 
           wrongAnswer(
-            "⏰ Timpul a expirat!"
+            "⏰ Timpul a expirat!",
+            session
           );
 
         }
@@ -2695,15 +2892,30 @@ function startTimer(){
 
 function submitAnswer(){
 
-  if(answerLocked) return;
+  if(answerLocked){
+    return;
+  }
+
+  const gameScreen =
+    document.getElementById(
+      "game"
+    );
+
+  if(
+    !gameScreen ||
+    !gameScreen.classList.contains("active")
+  ){
+    return;
+  }
 
   const input =
     document.getElementById(
       "answer"
     );
 
-  const value =
-    Number(input.value);
+  if(!input){
+    return;
+  }
 
   if(input.value.trim() === ""){
 
@@ -2713,18 +2925,37 @@ function submitAnswer(){
 
   }
 
+  const value =
+    Number(input.value);
+
+  if(!Number.isFinite(value)){
+
+    toast("⚠️ Răspuns invalid.");
+
+    return;
+
+  }
+
+  /*
+    FIX:
+    Blocăm imediat butonul.
+    Astfel Enter + click simultan
+    nu pot da două răspunsuri.
+  */
   answerLocked = true;
 
   clearInterval(timerInterval);
+  timerInterval = null;
 
   if(value === currentAnswer){
 
-    correctAnswer();
+    correctAnswer(gameSession);
 
   }else{
 
     wrongAnswer(
-      `❌ Greșit! Răspunsul era ${currentAnswer}.`
+      `❌ Greșit! Răspunsul era ${currentAnswer}.`,
+      gameSession
     );
 
   }
@@ -2736,7 +2967,11 @@ function submitAnswer(){
    CORRECT
 ========================= */
 
-function correctAnswer(){
+function correctAnswer(session = gameSession){
+
+  if(session !== gameSession){
+    return;
+  }
 
   roundCorrect++;
 
@@ -2756,21 +2991,29 @@ function correctAnswer(){
       combo
     );
 
-  let points =
+  const points =
     10 + combo * 2;
 
   score += points;
 
+  /*
+    XP este separat de scor.
+  */
   data.xp += 10;
 
   data.coins += 2;
 
-  challengeLevel++;
+  /*
+    Challenge crește numai în Challenge.
+  */
+  if(selectedMode === "challenge"){
+    challengeLevel++;
+  }
 
   playSound("correct");
 
   showFeedback(
-    `✅ Corect! +${points} XP +10`,
+    `✅ Corect! +${points} puncte • +10 XP`,
     true
   );
 
@@ -2781,38 +3024,63 @@ function correctAnswer(){
   updateGameUI();
 
   /*
-    Rapid Mode:
-    se termină după 20 răspunsuri totale.
+    TIME ATTACK:
+    continuă până expiră cele 30 secunde.
+    Nu se pornește un timer nou pentru
+    fiecare întrebare.
   */
+  if(selectedMode === "time"){
 
+    if(
+      timeLeft <= 0 ||
+      session !== gameSession
+    ){
+      endGame(session);
+      return;
+    }
+
+    gameTimeout(
+      ()=>{
+        generateQuestion(session);
+      },
+      250,
+      session
+    );
+
+    return;
+  }
+
+  /*
+    Rapid:
+    20 răspunsuri totale.
+  */
   if(
     selectedMode === "rapid" &&
     roundCorrect + roundWrong >= 20
   ){
 
-    setTimeout(
-      endGame,
-      500
+    gameTimeout(
+      ()=>endGame(session),
+      500,
+      session
     );
 
     return;
 
   }
 
-
   /*
-    Campania:
-    5 răspunsuri corecte
-    pentru fiecare nivel.
+    Campanie:
+    5 corecte = nivel completat.
   */
-
   if(campaignWorld !== null){
 
     if(roundCorrect >= 5){
 
-      setTimeout(
-        completeCampaignLevel,
-        600
+      gameTimeout(
+        ()=>completeCampaignLevel(session),
+        600,
+        session
       );
 
       return;
@@ -2821,9 +3089,16 @@ function correctAnswer(){
 
   }
 
-  setTimeout(
-    generateQuestion,
-    550
+  /*
+    Pentru restul modurilor:
+    următoarea întrebare.
+  */
+  gameTimeout(
+    ()=>{
+      generateQuestion(session);
+    },
+    550,
+    session
   );
 
 }
@@ -2833,7 +3108,24 @@ function correctAnswer(){
    WRONG
 ========================= */
 
-function wrongAnswer(message){
+function wrongAnswer(
+  message,
+  session = gameSession
+){
+
+  if(session !== gameSession){
+    return;
+  }
+
+  /*
+    Evităm ca expirarea timerului să
+    fie procesată de două ori.
+  */
+  if(
+    !answerLocked
+  ){
+    answerLocked = true;
+  }
 
   roundWrong++;
 
@@ -2842,9 +3134,7 @@ function wrongAnswer(message){
   combo = 0;
 
   if(selectedMode === "survival"){
-
     lives--;
-
   }
 
   playSound("wrong");
@@ -2859,64 +3149,69 @@ function wrongAnswer(message){
   updateGameUI();
 
   /*
-    Survival:
-    Game Over când nu mai sunt vieți.
+    TIME ATTACK:
+    timpul a expirat -> final.
   */
+  if(selectedMode === "time"){
 
+    gameTimeout(
+      ()=>endGame(session),
+      400,
+      session
+    );
+
+    return;
+
+  }
+
+  /*
+    Survival:
+    Game Over la 0 vieți.
+  */
   if(
     selectedMode === "survival" &&
     lives <= 0
   ){
 
-    setTimeout(
-      endGame,
-      700
+    gameTimeout(
+      ()=>endGame(session),
+      700,
+      session
     );
 
     return;
 
   }
 
-
   /*
-    Rapid Mode:
+    Rapid:
     20 răspunsuri totale.
   */
-
   if(
     selectedMode === "rapid" &&
     roundCorrect + roundWrong >= 20
   ){
 
-    setTimeout(
-      endGame,
-      700
+    gameTimeout(
+      ()=>endGame(session),
+      700,
+      session
     );
 
     return;
 
   }
 
-
-  if(campaignWorld !== null){
-
-    /*
-      În campanie, o greșeală
-      nu termină nivelul.
-    */
-
-    setTimeout(
-      generateQuestion,
-      800
-    );
-
-    return;
-
-  }
-
-  setTimeout(
-    generateQuestion,
-    800
+  /*
+    Campanie și restul modurilor
+    continuă cu următoarea întrebare.
+  */
+  gameTimeout(
+    ()=>{
+      generateQuestion(session);
+    },
+    800,
+    session
   );
 
 }
@@ -2936,6 +3231,10 @@ function showFeedback(
       "feedback"
     );
 
+  if(!feedback){
+    return;
+  }
+
   feedback.textContent =
     message;
 
@@ -2946,28 +3245,30 @@ function showFeedback(
 
   if(settings.animationsEnabled){
 
-    feedback.animate(
-      [
-        {
-          transform:"scale(.8)",
-          opacity:0
-        },
+    try{
 
+      feedback.animate(
+        [
+          {
+            transform:"scale(.8)",
+            opacity:0
+          },
+          {
+            transform:"scale(1.08)",
+            opacity:1
+          },
+          {
+            transform:"scale(1)",
+            opacity:1
+          }
+        ],
         {
-          transform:"scale(1.08)",
-          opacity:1
-        },
-
-        {
-          transform:"scale(1)",
-          opacity:1
+          duration:350,
+          easing:"ease-out"
         }
-      ],
-      {
-        duration:350,
-        easing:"ease-out"
-      }
-    );
+      );
+
+    }catch(error){}
 
   }
 
@@ -2980,27 +3281,72 @@ function showFeedback(
 
 function updateGameUI(){
 
-  document.getElementById(
-    "gameModeText"
-  ).textContent =
-    selectedMode.toUpperCase();
-
-  document.getElementById(
-    "gameScore"
-  ).textContent =
-    score;
-
-  document.getElementById(
-    "gameCombo"
-  ).textContent =
-    combo;
-
-  document.getElementById(
-    "gameLives"
-  ).textContent =
-    "❤️".repeat(
-      Math.max(0,lives)
+  const mode =
+    document.getElementById(
+      "gameModeText"
     );
+
+  const gameScore =
+    document.getElementById(
+      "gameScore"
+    );
+
+  const gameCombo =
+    document.getElementById(
+      "gameCombo"
+    );
+
+  const gameLives =
+    document.getElementById(
+      "gameLives"
+    );
+
+  if(mode){
+
+    if(campaignWorld !== null){
+
+      const world =
+        worlds[campaignWorld];
+
+      mode.textContent =
+        `CAMPAIGN • ${world.name} • LV.${campaignLevel}`;
+
+    }else{
+
+      mode.textContent =
+        selectedMode.toUpperCase();
+
+    }
+
+  }
+
+  if(gameScore){
+    gameScore.textContent =
+      score;
+  }
+
+  if(gameCombo){
+    gameCombo.textContent =
+      combo;
+  }
+
+  if(gameLives){
+
+    if(selectedMode === "survival"){
+
+      gameLives.textContent =
+        "❤️".repeat(
+          Math.max(0,lives)
+        );
+
+    }else{
+
+      gameLives.textContent =
+        "∞";
+
+    }
+
+  }
 
 }
 
@@ -3013,12 +3359,21 @@ function levelUpCheck(){
 
   let leveled = false;
 
+  /*
+    Safety:
+    dacă un save vechi are XP absurd,
+    while-ul îl procesează corect.
+  */
   while(
-    data.xp >= data.playerLevel * 100
+    data.xp >=
+    data.playerLevel * 100
   ){
 
-    data.xp -=
+    const needed =
       data.playerLevel * 100;
+
+    data.xp -=
+      needed;
 
     data.playerLevel++;
 
@@ -3047,10 +3402,28 @@ function levelUpCheck(){
 
 function exitGame(){
 
-  clearInterval(timerInterval);
+  /*
+    Creștem ID-ul sesiunii.
+    Toate timeout-urile vechi devin invalide.
+  */
+  gameSession++;
+
+  clearGameTimers();
+
+  currentAnswer = null;
+  answerLocked = true;
 
   campaignWorld = null;
   campaignLevel = null;
+
+  const feedback =
+    document.getElementById(
+      "feedback"
+    );
+
+  if(feedback){
+    feedback.textContent = "";
+  }
 
   show("menu");
 
@@ -3061,18 +3434,24 @@ function exitGame(){
    END GAME
 ========================= */
 
-function endGame(){
+function endGame(session = gameSession){
 
-  clearInterval(timerInterval);
+  if(session !== gameSession){
+    return;
+  }
+
+  clearGameTimers();
 
   /*
-    Recordul rămâne scorul maxim.
+    Invalidăm orice callback care
+    ar putea fi programat în continuare.
   */
+  gameSession++;
+
+  answerLocked = true;
 
   if(score > data.record){
-
     data.record = score;
-
   }
 
   data.maxCombo =
@@ -3083,32 +3462,66 @@ function endGame(){
 
   saveData();
 
-  document.getElementById(
-    "endMessage"
-  ).textContent =
-    score > 0
-    ? "🔥 RUN TERMINAT!"
-    : "💀 GAME OVER";
+  const message =
+    document.getElementById(
+      "endMessage"
+    );
 
-  document.getElementById(
-    "endScore"
-  ).textContent =
-    score;
+  const endScore =
+    document.getElementById(
+      "endScore"
+    );
 
-  document.getElementById(
-    "endCorrect"
-  ).textContent =
-    roundCorrect;
+  const endCorrect =
+    document.getElementById(
+      "endCorrect"
+    );
 
-  document.getElementById(
-    "endWrong"
-  ).textContent =
-    roundWrong;
+  const endWrong =
+    document.getElementById(
+      "endWrong"
+    );
 
-  document.getElementById(
-    "endCombo"
-  ).textContent =
-    roundMaxCombo;
+  const endCombo =
+    document.getElementById(
+      "endCombo"
+    );
+
+  if(message){
+
+    message.textContent =
+      score > 0
+      ? "🔥 RUN TERMINAT!"
+      : "💀 GAME OVER";
+
+  }
+
+  if(endScore){
+    endScore.textContent =
+      score;
+  }
+
+  if(endCorrect){
+    endCorrect.textContent =
+      roundCorrect;
+  }
+
+  if(endWrong){
+    endWrong.textContent =
+      roundWrong;
+  }
+
+  if(endCombo){
+    endCombo.textContent =
+      roundMaxCombo;
+  }
+
+  /*
+    Un nivel de campanie care ajunge aici
+    nu mai trebuie considerat activ.
+  */
+  campaignWorld = null;
+  campaignLevel = null;
 
   show("end");
 
@@ -3126,11 +3539,27 @@ function renderCampaign(){
       "campaignLevels"
     );
 
+  if(!container){
+    return;
+  }
+
+  /*
+    Ne asigurăm că datele sunt valide
+    înainte de afișare.
+  */
+  data =
+    normalizeData(data);
+
   container.innerHTML = "";
 
   worlds.forEach(
     (world,index)=>{
 
+      /*
+        Prima lume este deschisă.
+        Fiecare lume următoare se deschide
+        după 5 nivele din lumea precedentă.
+      */
       const unlocked =
         index === 0 ||
         data.campaignProgress[index - 1] >= 5;
@@ -3156,9 +3585,11 @@ function renderCampaign(){
         </p>
 
         <p>
-          ${unlocked
-            ? `⭐ ${progress}/5`
-            : "🔒 Blocat"}
+          ${
+            unlocked
+            ? `⭐ ${progress}/10`
+            : "🔒 Blocat"
+          }
         </p>
 
       `;
@@ -3166,7 +3597,7 @@ function renderCampaign(){
       if(unlocked){
 
         card.onclick =
-          () => openWorld(index);
+          ()=>openWorld(index);
 
       }
 
@@ -3180,7 +3611,31 @@ function renderCampaign(){
 
 function openWorld(index){
 
-  campaignWorld = index;
+  if(
+    !Number.isInteger(index) ||
+    index < 0 ||
+    index >= worlds.length
+  ){
+    return;
+  }
+
+  /*
+    Verificăm din nou unlock-ul.
+  */
+  const unlocked =
+    index === 0 ||
+    data.campaignProgress[index - 1] >= 5;
+
+  if(!unlocked){
+
+    toast("🔒 Această lume este blocată.");
+
+    return;
+
+  }
+
+  campaignWorld =
+    index;
 
   const world =
     worlds[index];
@@ -3209,6 +3664,10 @@ function renderWorldLevels(){
       "worldLevelGrid"
     );
 
+  if(!grid || campaignWorld === null){
+    return;
+  }
+
   grid.innerHTML = "";
 
   const progress =
@@ -3216,6 +3675,12 @@ function renderWorldLevels(){
       campaignWorld
     ];
 
+  /*
+    Nivelurile sunt 1-10.
+    Primul nivel este deschis,
+    apoi fiecare nivel următor după
+    finalizarea celui anterior.
+  */
   for(
     let level = 1;
     level <= 10;
@@ -3246,9 +3711,13 @@ function renderWorldLevels(){
     if(unlocked){
 
       button.onclick =
-        () => startCampaignLevel(
+        ()=>startCampaignLevel(
           level
         );
+
+    }else{
+
+      button.disabled = true;
 
     }
 
@@ -3261,43 +3730,15 @@ function renderWorldLevels(){
 
 function startCampaignLevel(level){
 
-  campaignLevel =
-    level;
-
-  const world =
-    worlds[campaignWorld];
-
-  selectedMode =
-    "free";
-
-  currentDifficulty =
-    world.difficulty;
-
-  score = 0;
-  combo = 0;
-  lives = 3;
-
-  roundCorrect = 0;
-  roundWrong = 0;
-  roundMaxCombo = 0;
-
-  answerLocked = false;
-
-  challengeLevel =
-    level;
-
-  show("game");
-
-  updateGameUI();
-
-  generateQuestion();
-
-}
-
-
-function completeCampaignLevel(){
-
   if(campaignWorld === null){
+    return;
+  }
+
+  if(
+    !Number.isInteger(level) ||
+    level < 1 ||
+    level > 10
+  ){
     return;
   }
 
@@ -3306,19 +3747,114 @@ function completeCampaignLevel(){
       campaignWorld
     ];
 
-  if(
-    campaignLevel > progress
-  ){
+  /*
+    Nu poți porni un nivel blocat.
+  */
+  if(level > progress + 1){
 
-    data.campaignProgress[
-      campaignWorld
-    ] =
-      campaignLevel;
+    toast("🔒 Nivelul este blocat.");
+
+    return;
 
   }
 
-  data.coins += 25;
+  /*
+    Dacă este deja completat, îl poți rejuca,
+    dar nu primești progres duplicat.
+  */
+  campaignLevel =
+    level;
 
+  const world =
+    worlds[campaignWorld];
+
+  /*
+    Anulăm jocul anterior.
+  */
+  gameSession++;
+
+  clearGameTimers();
+
+  selectedMode =
+    "free";
+
+  currentDifficulty =
+    world.difficulty;
+
+  resetRoundState();
+
+  /*
+    Păstrăm nivelul pentru UI.
+  */
+  challengeLevel =
+    level;
+
+  show("game");
+
+  updateGameUI();
+
+  generateQuestion(gameSession);
+
+}
+
+
+function completeCampaignLevel(
+  session = gameSession
+){
+
+  if(session !== gameSession){
+    return;
+  }
+
+  if(campaignWorld === null){
+    return;
+  }
+
+  if(campaignLevel === null){
+    return;
+  }
+
+  const worldIndex =
+    campaignWorld;
+
+  const completedLevel =
+    campaignLevel;
+
+  const progress =
+    data.campaignProgress[
+      worldIndex
+    ];
+
+  /*
+    Dacă nivelul era deja completat,
+    nu mai acordăm monede/XP din nou.
+  */
+  if(completedLevel <= progress){
+
+    campaignWorld = null;
+    campaignLevel = null;
+
+    show("campaign");
+
+    return;
+
+  }
+
+  /*
+    Progresul trebuie să fie secvențial.
+  */
+  const newProgress =
+    Math.min(
+      progress + 1,
+      completedLevel
+    );
+
+  data.campaignProgress[
+    worldIndex
+  ] =
+    newProgress;
+
+  data.coins += 25;
   data.xp += 30;
 
   levelUpCheck();
@@ -3326,12 +3862,22 @@ function completeCampaignLevel(){
   saveData();
 
   toast(
-    `🏆 Nivel ${campaignLevel} completat! +25 🪙`
+    `🏆 Nivel ${completedLevel} completat! +25 🪙 • +30 XP`
   );
+
+  /*
+    Oprim sesiunea actuală.
+  */
+  clearGameTimers();
+
+  gameSession++;
 
   campaignWorld = null;
   campaignLevel = null;
 
+  /*
+    După mesaj, revenim în campanie.
+  */
   setTimeout(
     ()=>{
       show("campaign");
@@ -3355,17 +3901,24 @@ function toast(message){
       "toast"
     );
 
+  if(!element){
+    return;
+  }
+
   element.textContent =
     message;
 
   element.classList.add("show");
 
-  clearTimeout(toastTimeout);
+  if(toastTimeout !== null){
+    clearTimeout(toastTimeout);
+  }
 
   toastTimeout =
     setTimeout(
       ()=>{
         element.classList.remove("show");
+        toastTimeout = null;
       },
       2500
     );
@@ -3382,29 +3935,30 @@ document.addEventListener(
   event=>{
 
     const game =
-      document
-        .getElementById("game");
+      document.getElementById(
+        "game"
+      );
 
     if(
-      game &&
-      game.classList.contains("active")
+      !game ||
+      !game.classList.contains("active")
     ){
+      return;
+    }
 
-      if(
-        event.key === "Enter"
-      ){
+    if(event.key === "Enter"){
 
-        submitAnswer();
+      event.preventDefault();
 
-      }
+      submitAnswer();
 
-      if(
-        event.key === "Escape"
-      ){
+    }
 
-        exitGame();
+    if(event.key === "Escape"){
 
-      }
+      event.preventDefault();
+
+      exitGame();
 
     }
 
@@ -3413,25 +3967,67 @@ document.addEventListener(
 
 
 /* =========================
+   PAGE VISIBILITY
+========================= */
+
+/*
+  FIX:
+  Dacă utilizatorul schimbă tab-ul,
+  timerul nu continuă să producă
+  comportamente ciudate după revenire.
+*/
+document.addEventListener(
+  "visibilitychange",
+  ()=>{
+
+    if(
+      document.hidden &&
+      document
+        .getElementById("game")
+        ?.classList.contains("active")
+    ){
+
+      /*
+        Nu închidem jocul automat.
+        Timerul continuă normal, dar dacă
+        pagina este ascunsă browserul poate
+        limita intervalele.
+      */
+    }
+
+  }
+);
+
+
+/* =========================
+   BEFORE UNLOAD
+========================= */
+
+window.addEventListener(
+  "beforeunload",
+  ()=>{
+    clearGameTimers();
+
+    if(introTimeout !== null){
+      clearTimeout(introTimeout);
+    }
+  }
+);
+
+
+/* =========================
    INITIALIZATION
 ========================= */
+
+applySettings();
 
 updateUI();
 
 updateSettingsUI();
 
-if(!settings.darkMode){
-
-  document.body.style.background =
-    "#f2f4f8";
-
-  document.body.style.color =
-    "#111";
-
-}
+renderCampaign();
 
 </script>
 
 </body>
 </html>
-```
