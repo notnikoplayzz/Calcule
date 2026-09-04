@@ -345,6 +345,33 @@ h1,h2,h3{
   margin:12px 0 7px;
 }
 
+/* SHOP */
+
+.shop-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  margin-top:20px;
+}
+
+.shop-item{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.shop-header{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.shop-icon{
+  font-size:40px;
+}
+
 /* CAMPAIGN */
 
 .world-grid{
@@ -628,7 +655,33 @@ h1,h2,h3{
   margin-top:25px;
 }
 
-/* LIGHT */
+/* THEMES / CUSTOM STYLING */
+
+body.theme-matrix{
+  --bg:#020a04;
+  --bg2:#051408;
+  --card:#081f0d;
+  --card2:#0d2e14;
+  --text:#32e875;
+  --muted:#4e9f3d;
+  --primary:#198754;
+  --primary2:#20c997;
+  --cyan:#32e875;
+  --border:rgba(50,232,117,.15);
+}
+
+body.theme-sunset{
+  --bg:#14070c;
+  --bg2:#200d14;
+  --card:#2b111a;
+  --card2:#381723;
+  --text:#ffd166;
+  --muted:#d88373;
+  --primary:#ff4f6d;
+  --primary2:#ffa69e;
+  --cyan:#ffd166;
+  --border:rgba(255,79,109,.18);
+}
 
 body.light{
   --bg:#eef1fa;
@@ -668,7 +721,8 @@ body.light .switch{
 
   .menu-grid,
   .option-grid,
-  .world-grid{
+  .world-grid,
+  .shop-grid{
     grid-template-columns:1fr;
   }
 
@@ -764,6 +818,12 @@ body.light .switch{
         <div class="menu-icon">🌍</div>
         <div class="menu-title">Campanie</div>
         <div class="menu-desc">Completează lumile și nivelele</div>
+      </button>
+
+      <button class="btn card menu-btn" onclick="openShop()">
+        <div class="menu-icon">🛒</div>
+        <div class="menu-title">Magazin</div>
+        <div class="menu-desc">Cumpără teme și bonusuri</div>
       </button>
 
       <button class="btn card menu-btn" onclick="showProfile()">
@@ -901,6 +961,17 @@ body.light .switch{
     <div id="worldDescription" class="muted"></div>
 
     <div id="levelGrid" class="level-grid"></div>
+  </div>
+</section>
+
+<section id="shop" class="screen center">
+  <div class="container">
+    <button class="btn secondary back" onclick="show('menu')">← Înapoi</button>
+
+    <h2>🛒 Magazin & Teme</h2>
+    <div class="muted">Personalizează-ți experiența de joc.</div>
+
+    <div id="shopGrid" class="shop-grid"></div>
   </div>
 </section>
 
@@ -1113,25 +1184,39 @@ body.light .switch{
 
       <div class="card setting">
         <div>
-          <strong>🌙 Mod întunecat</strong>
-          <div class="muted small">Schimbă aspectul jocului.</div>
+          <strong>🌙 Mod întunecat / Light</strong>
+          <div class="muted small">Schimbă aspectul de bază.</div>
         </div>
-
-        <div id="themeSwitch" class="switch on" onclick="toggleTheme()"></div>
+        <div id="themeSwitch" class="switch on" onclick="toggleThemeSetting()"></div>
       </div>
 
       <div class="card setting">
         <div>
           <strong>🔊 Sunete</strong>
-          <div class="muted small">Sunete pentru răspunsuri și joc.</div>
+          <div class="muted small">Efecte audio la răspunsuri.</div>
         </div>
+        <div id="soundSwitch" class="switch on" onclick="toggleSoundSetting()"></div>
+      </div>
 
-        <div id="soundSwitch" class="switch on" onclick="toggleSound()"></div>
+      <div class="card setting">
+        <div>
+          <strong>📳 Vibrații</strong>
+          <div class="muted small">Vibrație la răspunsuri greșite/corecte.</div>
+        </div>
+        <div id="vibrationSwitch" class="switch on" onclick="toggleVibrationSetting()"></div>
+      </div>
+
+      <div class="card setting">
+        <div>
+          <strong>🖥️ Ecran complet (Fullscreen)</strong>
+          <div class="muted small">Intră în mod ecran complet.</div>
+        </div>
+        <button class="btn primary" onclick="toggleFullscreen()">Activează</button>
       </div>
 
       <div style="margin-top:25px">
         <button class="btn danger" onclick="resetProgress()">
-          🗑️ Șterge progresul
+          🗑️ Șterge progresul complet
         </button>
       </div>
 
@@ -1184,11 +1269,11 @@ body.light .switch{
 
 <script>
 /* =========================
-   DATA
+   DATA & STORAGE
 ========================= */
 
-const STORAGE_KEY = "calcule_legends_data_v2";
-const SETTINGS_KEY = "calcule_legends_settings_v2";
+const STORAGE_KEY = "calcule_legends_data_v3";
+const SETTINGS_KEY = "calcule_legends_settings_v3";
 
 const defaultData = {
   xp: 0,
@@ -1201,12 +1286,15 @@ const defaultData = {
   rapidBest: 0,
   timeBest: 0,
   achievements: [],
-  campaign: {}
+  campaign: {},
+  unlockedThemes: ["default"],
+  activeTheme: "default"
 };
 
 const defaultSettings = {
   dark: true,
-  sound: true
+  sound: true,
+  vibration: true
 };
 
 let data = loadData();
@@ -1227,24 +1315,29 @@ let lives = Infinity;
 let questionNumber = 0;
 
 let currentQuestion = null;
-
 let gameActive = false;
 let gameSession = 0;
 
 let timerInterval = null;
-let timerDeadline = 0;
 let timeLeft = 30;
-
 let pendingTimeouts = [];
 
 let campaignWorld = null;
 let campaignLevel = null;
 let campaignCorrect = 0;
-
 let challengeLevel = 1;
 
 let lastGameMode = "free";
 let lastGameDifficulty = "easy";
+
+/* =========================
+   SHOP ITEMS
+========================= */
+const shopItems = [
+  { id: "default", name: "Classic Dark", type: "theme", cost: 0, icon: "🌌", desc: "Tema standard întunecată." },
+  { id: "theme-matrix", name: "Matrix Green", type: "theme", cost: 100, icon: "🟢", desc: "Stil terminal de hacking verde." },
+  { id: "theme-sunset", name: "Sunset Gold", type: "theme", cost: 150, icon: "🌅", desc: "Nuanțe calde de apus și aurii." }
+];
 
 /* =========================
    HELPERS
@@ -1258,9 +1351,7 @@ function show(id){
   document.querySelectorAll(".screen").forEach(screen=>{
     screen.classList.remove("active");
   });
-
   const target = $(id);
-
   if(target){
     target.classList.add("active");
   }
@@ -1273,20 +1364,13 @@ function saveData(){
 function loadData(){
   try{
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-    if(!saved){
-      return {...defaultData};
-    }
-
+    if(!saved) return {...defaultData};
     return {
       ...defaultData,
       ...saved,
-      achievements:Array.isArray(saved.achievements)
-        ? saved.achievements
-        : [],
-      campaign:saved.campaign && typeof saved.campaign === "object"
-        ? saved.campaign
-        : {}
+      achievements: Array.isArray(saved.achievements) ? saved.achievements : [],
+      campaign: saved.campaign && typeof saved.campaign === "object" ? saved.campaign : {},
+      unlockedThemes: Array.isArray(saved.unlockedThemes) ? saved.unlockedThemes : ["default"]
     };
   }catch{
     return {...defaultData};
@@ -1300,13 +1384,28 @@ function saveSettings(){
 function loadSettings(){
   try{
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY));
-
-    return {
-      ...defaultSettings,
-      ...(saved || {})
-    };
+    return {...defaultSettings, ...(saved || {})};
   }catch{
     return {...defaultSettings};
+  }
+}
+
+function applyTheme(){
+  document.body.className = "";
+  if(data.activeTheme && data.activeTheme !== "default"){
+    document.body.classList.add(data.activeTheme);
+  } else if(!settings.dark){
+    document.body.classList.add("light");
+  }
+  
+  if($("themeSwitch")){
+    $("themeSwitch"].className = "switch " + ((settings.dark && data.activeTheme === "default") ? "on" : "");
+  }
+  if($("soundSwitch")){
+    $("soundSwitch"].className = "switch " + (settings.sound ? "on" : "");
+  }
+  if($("vibrationSwitch")){
+    $("vibrationSwitch"].className = "switch " + (settings.vibration ? "on" : "");
   }
 }
 
@@ -1315,31 +1414,14 @@ function clearAllTimers(){
     clearInterval(timerInterval);
     timerInterval = null;
   }
-
   pendingTimeouts.forEach(id=>clearTimeout(id));
   pendingTimeouts = [];
-
-  timerDeadline = 0;
 }
 
-function later(callback,ms,session){
-  const id = setTimeout(()=>{
-    pendingTimeouts = pendingTimeouts.filter(x=>x!==id);
-
-    if(session !== gameSession){
-      return;
-    }
-
-    callback();
-  },ms);
-
-  pendingTimeouts.push(id);
-
-  return id;
-}
-
-function randomInt(min,max){
-  return Math.floor(Math.random()*(max-min+1))+min;
+function triggerVibration(pattern){
+  if(settings.vibration && navigator.vibrate){
+    try { navigator.vibrate(pattern); } catch(e){}
+  }
 }
 
 /* =========================
@@ -1349,18 +1431,12 @@ function randomInt(min,max){
 let audioContext = null;
 
 function playSound(type){
-  if(!settings.sound){
-    return;
-  }
+  if(!settings.sound) return;
 
   try{
     if(!audioContext){
-      audioContext = new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-
     if(audioContext.state === "suspended"){
       audioContext.resume();
     }
@@ -1391,12 +1467,11 @@ function playSound(type){
 
     osc.start(now);
     osc.stop(now+.2);
-
   }catch(e){}
 }
 
 /* =========================
-   INTRO - REPARAT
+   INTRO & MENU
 ========================= */
 
 function startIntro(){
@@ -1409,17 +1484,9 @@ function startIntro(){
   playSound("level");
 }
 
-/* =========================
-   MENU
-========================= */
-
 function updateMenu(){
-  if($("coinsMenu")){
-    $("coinsMenu").textContent = data.coins;
-  }
-  if($("xpMenu")){
-    $("xpMenu").textContent = data.xp;
-  }
+  if($("coinsMenu")) $("coinsMenu").textContent = data.coins;
+  if($("xpMenu")) $("xpMenu").textContent = data.xp;
 }
 
 function openModes(){
@@ -1428,82 +1495,58 @@ function openModes(){
   show("modes");
 }
 
-/* =========================
-   MODE
-========================= */
-
 function selectMode(mode){
   selectedMode = mode;
   show("difficulty");
 }
 
 /* =========================
-   QUESTIONS
+   QUESTIONS GENERATOR
 ========================= */
 
 function generateQuestion(difficulty){
   let max;
-
-  if(difficulty === "easy"){
-    max = 20;
-  }
-  else if(difficulty === "medium"){
-    max = 60;
-  }
-  else{
-    max = 150;
-  }
+  if(difficulty === "easy") max = 20;
+  else if(difficulty === "medium") max = 60;
+  else max = 150;
 
   let a,b,answer,operator;
 
   if(selectedMode === "challenge"){
-    const extra = Math.min(challengeLevel * 10,150);
+    const extra = Math.min(challengeLevel * 10, 150);
     max += extra;
   }
 
-  const operators =
-    difficulty === "easy"
-      ? ["+","-","×"]
-      : ["+","-","×","÷"];
-
-  operator = operators[randomInt(0,operators.length-1)];
+  const operators = difficulty === "easy" ? ["+","-","×"] : ["+","-","×","÷"];
+  operator = operators[Math.floor(Math.random()*operators.length)];
 
   if(operator === "+"){
-    a = randomInt(1,max);
-    b = randomInt(1,max);
+    a = Math.floor(Math.random()*max)+1;
+    b = Math.floor(Math.random()*max)+1;
     answer = a+b;
   }
   else if(operator === "-"){
-    a = randomInt(1,max);
-    b = randomInt(1,a);
+    a = Math.floor(Math.random()*max)+1;
+    b = Math.floor(Math.random()*a)+1;
     answer = a-b;
   }
   else if(operator === "×"){
-    const multMax =
-      difficulty === "easy"
-        ? 10
-        : difficulty === "medium"
-          ? 15
-          : 20;
-
-    a = randomInt(1,multMax);
-    b = randomInt(1,multMax);
+    const multMax = difficulty === "easy" ? 10 : difficulty === "medium" ? 15 : 20;
+    a = Math.floor(Math.random()*multMax)+1;
+    b = Math.floor(Math.random()*multMax)+1;
     answer = a*b;
   }
   else{
-    b = randomInt(1,difficulty === "easy" ? 10 : 20);
-    answer = randomInt(1,difficulty === "easy" ? 10 : 20);
+    b = Math.floor(Math.random()*(difficulty === "easy" ? 10 : 20))+1;
+    answer = Math.floor(Math.random()*(difficulty === "easy" ? 10 : 20))+1;
     a = b * answer;
   }
 
-  return {
-    text:`${a} ${operator} ${b} = ?`,
-    answer
-  };
+  return { text:`${a} ${operator} ${b} = ?`, answer };
 }
 
 /* =========================
-   GAME START
+   GAME ENGINE
 ========================= */
 
 function startGame(difficulty){
@@ -1522,11 +1565,7 @@ function startGame(difficulty){
   challengeLevel = 1;
   campaignCorrect = 0;
 
-  if(selectedMode === "survival"){
-    lives = 3;
-  }else{
-    lives = Infinity;
-  }
+  lives = (selectedMode === "survival") ? 3 : Infinity;
 
   gameActive = true;
   data.games++;
@@ -1540,17 +1579,11 @@ function startGame(difficulty){
     startTimeAttack();
   }
 
-  $("answerInput").focus();
+  setTimeout(()=> $("answerInput").focus(), 50);
 }
 
-/* =========================
-   NEXT QUESTION
-========================= */
-
 function generateNextQuestion(){
-  if(!gameActive){
-    return;
-  }
+  if(!gameActive) return;
 
   currentQuestion = generateQuestion(selectedDifficulty);
 
@@ -1562,7 +1595,7 @@ function generateNextQuestion(){
   questionNumber++;
   $("questionCounter").textContent = getQuestionCounterText();
   updateProgress();
-  $("answerInput").focus();
+  setTimeout(()=> $("answerInput").focus(), 50);
 }
 
 function getQuestionCounterText(){
@@ -1575,67 +1608,34 @@ function getQuestionCounterText(){
   return `Întrebarea ${questionNumber}`;
 }
 
-/* =========================
-   GAME UI
-========================= */
-
 function updateGameUI(){
   $("gameScore").textContent = score;
   $("gameStreak").textContent = streak;
+  $("gameLives").textContent = (lives === Infinity) ? "∞" : lives;
 
-  if(lives === Infinity){
-    $("gameLives").textContent = "∞";
-  }else{
-    $("gameLives").textContent = lives;
-  }
-
-  let modeText = "";
-
-  if(selectedMode === "free"){
-    modeText = "♾️ FREE PLAY";
-  }
-  else if(selectedMode === "zen"){
-    modeText = "🧘 ZEN";
-  }
-  else if(selectedMode === "rapid"){
-    modeText = "⚡ RAPID";
-  }
-  else if(selectedMode === "survival"){
-    modeText = "❤️ SURVIVAL";
-  }
-  else if(selectedMode === "time"){
-    modeText = "⏱️ TIME ATTACK";
-  }
-  else if(selectedMode === "challenge"){
-    modeText = `🔥 CHALLENGE • NIVEL ${challengeLevel}`;
-  }
-  else if(campaignWorld !== null){
-    modeText = `🌍 CAMPANIE • L${campaignWorld} • NIVEL ${campaignLevel}`;
-  }
+  let modeText = "FREE PLAY";
+  if(selectedMode === "zen") modeText = "ZEN";
+  else if(selectedMode === "rapid") modeText = "RAPID";
+  else if(selectedMode === "survival") modeText = "SURVIVAL";
+  else if(selectedMode === "time") modeText = "TIME ATTACK";
+  else if(selectedMode === "challenge") modeText = `CHALLENGE • NIVEL ${challengeLevel}`;
+  else if(campaignWorld !== null) modeText = `CAMPANIE • L${campaignWorld} • NIVEL ${campaignLevel}`;
 
   $("gameModeText").textContent = `${modeText} • ${selectedDifficulty.toUpperCase()}`;
-  updateTimerUI();
-}
-
-function updateTimerUI(){
-  const timerBox = $("timerBox");
-  if(!timerBox) return;
-
-  if(selectedMode === "time"){
-    timerBox.style.display = "block";
-    $("gameTimer").textContent = timeLeft;
-  } else {
-    timerBox.style.display = "none";
+  
+  if($("timerBox")){
+    $("timerBox").style.display = (selectedMode === "time") ? "block" : "none";
+    if(selectedMode === "time") $("gameTimer").textContent = timeLeft;
   }
 }
 
 function startTimeAttack(){
   timeLeft = 30;
-  updateTimerUI();
+  updateGameUI();
 
   timerInterval = setInterval(()=>{
     timeLeft--;
-    updateTimerUI();
+    updateGameUI();
 
     if(timeLeft <= 0){
       clearInterval(timerInterval);
@@ -1644,24 +1644,15 @@ function startTimeAttack(){
   }, 1000);
 }
 
-/* =========================
-   PROGRESS
-========================= */
-
 function updateProgress(){
   let percent = 0;
   if(selectedMode === "rapid"){
-    percent = Math.min((questionNumber-1)/20*100,100);
-  }
-  else if(selectedMode === "campaign"){
-    percent = Math.min(campaignCorrect/5*100,100);
+    percent = Math.min((questionNumber-1)/20*100, 100);
+  } else if(selectedMode === "campaign"){
+    percent = Math.min(campaignCorrect/5*100, 100);
   }
   $("progressBar").style.width = percent + "%";
 }
-
-/* =========================
-   ANSWER SUBMISSION
-========================= */
 
 function submitAnswer(){
   if(!gameActive || !currentQuestion) return;
@@ -1670,24 +1661,17 @@ function submitAnswer(){
   if(inputVal === "") return;
 
   const userAns = parseInt(inputVal, 10);
-  const isCorrect = (userAns === currentQuestion.answer);
+  const fb = $("feedback");
 
-  const feedback = $("feedback");
-
-  if(isCorrect){
-    playSound("correct");
+  if(userAns === currentQuestion.answer){
     correct++;
     streak++;
-    score += (10 * streak);
-    data.correct++;
-    data.coins += 2;
-    data.xp += 5;
-
-    if(streak > data.bestStreak) data.bestStreak = streak;
-    if(score > data.bestScore) data.bestScore = score;
-
-    feedback.textContent = "Corect! 🎉";
-    feedback.className = "feedback correct";
+    score += (selectedDifficulty === "easy" ? 10 : selectedDifficulty === "medium" ? 20 : 35);
+    
+    fb.textContent = "CORECT! 🎉";
+    fb.className = "feedback correct";
+    playSound("correct");
+    triggerVibration(40);
 
     if(selectedMode === "challenge" && streak % 5 === 0){
       challengeLevel++;
@@ -1697,7 +1681,7 @@ function submitAnswer(){
       campaignCorrect++;
       updateProgress();
       if(campaignCorrect >= 5){
-        finishCampaignLevel();
+        completeCampaignLevel();
         return;
       }
     }
@@ -1707,137 +1691,66 @@ function submitAnswer(){
       return;
     }
 
-    saveData();
-    updateGameUI();
-
-    gameActive = false;
-    later(()=>{
-      gameActive = true;
-      generateNextQuestion();
-    }, 600, gameSession);
+    setTimeout(() => {
+      if(gameActive) generateNextQuestion();
+    }, 400);
 
   } else {
-    playSound("wrong");
     wrong++;
     streak = 0;
-    data.wrong++;
-
-    feedback.textContent = `Greșit! Răspunsul era ${currentQuestion.answer}`;
-    feedback.className = "feedback wrong";
+    fb.textContent = `GREȘIT! Răspunsul corect era ${currentQuestion.answer}`;
+    fb.className = "feedback wrong";
+    playSound("wrong");
+    triggerVibration([80, 50, 80]);
 
     if(selectedMode === "survival"){
       lives--;
+      updateGameUI();
       if(lives <= 0){
-        saveData();
-        updateGameUI();
-        later(()=>{ endGame(); }, 800, gameSession);
+        setTimeout(() => endGame(), 1000);
         return;
       }
     }
 
-    saveData();
-    updateGameUI();
-
-    gameActive = false;
-    later(()=>{
-      gameActive = true;
-      generateNextQuestion();
-    }, 1000, gameSession);
-  }
-}
-
-/* =========================
-   CAMPAIGN LOGIC
-========================= */
-
-const campaignWorldsData = [
-  { id: 1, title: "Lumea 1: Începutul", desc: "Adunări și scăderi de bază." },
-  { id: 2, title: "Lumea 2: Înmulțirea", desc: "Tabela înmulțirii și viteză." },
-  { id: 3, title: "Lumea 3: Împărțiri", desc: "Provocări matematice complexe." }
-];
-
-function openCampaign(){
-  show("campaign");
-  const grid = $("worldGrid");
-  grid.innerHTML = "";
-
-  campaignWorldsData.forEach(w => {
-    const div = document.createElement("div");
-    div.className = "card world";
-    div.innerHTML = `
-      <div class="world-number">LUMEA ${w.id}</div>
-      <h3>${w.title}</h3>
-      <p class="muted">${w.desc}</p>
-    `;
-    div.onclick = () => openWorldLevels(w.id, w.title, w.desc);
-    grid.appendChild(div);
-  });
-}
-
-function openWorldLevels(worldId, title, desc){
-  campaignWorld = worldId;
-  $("worldTitle").textContent = title;
-  $("worldDescription").textContent = desc;
-
-  show("worldLevels");
-  const grid = $("levelGrid");
-  grid.innerHTML = "";
-
-  for(let l = 1; l <= 5; l++){
-    const btn = document.createElement("button");
-    btn.className = "level";
-    btn.textContent = l;
-    
-    // Verificăm dacă nivelul e completat
-    if(data.campaign && data.campaign[worldId] && data.campaign[worldId] >= l){
-      btn.classList.add("done");
+    if(selectedMode === "rapid" && questionNumber >= 20){
+      setTimeout(() => endGame(), 1000);
+      return;
     }
 
-    btn.onclick = () => startCampaignLevel(worldId, l);
-    grid.appendChild(btn);
+    setTimeout(() => {
+      if(gameActive) generateNextQuestion();
+    }, 900);
   }
+
+  updateGameUI();
 }
 
-function startCampaignLevel(worldId, levelId){
-  campaignWorld = worldId;
-  campaignLevel = levelId;
-  campaignCorrect = 0;
-  selectedMode = "campaign";
-  selectedDifficulty = worldId === 1 ? "easy" : worldId === 2 ? "medium" : "hard";
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter" && gameActive){
+    submitAnswer();
+  }
+});
 
-  startGame(selectedDifficulty);
-}
-
-function finishCampaignLevel(){
+function quitGame(){
   gameActive = false;
   clearAllTimers();
-
-  if(!data.campaign) data.campaign = {};
-  if(!data.campaign[campaignWorld] || data.campaign[campaignWorld] < campaignLevel){
-    data.campaign[campaignWorld] = campaignLevel;
-  }
-
-  data.xp += 50;
-  data.coins += 20;
-  saveData();
-
-  $("endTitle").textContent = `🎉 Nivelul ${campaignLevel} completat!`;
-  $("endScore").textContent = score;
-  $("endMessage").textContent = "Felicitări! Ai trecut nivelul cu succes.";
-  $("endCorrect").textContent = correct;
-  $("endWrong").textContent = wrong;
-  $("endXP").textContent = 50;
-
-  show("end");
+  show("menu");
 }
-
-/* =========================
-   END & STATS SCREENS
-========================= */
 
 function endGame(){
   gameActive = false;
   clearAllTimers();
+
+  const earnedXP = correct * 15 + score;
+  const earnedCoins = Math.floor(score / 15) + (correct * 2);
+
+  data.xp += earnedXP;
+  data.coins += earnedCoins;
+  data.correct += correct;
+  data.wrong += wrong;
+
+  if(score > data.bestScore) data.bestScore = score;
+  if(streak > data.bestStreak) data.bestStreak = streak;
 
   if(selectedMode === "rapid" && score > data.rapidBest){
     data.rapidBest = score;
@@ -1848,25 +1761,166 @@ function endGame(){
 
   saveData();
 
-  $("endTitle").textContent = "🏆 Joc terminat!";
   $("endScore").textContent = score;
-  $("endMessage").textContent = "Ai terminat sesiunea de joc!";
   $("endCorrect").textContent = correct;
   $("endWrong").textContent = wrong;
-  $("endXP").textContent = Math.floor(score / 5);
+  $("endXP").textContent = earnedXP;
+  $("endTitle").textContent = (lives <= 0) ? "💀 Ai rămas fără vieți!" : "🏆 Joc terminat!";
 
   show("end");
-}
-
-function quitGame(){
-  clearAllTimers();
-  show("menu");
-  updateMenu();
 }
 
 function restartGame(){
   startGame(selectedDifficulty);
 }
+
+/* =========================
+   CAMPAIGN SYSTEM
+========================= */
+
+const campaignWorldsData = [
+  { id: 1, name: "Lumea 1: Tărâmul Adunărilor", desc: "Nivele introductive de bază." },
+  { id: 2, name: "Lumea 2: Pădurea Scăderilor", desc: "Exersează scăderile rapide." },
+  { id: 3, name: "Lumea 3: Fortăreața Înmulțirilor", desc: "Tabla înmulțirii pusă la încercare." }
+];
+
+function openCampaign(){
+  const grid = $("worldGrid");
+  grid.innerHTML = "";
+
+  campaignWorldsData.forEach(w => {
+    const unlocked = w.id === 1 || (data.campaign[w.id - 1] && data.campaign[w.id - 1].completed);
+    const card = document.createElement("div");
+    card.className = `card world ${unlocked ? "" : "locked"}`;
+    card.innerHTML = `
+      <div class="world-number">LUMEA ${w.id}</div>
+      <h3>${w.name}</h3>
+      <p class="muted small" style="margin-top:8px">${w.desc}</p>
+    `;
+    if(unlocked){
+      card.onclick = () => openWorldLevels(w.id);
+    }
+    grid.appendChild(card);
+  });
+
+  show("campaign");
+}
+
+function openWorldLevels(worldId){
+  campaignWorld = worldId;
+  const world = campaignWorldsData.find(w => w.id === worldId);
+  $("worldTitle").textContent = world.name;
+  $("worldDescription").textContent = world.desc;
+
+  const grid = $("levelGrid");
+  grid.innerHTML = "";
+
+  if(!data.campaign[worldId]) data.campaign[worldId] = { unlockedLevel: 1, levels: {} };
+
+  for(let i = 1; i <= 10; i++){
+    const isUnlocked = i <= data.campaign[worldId].unlockedLevel;
+    const isDone = data.campaign[worldId].levels[i];
+
+    const btn = document.createElement("div");
+    btn.className = `level ${isUnlocked ? "" : "locked"} ${isDone ? "done" : ""}`;
+    btn.textContent = `Nivel ${i}`;
+
+    if(isUnlocked){
+      btn.onclick = () => startCampaignLevel(worldId, i);
+    }
+    grid.appendChild(btn);
+  }
+
+  show("worldLevels");
+}
+
+function startCampaignLevel(worldId, levelId){
+  campaignWorld = worldId;
+  campaignLevel = levelId;
+  campaignCorrect = 0;
+  selectedMode = "campaign";
+  startGame(worldId === 1 ? "easy" : worldId === 2 ? "medium" : "hard");
+}
+
+function completeCampaignLevel(){
+  gameActive = false;
+  clearAllTimers();
+
+  if(!data.campaign[campaignWorld]) data.campaign[campaignWorld] = { unlockedLevel: 1, levels: {} };
+  data.campaign[campaignWorld].levels[campaignLevel] = true;
+  if(campaignLevel >= data.campaign[campaignWorld].unlockedLevel && campaignLevel < 10){
+    data.campaign[campaignWorld].unlockedLevel = campaignLevel + 1;
+  } else if(campaignLevel === 10 && campaignWorld < campaignWorldsData.length){
+    if(!data.campaign[campaignWorld + 1]) data.campaign[campaignWorld + 1] = { unlockedLevel: 1, levels: {} };
+  }
+
+  data.xp += 100;
+  data.coins += 25;
+  saveData();
+
+  alert(`🎉 Nivelul ${campaignLevel} din Lumea ${campaignWorld} completat! Ai câștigat 100 XP și 25 Monede!`);
+  openWorldLevels(campaignWorld);
+}
+
+/* =========================
+   SHOP & CUSTOMIZATION
+========================= */
+
+function openShop(){
+  const grid = $("shopGrid");
+  grid.innerHTML = "";
+
+  shopItems.forEach(item => {
+    const isUnlocked = data.unlockedThemes.includes(item.id);
+    const isActive = data.activeTheme === item.id;
+
+    const div = document.createElement("div");
+    div.className = "card shop-item";
+    div.innerHTML = `
+      <div class="shop-header">
+        <span class="shop-icon">${item.icon}</span>
+        <div>
+          <h3>${item.name}</h3>
+          <p class="muted small">${item.desc}</p>
+        </div>
+      </div>
+      <div>
+        ${isUnlocked 
+          ? `<button class="btn ${isActive ? 'success' : 'secondary'}" style="width:100%" onclick="equipTheme('${item.id}')">${isActive ? 'Echipat ✓' : 'Echipează'}</button>`
+          : `<button class="btn primary" style="width:100%" onclick="buyTheme('${item.id}', ${item.cost})">Cumpără (${item.cost} 🪙)</button>`
+        }
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+
+  show("shop");
+}
+
+function buyTheme(id, cost){
+  if(data.coins < cost){
+    alert("Nu ai suficiente monede!");
+    return;
+  }
+  data.coins -= cost;
+  data.unlockedThemes.push(id);
+  data.activeTheme = id;
+  saveData();
+  updateMenu();
+  openShop();
+  applyTheme();
+}
+
+function equipTheme(id){
+  data.activeTheme = id;
+  saveData();
+  openShop();
+  applyTheme();
+}
+
+/* =========================
+   PROFILES, STATS & RECORDS
+========================= */
 
 function showProfile(){
   $("profileXP").textContent = data.xp;
@@ -1882,13 +1936,12 @@ function showStats(){
   $("statsGames").textContent = data.games;
   $("statsCorrect").textContent = data.correct;
   $("statsWrong").textContent = data.wrong;
-
+  
   const total = data.correct + data.wrong;
   const acc = total > 0 ? Math.round((data.correct / total) * 100) : 0;
   $("statsAccuracy").textContent = acc + "%";
   $("statsBestStreak").textContent = data.bestStreak;
   $("statsBestScore").textContent = data.bestScore;
-
   show("statsPage");
 }
 
@@ -1897,72 +1950,85 @@ function showRecords(){
   $("recordStreak").textContent = data.bestStreak;
   $("recordRapid").textContent = data.rapidBest;
   $("recordTime").textContent = data.timeBest;
-
   show("records");
 }
 
 function showAchievements(){
   const list = $("achievementList");
-  list.innerHTML = `
-    <div class="card list-item"><span>🚀 Primul Joc</span><strong>${data.games > 0 ? "Deblocat" : "Blocat"}</strong></div>
-    <div class="card list-item"><span>🔥 Streak de 10</span><strong>${data.bestStreak >= 10 ? "Deblocat" : "Blocat"}</strong></div>
-    <div class="card list-item"><span>⭐ 100 Răspunsuri Corecte</span><strong>${data.correct >= 100 ? "Deblocat" : "Blocat"}</strong></div>
-  `;
+  list.innerHTML = "";
+
+  const achievementsDef = [
+    { id: "first_game", title: "Primul Pas", desc: "Joacă cel puțin un joc.", check: () => data.games >= 1 },
+    { id: "math_master", title: "Matematician", desc: "Obține 50 de răspunsuri corecte.", check: () => data.correct >= 50 },
+    { id: "rich", title: "Bogătaș", desc: "Strânge cel puțin 100 monede.", check: () => data.coins >= 100 },
+    { id: "streak_10", title: "De Oprișit", desc: "Fă un streak de 10 răspunsuri corecte.", check: () => data.bestStreak >= 10 }
+  ];
+
+  achievementsDef.forEach(ach => {
+    const unlocked = ach.check();
+    const item = document.createElement("div");
+    item.className = "card list-item";
+    item.innerHTML = `
+      <div>
+        <strong>${unlocked ? '✅' : '🔒'} ${ach.title}</strong>
+        <div class="muted small">${ach.desc}</div>
+      </div>
+      <span>${unlocked ? 'Deblocat' : 'Blocat'}</span>
+    `;
+    list.appendChild(item);
+  });
+
   show("achievements");
 }
 
-function toggleTheme(){
+/* =========================
+   SETTINGS ACTIONS
+========================= */
+
+function toggleThemeSetting(){
   settings.dark = !settings.dark;
-  saveSettings();
-  applySettings();
+  if(data.activeTheme === "default"){
+    saveSettings();
+    applyTheme();
+  }
 }
 
-function toggleSound(){
+function toggleSoundSetting(){
   settings.sound = !settings.sound;
   saveSettings();
-  applySettings();
+  applyTheme();
 }
 
-function applySettings(){
-  if(settings.dark){
-    document.body.classList.remove("light");
-    $("themeSwitch").classList.add("on");
-  } else {
-    document.body.classList.add("light");
-    $("themeSwitch").classList.remove("on");
-  }
+function toggleVibrationSetting(){
+  settings.vibration = !settings.vibration;
+  saveSettings();
+  applyTheme();
+}
 
-  if(settings.sound){
-    $("soundSwitch").classList.add("on");
+function toggleFullscreen(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
   } else {
-    $("soundSwitch").classList.remove("on");
+    if(document.exitFullscreen){
+      document.exitFullscreen();
+    }
   }
 }
 
 function resetProgress(){
-  if(confirm("Sigur vrei să ștergi tot progresul?")){
+  if(confirm("Ești sigur că vrei să ștergi tot progresul? Această acțiune este ireversibilă!")){
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(SETTINGS_KEY);
     data = loadData();
+    settings = loadSettings();
+    applyTheme();
     updateMenu();
-    alert("Progresul a fost resetat!");
     show("menu");
   }
 }
 
-// Suport pentru tasta Enter în input-ul de răspuns
-document.addEventListener("DOMContentLoaded", () => {
-  applySettings();
-  updateMenu();
-
-  const input = $("answerInput");
-  if(input){
-    input.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        submitAnswer();
-      }
-    });
-  }
-});
+// Inițializare temă la pornire
+applyTheme();
 </script>
 
 </body>
