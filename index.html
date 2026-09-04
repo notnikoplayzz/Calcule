@@ -1340,6 +1340,16 @@ const shopItems = [
 ];
 
 /* =========================
+   ACHIEVEMENTS DATA
+========================= */
+const achievementsList = [
+  { id: "first_win", name: "Primul Pas", desc: "Răspunde corect la prima ta întrebare.", icon: "🎯", reward: 20 },
+  { id: "streak_5", name: "Pe Val", desc: "Obține un streak de 5 răspunsuri corecte.", icon: "🔥", reward: 50 },
+  { id: "streak_10", name: "De Opri Neoprit", desc: "Obține un streak de 10 răspunsuri corecte.", icon: "⚡", reward: 100 },
+  { id: "games_10", name: "Jucător Dedicat", desc: "Termină cel puțin 10 jocuri.", icon: "🎮", reward: 75 }
+];
+
+/* =========================
    HELPERS
 ========================= */
 
@@ -1399,13 +1409,13 @@ function applyTheme(){
   }
   
   if($("themeSwitch")){
-    $("themeSwitch"].className = "switch " + ((settings.dark && data.activeTheme === "default") ? "on" : "");
+    $("themeSwitch").className = "switch " + ((settings.dark && data.activeTheme === "default") ? "on" : "");
   }
   if($("soundSwitch")){
-    $("soundSwitch"].className = "switch " + (settings.sound ? "on" : "");
+    $("soundSwitch").className = "switch " + (settings.sound ? "on" : "");
   }
   if($("vibrationSwitch")){
-    $("vibrationSwitch"].className = "switch " + (settings.vibration ? "on" : "");
+    $("vibrationSwitch").className = "switch " + (settings.vibration ? "on" : "");
   }
 }
 
@@ -1591,181 +1601,163 @@ function generateNextQuestion(){
   $("answerInput").value = "";
   $("feedback").textContent = "";
   $("feedback").className = "feedback";
-
+  
   questionNumber++;
-  $("questionCounter").textContent = getQuestionCounterText();
-  updateProgress();
-  setTimeout(()=> $("answerInput").focus(), 50);
-}
-
-function getQuestionCounterText(){
-  if(selectedMode === "rapid"){
-    return `Întrebarea ${Math.min(questionNumber,20)} / 20`;
+  updateGameUI();
+  
+  if(selectedMode === "zen"){
+    $("progressBar").style.width = "100%";
+  } else if(selectedMode === "rapid"){
+    const pct = ((questionNumber - 1) / 20) * 100;
+    $("progressBar").style.width = pct + "%";
+  } else {
+    $("progressBar").style.width = "0%";
   }
-  if(selectedMode === "campaign"){
-    return `Nivel ${campaignLevel} • ${campaignCorrect} / 5`;
-  }
-  return `Întrebarea ${questionNumber}`;
 }
 
 function updateGameUI(){
-  $("gameScore").textContent = score;
-  $("gameStreak").textContent = streak;
-  $("gameLives").textContent = (lives === Infinity) ? "∞" : lives;
-
-  let modeText = "FREE PLAY";
-  if(selectedMode === "zen") modeText = "ZEN";
-  else if(selectedMode === "rapid") modeText = "RAPID";
-  else if(selectedMode === "survival") modeText = "SURVIVAL";
-  else if(selectedMode === "time") modeText = "TIME ATTACK";
-  else if(selectedMode === "challenge") modeText = `CHALLENGE • NIVEL ${challengeLevel}`;
-  else if(campaignWorld !== null) modeText = `CAMPANIE • L${campaignWorld} • NIVEL ${campaignLevel}`;
-
-  $("gameModeText").textContent = `${modeText} • ${selectedDifficulty.toUpperCase()}`;
-  
-  if($("timerBox")){
-    $("timerBox").style.display = (selectedMode === "time") ? "block" : "none";
-    if(selectedMode === "time") $("gameTimer").textContent = timeLeft;
-  }
+  if($("gameScore")) $("gameScore").textContent = score;
+  if($("gameStreak")) $("gameStreak").textContent = streak;
+  if($("gameLives")) $("gameLives").textContent = lives === Infinity ? "∞" : "❤️".repeat(lives);
+  if($("gameModeText")) $("gameModeText").textContent = selectedMode.toUpperCase();
+  if($("questionCounter")) $("questionCounter").textContent = `Întrebarea ${questionNumber}`;
 }
 
 function startTimeAttack(){
   timeLeft = 30;
-  updateGameUI();
-
+  if($("gameTimer")) $("gameTimer").textContent = timeLeft;
+  
   timerInterval = setInterval(()=>{
     timeLeft--;
-    updateGameUI();
+    if($("gameTimer")) $("gameTimer").textContent = timeLeft;
+    
+    const pct = (timeLeft / 30) * 100;
+    $("progressBar").style.width = pct + "%";
 
     if(timeLeft <= 0){
-      clearInterval(timerInterval);
+      clearAllTimers();
       endGame();
     }
   }, 1000);
 }
 
-function updateProgress(){
-  let percent = 0;
-  if(selectedMode === "rapid"){
-    percent = Math.min((questionNumber-1)/20*100, 100);
-  } else if(selectedMode === "campaign"){
-    percent = Math.min(campaignCorrect/5*100, 100);
-  }
-  $("progressBar").style.width = percent + "%";
-}
-
 function submitAnswer(){
-  if(!gameActive || !currentQuestion) return;
+  if(!gameActive) return;
 
-  const inputVal = $("answerInput").value.trim();
-  if(inputVal === "") return;
+  const val = $("answerInput").value.trim();
+  if(val === "") return;
 
-  const userAns = parseInt(inputVal, 10);
-  const fb = $("feedback");
+  const userAns = parseInt(val, 10);
+  const isCorrect = (userAns === currentQuestion.answer);
 
-  if(userAns === currentQuestion.answer){
+  const currentSession = gameSession;
+
+  if(isCorrect){
     correct++;
     streak++;
-    score += (selectedDifficulty === "easy" ? 10 : selectedDifficulty === "medium" ? 20 : 35);
+    score += (10 * (selectedDifficulty === "easy" ? 1 : selectedDifficulty === "medium" ? 2 : 3));
     
-    fb.textContent = "CORECT! 🎉";
-    fb.className = "feedback correct";
-    playSound("correct");
-    triggerVibration(40);
+    if(streak > data.bestStreak) data.bestStreak = streak;
+    if(score > data.bestScore) data.bestScore = score;
+    
+    data.correct++;
+    data.xp += 15;
+    data.coins += 5;
 
-    if(selectedMode === "challenge" && streak % 5 === 0){
-      challengeLevel++;
+    playSound("correct");
+    triggerVibration(50);
+
+    $("feedback").textContent = "Corect! 🎉";
+    $("feedback").className = "feedback correct";
+
+    checkAchievements();
+
+    if(selectedMode === "rapid" && questionNumber >= 20){
+      gameActive = false;
+      clearAllTimers();
+      if(score > data.rapidBest) data.rapidBest = score;
+      saveData();
+      const timeoutId = setTimeout(() => endGame(), 800);
+      pendingTimeouts.push(timeoutId);
+      return;
     }
 
-    if(selectedMode === "campaign"){
+    if(campaignWorld !== null){
       campaignCorrect++;
-      updateProgress();
       if(campaignCorrect >= 5){
+        gameActive = false;
+        clearAllTimers();
         completeCampaignLevel();
         return;
       }
     }
 
-    if(selectedMode === "rapid" && questionNumber >= 20){
-      endGame();
-      return;
+    if(selectedMode === "challenge"){
+      challengeLevel++;
     }
 
-    setTimeout(() => {
-      if(gameActive) generateNextQuestion();
-    }, 400);
+    const timeoutId = setTimeout(()=>{
+      if(gameActive && gameSession === currentSession){
+        generateNextQuestion();
+      }
+    }, 600);
+    pendingTimeouts.push(timeoutId);
 
   } else {
     wrong++;
     streak = 0;
-    fb.textContent = `GREȘIT! Răspunsul corect era ${currentQuestion.answer}`;
-    fb.className = "feedback wrong";
+    data.wrong++;
+
     playSound("wrong");
     triggerVibration([80, 50, 80]);
+
+    $("feedback").textContent = `Greșit! Răspunsul era ${currentQuestion.answer}`;
+    $("feedback").className = "feedback wrong";
 
     if(selectedMode === "survival"){
       lives--;
       updateGameUI();
       if(lives <= 0){
-        setTimeout(() => endGame(), 1000);
+        gameActive = false;
+        clearAllTimers();
+        const timeoutId = setTimeout(() => endGame(), 1000);
+        pendingTimeouts.push(timeoutId);
         return;
       }
     }
 
-    if(selectedMode === "rapid" && questionNumber >= 20){
-      setTimeout(() => endGame(), 1000);
-      return;
-    }
-
-    setTimeout(() => {
-      if(gameActive) generateNextQuestion();
-    }, 900);
+    const timeoutId = setTimeout(()=>{
+      if(gameActive && gameSession === currentSession){
+        generateNextQuestion();
+      }
+    }, 1000);
+    pendingTimeouts.push(timeoutId);
   }
 
+  saveData();
   updateGameUI();
 }
-
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter" && gameActive){
-    submitAnswer();
-  }
-});
 
 function quitGame(){
   gameActive = false;
   clearAllTimers();
   show("menu");
+  updateMenu();
 }
 
 function endGame(){
   gameActive = false;
   clearAllTimers();
 
-  const earnedXP = correct * 15 + score;
-  const earnedCoins = Math.floor(score / 15) + (correct * 2);
-
-  data.xp += earnedXP;
-  data.coins += earnedCoins;
-  data.correct += correct;
-  data.wrong += wrong;
-
-  if(score > data.bestScore) data.bestScore = score;
-  if(streak > data.bestStreak) data.bestStreak = streak;
-
-  if(selectedMode === "rapid" && score > data.rapidBest){
-    data.rapidBest = score;
-  }
   if(selectedMode === "time" && score > data.timeBest){
     data.timeBest = score;
   }
-
   saveData();
 
-  $("endScore").textContent = score;
-  $("endCorrect").textContent = correct;
-  $("endWrong").textContent = wrong;
-  $("endXP").textContent = earnedXP;
-  $("endTitle").textContent = (lives <= 0) ? "💀 Ai rămas fără vieți!" : "🏆 Joc terminat!";
+  if($("endScore")) $("endScore").textContent = score;
+  if($("endCorrect")) $("endCorrect").textContent = correct;
+  if($("endWrong")) $("endWrong").textContent = wrong;
+  if($("endXP")) $("endXP").textContent = correct * 15;
 
   show("end");
 }
@@ -1775,222 +1767,252 @@ function restartGame(){
 }
 
 /* =========================
-   CAMPAIGN SYSTEM
+   CAMPAIGN LOGIC
 ========================= */
 
-const campaignWorldsData = [
-  { id: 1, name: "Lumea 1: Tărâmul Adunărilor", desc: "Nivele introductive de bază." },
-  { id: 2, name: "Lumea 2: Pădurea Scăderilor", desc: "Exersează scăderile rapide." },
-  { id: 3, name: "Lumea 3: Fortăreața Înmulțirilor", desc: "Tabla înmulțirii pusă la încercare." }
+const campaignWorlds = [
+  { id: 1, name: "Lumea 1: Tărâmul Simplu", desc: "Adunări și scăderi de bază.", levels: 5 },
+  { id: 2, name: "Lumea 2: Pădurea Înmulțirii", desc: "Introducerea înmulțirii.", levels: 5 },
+  { id: 3, name: "Lumea 3: Vulcanul Matematic", desc: "Operații mixte și dificultate crescută.", levels: 5 }
 ];
 
 function openCampaign(){
-  const grid = $("worldGrid");
-  grid.innerHTML = "";
-
-  campaignWorldsData.forEach(w => {
-    const unlocked = w.id === 1 || (data.campaign[w.id - 1] && data.campaign[w.id - 1].completed);
-    const card = document.createElement("div");
-    card.className = `card world ${unlocked ? "" : "locked"}`;
-    card.innerHTML = `
-      <div class="world-number">LUMEA ${w.id}</div>
-      <h3>${w.name}</h3>
-      <p class="muted small" style="margin-top:8px">${w.desc}</p>
-    `;
-    if(unlocked){
-      card.onclick = () => openWorldLevels(w.id);
-    }
-    grid.appendChild(card);
-  });
-
   show("campaign");
+  renderCampaignWorlds();
 }
 
-function openWorldLevels(worldId){
-  campaignWorld = worldId;
-  const world = campaignWorldsData.find(w => w.id === worldId);
-  $("worldTitle").textContent = world.name;
-  $("worldDescription").textContent = world.desc;
-
-  const grid = $("levelGrid");
+function renderCampaignWorlds(){
+  const grid = $("worldGrid");
+  if(!grid) return;
   grid.innerHTML = "";
 
-  if(!data.campaign[worldId]) data.campaign[worldId] = { unlockedLevel: 1, levels: {} };
+  campaignWorlds.forEach(world => {
+    const unlocked = world.id === 1 || (data.campaign && data.campaign[world.id - 1] && data.campaign[world.id - 1].completed);
+    
+    const div = document.createElement("div");
+    div.className = `card world ${unlocked ? "" : "locked"}`;
+    div.innerHTML = `
+      <div class="world-number">LUMEA ${world.id}</div>
+      <h3>${world.name}</h3>
+      <p class="muted small" style="margin-top:8px">${world.desc}</p>
+    `;
+    
+    if(unlocked){
+      div.onclick = () => openWorldLevels(world);
+    }
+    grid.appendChild(div);
+  });
+}
 
-  for(let i = 1; i <= 10; i++){
-    const isUnlocked = i <= data.campaign[worldId].unlockedLevel;
-    const isDone = data.campaign[worldId].levels[i];
+function openWorldLevels(world){
+  campaignWorld = world;
+  show("worldLevels");
+  if($("worldTitle")) $("worldTitle").textContent = world.name;
+  if($("worldDescription")) $("worldDescription").textContent = world.desc;
+
+  const grid = $("levelGrid");
+  if(!grid) return;
+  grid.innerHTML = "";
+
+  for(let i = 1; i <= world.levels; i++){
+    const worldData = data.campaign[world.id] || { unlockedLevel: 1 };
+    const isUnlocked = i <= (worldData.unlockedLevel || 1);
+    const isDone = i < (worldData.unlockedLevel || 1);
 
     const btn = document.createElement("div");
     btn.className = `level ${isUnlocked ? "" : "locked"} ${isDone ? "done" : ""}`;
     btn.textContent = `Nivel ${i}`;
 
     if(isUnlocked){
-      btn.onclick = () => startCampaignLevel(worldId, i);
+      btn.onclick = () => startCampaignLevel(world.id, i);
     }
     grid.appendChild(btn);
   }
-
-  show("worldLevels");
 }
 
 function startCampaignLevel(worldId, levelId){
   campaignWorld = worldId;
   campaignLevel = levelId;
   campaignCorrect = 0;
-  selectedMode = "campaign";
+
+  selectedMode = "free";
   startGame(worldId === 1 ? "easy" : worldId === 2 ? "medium" : "hard");
+  if($("gameModeText")) $("gameModeText").textContent = `CAMPANIE: L${worldId} - N${levelId}`;
 }
 
 function completeCampaignLevel(){
-  gameActive = false;
-  clearAllTimers();
-
-  if(!data.campaign[campaignWorld]) data.campaign[campaignWorld] = { unlockedLevel: 1, levels: {} };
-  data.campaign[campaignWorld].levels[campaignLevel] = true;
-  if(campaignLevel >= data.campaign[campaignWorld].unlockedLevel && campaignLevel < 10){
-    data.campaign[campaignWorld].unlockedLevel = campaignLevel + 1;
-  } else if(campaignLevel === 10 && campaignWorld < campaignWorldsData.length){
-    if(!data.campaign[campaignWorld + 1]) data.campaign[campaignWorld + 1] = { unlockedLevel: 1, levels: {} };
+  if(!data.campaign[campaignWorld]) {
+    data.campaign[campaignWorld] = { unlockedLevel: 1, completed: false };
   }
-
-  data.xp += 100;
-  data.coins += 25;
+  
+  const currentUnlocked = data.campaign[campaignWorld].unlockedLevel || 1;
+  if(campaignLevel >= currentUnlocked && campaignLevel < 5){
+    data.campaign[campaignWorld].unlockedLevel = campaignLevel + 1;
+  } else if(campaignLevel >= 5){
+    data.campaign[campaignWorld].completed = true;
+  }
+  
+  data.xp += 50;
+  data.coins += 20;
   saveData();
 
-  alert(`🎉 Nivelul ${campaignLevel} din Lumea ${campaignWorld} completat! Ai câștigat 100 XP și 25 Monede!`);
-  openWorldLevels(campaignWorld);
+  show("campaign");
+  renderCampaignWorlds();
 }
 
 /* =========================
-   SHOP & CUSTOMIZATION
+   SHOP LOGIC
 ========================= */
 
 function openShop(){
+  show("shop");
+  renderShop();
+}
+
+function renderShop(){
   const grid = $("shopGrid");
+  if(!grid) return;
   grid.innerHTML = "";
 
   shopItems.forEach(item => {
-    const isUnlocked = data.unlockedThemes.includes(item.id);
-    const isActive = data.activeTheme === item.id;
+    const owned = data.unlockedThemes.includes(item.id);
+    const active = data.activeTheme === item.id;
 
     const div = document.createElement("div");
     div.className = "card shop-item";
     div.innerHTML = `
       <div class="shop-header">
-        <span class="shop-icon">${item.icon}</span>
+        <div class="shop-icon">${item.icon}</div>
         <div>
           <h3>${item.name}</h3>
           <p class="muted small">${item.desc}</p>
         </div>
       </div>
-      <div>
-        ${isUnlocked 
-          ? `<button class="btn ${isActive ? 'success' : 'secondary'}" style="width:100%" onclick="equipTheme('${item.id}')">${isActive ? 'Echipat ✓' : 'Echipează'}</button>`
-          : `<button class="btn primary" style="width:100%" onclick="buyTheme('${item.id}', ${item.cost})">Cumpără (${item.cost} 🪙)</button>`
-        }
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+        <span class="pill">🪙 ${item.cost}</span>
+        <button class="btn ${active ? 'success' : owned ? 'secondary' : 'primary'}" onclick="handleShopAction('${item.id}', ${item.cost})">
+          ${active ? 'Activ' : owned ? 'Echipați' : 'Cumpără'}
+        </button>
       </div>
     `;
     grid.appendChild(div);
   });
-
-  show("shop");
 }
 
-function buyTheme(id, cost){
-  if(data.coins < cost){
-    alert("Nu ai suficiente monede!");
-    return;
+function handleShopAction(id, cost){
+  const owned = data.unlockedThemes.includes(id);
+
+  if(owned){
+    data.activeTheme = id;
+    saveData();
+    applyTheme();
+    renderShop();
+  } else {
+    if(data.coins >= cost){
+      data.coins -= cost;
+      data.unlockedThemes.push(id);
+      data.activeTheme = id;
+      saveData();
+      applyTheme();
+      renderShop();
+      updateMenu();
+    } else {
+      alert("Nu ai suficiente monede!");
+    }
   }
-  data.coins -= cost;
-  data.unlockedThemes.push(id);
-  data.activeTheme = id;
-  saveData();
-  updateMenu();
-  openShop();
-  applyTheme();
-}
-
-function equipTheme(id){
-  data.activeTheme = id;
-  saveData();
-  openShop();
-  applyTheme();
 }
 
 /* =========================
-   PROFILES, STATS & RECORDS
+   PROFILE & STATS & RECORDS
 ========================= */
 
 function showProfile(){
-  $("profileXP").textContent = data.xp;
-  $("profileCoins").textContent = data.coins;
-  $("profileCorrect").textContent = data.correct;
-  $("profileWrong").textContent = data.wrong;
-  $("profileGames").textContent = data.games;
-  $("profileBest").textContent = data.bestScore;
   show("profile");
+  if($("profileXP")) $("profileXP").textContent = data.xp;
+  if($("profileCoins")) $("profileCoins").textContent = data.coins;
+  if($("profileCorrect")) $("profileCorrect").textContent = data.correct;
+  if($("profileWrong")) $("profileWrong").textContent = data.wrong;
+  if($("profileGames")) $("profileGames").textContent = data.games;
+  if($("profileBest")) $("profileBest").textContent = data.bestScore;
 }
 
 function showStats(){
-  $("statsGames").textContent = data.games;
-  $("statsCorrect").textContent = data.correct;
-  $("statsWrong").textContent = data.wrong;
-  
-  const total = data.correct + data.wrong;
-  const acc = total > 0 ? Math.round((data.correct / total) * 100) : 0;
-  $("statsAccuracy").textContent = acc + "%";
-  $("statsBestStreak").textContent = data.bestStreak;
-  $("statsBestScore").textContent = data.bestScore;
   show("statsPage");
+  const total = data.correct + data.wrong;
+  const accuracy = total > 0 ? Math.round((data.correct / total) * 100) : 0;
+
+  if($("statsGames")) $("statsGames").textContent = data.games;
+  if($("statsCorrect")) $("statsCorrect").textContent = data.correct;
+  if($("statsWrong")) $("statsWrong").textContent = data.wrong;
+  if($("statsAccuracy")) $("statsAccuracy").textContent = accuracy + "%";
+  if($("statsBestStreak")) $("statsBestStreak").textContent = data.bestStreak;
+  if($("statsBestScore")) $("statsBestScore").textContent = data.bestScore;
 }
 
 function showRecords(){
-  $("recordScore").textContent = data.bestScore;
-  $("recordStreak").textContent = data.bestStreak;
-  $("recordRapid").textContent = data.rapidBest;
-  $("recordTime").textContent = data.timeBest;
   show("records");
-}
-
-function showAchievements(){
-  const list = $("achievementList");
-  list.innerHTML = "";
-
-  const achievementsDef = [
-    { id: "first_game", title: "Primul Pas", desc: "Joacă cel puțin un joc.", check: () => data.games >= 1 },
-    { id: "math_master", title: "Matematician", desc: "Obține 50 de răspunsuri corecte.", check: () => data.correct >= 50 },
-    { id: "rich", title: "Bogătaș", desc: "Strânge cel puțin 100 monede.", check: () => data.coins >= 100 },
-    { id: "streak_10", title: "De Oprișit", desc: "Fă un streak de 10 răspunsuri corecte.", check: () => data.bestStreak >= 10 }
-  ];
-
-  achievementsDef.forEach(ach => {
-    const unlocked = ach.check();
-    const item = document.createElement("div");
-    item.className = "card list-item";
-    item.innerHTML = `
-      <div>
-        <strong>${unlocked ? '✅' : '🔒'} ${ach.title}</strong>
-        <div class="muted small">${ach.desc}</div>
-      </div>
-      <span>${unlocked ? 'Deblocat' : 'Blocat'}</span>
-    `;
-    list.appendChild(item);
-  });
-
-  show("achievements");
+  if($("recordScore")) $("recordScore").textContent = data.bestScore;
+  if($("recordStreak")) $("recordStreak").textContent = data.bestStreak;
+  if($("recordRapid")) $("recordRapid").textContent = data.rapidBest;
+  if($("recordTime")) $("recordTime").textContent = data.timeBest;
 }
 
 /* =========================
-   SETTINGS ACTIONS
+   ACHIEVEMENTS LOGIC
+========================= */
+
+function checkAchievements(){
+  achievementsList.forEach(ach => {
+    if(!data.achievements.includes(ach.id)){
+      let unlocked = false;
+      if(ach.id === "first_win" && data.correct >= 1) unlocked = true;
+      if(ach.id === "streak_5" && streak >= 5) unlocked = true;
+      if(ach.id === "streak_10" && streak >= 10) unlocked = true;
+      if(ach.id === "games_10" && data.games >= 10) unlocked = true;
+
+      if(unlocked){
+        data.achievements.push(ach.id);
+        data.coins += ach.reward;
+        data.xp += ach.reward * 2;
+        saveData();
+      }
+    }
+  });
+}
+
+function showAchievements(){
+  show("achievements");
+  const list = $("achievementList");
+  if(!list) return;
+  list.innerHTML = "";
+
+  achievementsList.forEach(ach => {
+    const unlocked = data.achievements.includes(ach.id);
+    const div = document.createElement("div");
+    div.className = "card list-item";
+    div.style.opacity = unlocked ? "1" : "0.5";
+    div.innerHTML = `
+      <div style="display:flex; align-items:center; gap:15px;">
+        <span style="font-size:30px">${ach.icon}</span>
+        <div>
+          <strong>${ach.name}</strong>
+          <div class="muted small">${ach.desc}</div>
+        </div>
+      </div>
+      <span class="pill">${unlocked ? '✅ Deblocat' : `🪙 ${ach.reward}`}</span>
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* =========================
+   SETTINGS LOGIC
 ========================= */
 
 function toggleThemeSetting(){
   settings.dark = !settings.dark;
-  if(data.activeTheme === "default"){
-    saveSettings();
-    applyTheme();
-  }
+  saveSettings();
+  applyTheme();
 }
 
 function toggleSoundSetting(){
@@ -2009,26 +2031,27 @@ function toggleFullscreen(){
   if(!document.fullscreenElement){
     document.documentElement.requestFullscreen().catch(()=>{});
   } else {
-    if(document.exitFullscreen){
-      document.exitFullscreen();
-    }
+    document.exitFullscreen().catch(()=>{});
   }
 }
 
 function resetProgress(){
-  if(confirm("Ești sigur că vrei să ștergi tot progresul? Această acțiune este ireversibilă!")){
+  if(confirm("Ești sigur că vrei să ștergi tot progresul? Această acțiune este ireversibilă.")){
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(SETTINGS_KEY);
     data = loadData();
     settings = loadSettings();
     applyTheme();
-    updateMenu();
     show("menu");
+    updateMenu();
   }
 }
 
-// Inițializare temă la pornire
-applyTheme();
+// Initial initialization on load
+window.addEventListener("DOMContentLoaded", () => {
+  applyTheme();
+  updateMenu();
+});
 </script>
 
 </body>
