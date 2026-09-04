@@ -606,7 +606,6 @@ h1,h2,h3{
 }
 
 .switch {
-  /* Am reparat clasa intrerupta aici */
   position: relative;
   display: inline-block;
   width: 60px;
@@ -616,17 +615,30 @@ h1,h2,h3{
 </head>
 <body>
 
-  <!-- AICI VINE STRUCTURA TA HTML (Butoane, Meniuri etc.) -->
-  <button onclick="startIntro()">Start Game</button>
+  <!-- ECRANUL PRINCIPAL (HOME) -->
+  <div class="screen active center">
+    <div class="container center">
+      <div class="card home-box">
+        <!-- Logo-ul tău cu extensia jfif mică -->
+        <img src="Gemini_Generated_Image_ez98onez98onez98.jfif" alt="Logo Calcule Legends" class="home-img">
+        
+        <h1 class="home-title logo">CALCULE LEGENDS</h1>
+        <p class="home-version subtitle">Versiunea 1.0</p>
+        
+        <button class="btn primary big-btn" onclick="startIntro()">JOACĂ ACUM</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // AICI TREBUIE SĂ ADAUGI CODUL TĂU JAVASCRIPT INCLUSIV FUNCȚIA startIntro()
+    // Această funcție previne apariția erorii de tip ReferenceError observată în consolă
     function startIntro() {
-        console.log("Jocul a pornit!");
-        // Pune logica ta aici
+        console.log("Introducerea și jocul au pornit cu succes!");
+        // Aici poți reintroduce funcțiile și codul tău JavaScript original
     }
 
-    // ATENȚIE: Verifică codul tău în jurul liniei 1402 pentru paranteze uitate deschise!
+    // IMPORTANT: Când adaugi scriptul tău înapoi, verifică cu atenție linia 1402!
+    // Asigură-te că nu ai paranteze uitate deschise sau ghilimele lipsă.
   </script>
 </body>
 </html>
