@@ -30,6 +30,7 @@
 }
 
 html,body{
+  height:100%; /* Forțează fundalul să ocupe tot ecranul pentru centrare */
   min-height:100%;
   font-family:Arial,Helvetica,sans-serif;
   background:
@@ -41,30 +42,29 @@ html,body{
 
 body{
   overflow-x:hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button{
   font:inherit;
 }
 
-.screen{
-  display:none;
-  min-height:100vh;
-  padding:25px;
+/* Stil reparat pentru centrare verticală și orizontală absolută */
+.screen.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
 }
 
-.screen.active{
-  display:flex;
-}
-
-.container{
-  width:min(1100px,100%);
-  margin:auto;
-}
-
-.center{
-  align-items:center;
-  justify-content:center;
+.container.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .card{
@@ -605,29 +605,24 @@ h1,h2,h3{
 </head>
 <body>
 
-  <!-- INTERFAȚA HOME (FĂRĂ LOGO IMAGINE) -->
+  <!-- INTERFAȚA HOME ALINIATĂ PERFECT PE MIJLOC -->
   <div class="screen active center">
     <div class="container center">
       <div class="card home-box">
         
-        <!-- Spațiu curat în loc de imagine -->
-        <h1 id="mainTitle" class="home-title logo" style="margin-top: 20px;">CALCULE LEGENDS</h1>
+        <h1 class="home-title logo">CALCULE LEGENDS</h1>
         <p class="home-version subtitle">Versiunea 1.0</p>
         
-        <button id="playBtn" class="btn primary big-btn" onclick="startIntro()">JOACĂ ACUM</button>
+        <button class="btn primary big-btn" onclick="startIntro()">JOACĂ ACUM</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Această funcție simulează pornirea jocului pentru testare
+    // Butonul apelează direct funcția ta din codul vechi fără să mai schimbe textul
     function startIntro() {
-        let titlu = document.getElementById("mainTitle");
-        let buton = document.getElementById("playBtn");
-        
-        titlu.innerText = "SE ÎNCARCĂ...";
-        buton.innerText = "PORNEȘTE JOCUL";
-        console.log("Sistemul de bază rulează. Trimite restul scriptului de 1400 de linii pentru a adăuga jocul propriu-zis!");
+        // Când vei adăuga codul original de 1400 de linii, logica de pornire se va executa direct aici
+        console.log("Funcția startIntro a fost apelată.");
     }
   </script>
 </body>
